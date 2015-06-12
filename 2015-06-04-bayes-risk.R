@@ -6,7 +6,7 @@
 # Parameters (change me)
 d = 5
 delta = 1
-r = 100000
+r = 1000000
 
 # Mean vectors
 # (first d only, as the other p-d entries are ignored by the Bayes classifier)
@@ -26,4 +26,4 @@ estimate_bayes_risk = function() {
 }
 
 # Answer
-print(mean(replicate(r, estimate_bayes_risk())))
+print(mean(replicate(r, estimate_bayes_risk()))) # 0.0128
