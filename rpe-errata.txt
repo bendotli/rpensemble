@@ -1,0 +1,3 @@
+RPEnsemble 0.2 errata
+- Explicit references to global variables Train.Class, Test.Class
+- Spelling error ("methed") in documentation of RPParallel
