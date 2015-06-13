@@ -10,6 +10,15 @@
 \usepackage[T1]{fontenc}	
 \usepackage{eulervm}
 \usepackage{tikz-cd}
+
+
+\usepackage{beramono} % better typewriter font, for code listings
+%\usepackage{courier} % another option
+
+\usepackage{caption} % have to declare these here instead of letting LyX do it
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
 \end_preamble
 \options reqno
 \use_default_options true
@@ -78,6 +87,7 @@ figs-within-sections
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
+\listings_params "basicstyle={\footnotesize\ttfamily},breaklines=true,commentstyle={\color[rgb]{0,0.6,0}},framexbottommargin=4pt,framexleftmargin=17pt,framexrightmargin=5pt,keywordstyle={\color{blue}},language=R,numbers=right,numbersep=8pt,numberstyle={\tiny\ttfamily\color[rgb]{0.2,0.2,0.2}},rulecolor={\color{black}},showspaces=false,showstringspaces=false,showtabs=false,stepnumber=1,stringstyle={\color[rgb]{0.588,0.345,0.475}},xleftmargin=17pt"
 \tracking_changes false
 \output_changes false
 \html_math_output 0
@@ -148,8 +158,20 @@ The Basic Model consists of two
 \begin_inset Formula $2\Delta$
 \end_inset
 
-.
+, where 
+\begin_inset Formula $\pi_{1}$
+\end_inset
+
+ is the probability of class 1 and 
+\begin_inset Formula $1-\pi_{1}$
+\end_inset
+
+ that of class 2.
  The parameters are 
+\begin_inset Formula $\pi_{1}$
+\end_inset
+
+, 
 \begin_inset Formula $p$
 \end_inset
 
@@ -161,7 +183,7 @@ The Basic Model consists of two
 \begin_inset Formula $\Delta$
 \end_inset
 
- (as well as 
+ (and we also can adjust 
 \begin_inset Formula $n_{\mathrm{train}}$
 \end_inset
 
@@ -173,7 +195,7 @@ The Basic Model consists of two
 \end_layout
 
 \begin_layout Subsection
-Parameter values
+Model parameter values
 \end_layout
 
 \begin_layout Standard
@@ -189,14 +211,31 @@ We use
 \begin_inset Formula $\Delta=1$
 \end_inset
 
-, 
-\begin_inset Formula $n_{\mathrm{train}}=50$
+, and as in the paper, 
+\begin_inset Formula $n_{\mathrm{train}}\in\{50,100,200\}$
 \end_inset
 
-, and 
-\begin_inset Formula $n_{\mathrm{test}}=100$
+ and 
+\begin_inset Formula $n_{\mathrm{test}}=1000$
 \end_inset
 
+.
+ Instead of varying 
+\begin_inset Formula $\pi_{1}$
+\end_inset
+
+, here we'll just keep it at 
+\begin_inset Formula $\pi_{1}=0.5$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For these model parameter values, the Bayes risk multiplied by 100 is 
+\series bold
+12.8
+\series default
 .
 \end_layout
 
@@ -211,6 +250,97 @@ Linear discriminant analysis
 \begin_layout Standard
 One of the standard linear classifiers.
  No hyperparameters.
+\end_layout
+
+\begin_layout Standard
+I've found that the standard implementation in R (from the 
+\family typewriter
+MASS
+\family default
+ library) still functions when 
+\begin_inset Formula $n_{\mathrm{train}}\ll p$
+\end_inset
+
+; it just complains about collinearity and performs very poorly.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+library(MASS)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+compare.lda = function(data) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	train = data$train
+\end_layout
+
+\begin_layout Plain Layout
+
+	test = data$test
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Run LDA
+\end_layout
+
+\begin_layout Plain Layout
+
+	lda.model = lda(y ~ ., data = train)
+\end_layout
+
+\begin_layout Plain Layout
+
+	lda.out = predict(lda.model, newdata = test)
+\end_layout
+
+\begin_layout Plain Layout
+
+	lda.class = lda.out$class
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Calculate error
+\end_layout
+
+\begin_layout Plain Layout
+
+	return(mean(lda.class != test$y))
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -244,6 +374,155 @@ s).
 ).
 \end_layout
 
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+library(RPEnsemble)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+compare.haar.rpe.lda = function(data) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	train = data$train
+\end_layout
+
+\begin_layout Plain Layout
+
+	test = data$test
+\end_layout
+
+\begin_layout Plain Layout
+
+	n_train = length(train$y)
+\end_layout
+
+\begin_layout Plain Layout
+
+	n_test = length(test$y)
+\end_layout
+
+\begin_layout Plain Layout
+
+	p = ncol(train)-1
+\end_layout
+
+\begin_layout Plain Layout
+
+	d = 5 ###############################
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Run RPE LDA with Haar measure-drawn random projections
+\end_layout
+
+\begin_layout Plain Layout
+
+	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
+\end_layout
+
+\begin_layout Plain Layout
+
+			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 10, B2 = 10,
+\end_layout
+
+\begin_layout Plain Layout
+
+			cores = 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Estimate the class 1 prior probability
+\end_layout
+
+\begin_layout Plain Layout
+
+	rpelda.p_hat = sum(train$y == 1)/n_train
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Choose the best value for alpha (the voting threshold) emperically
+\end_layout
+
+\begin_layout Plain Layout
+
+	rpelda.alpha_hat = RPalpha(RP.out = rpelda.out, Y = train$y, p1 = rpelda.p_hat)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Ensemble the base classifiers
+\end_layout
+
+\begin_layout Plain Layout
+
+	rpelda.class = RPEnsembleClass(RP.out = rpelda.out, n = n_train, n.test = n_test,
+\end_layout
+
+\begin_layout Plain Layout
+
+			p1 = rpelda.p_hat, alpha = rpelda.alpha_hat)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Calculate error
+\end_layout
+
+\begin_layout Plain Layout
+
+	return(mean(rpelda.class != test$y))
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 AxisRPE-LDA
 \end_layout
@@ -252,7 +531,7 @@ AxisRPE-LDA
 Same as above, but the choice procedure for projection matrices only considers
  axis-aligned projections.
  Since the model is in fact axis-aligned, this makes it far easier to find
- the true projection (use the first 
+ the true projection (projecting down to the first 
 \begin_inset Formula $d$
 \end_inset
 
@@ -265,6 +544,151 @@ This was implemented as part of the
 RPEnsemble
 \family default
  package, and I have not looked over the code.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+compare.axis.rpe.lda = function(data) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	train = data$train
+\end_layout
+
+\begin_layout Plain Layout
+
+	test = data$test
+\end_layout
+
+\begin_layout Plain Layout
+
+	n_train = length(train$y)
+\end_layout
+
+\begin_layout Plain Layout
+
+	n_test = length(test$y)
+\end_layout
+
+\begin_layout Plain Layout
+
+	p = ncol(train)-1
+\end_layout
+
+\begin_layout Plain Layout
+
+	d = 5 ###############################
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Run RPE LDA with axis-aligned random projections
+\end_layout
+
+\begin_layout Plain Layout
+
+	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
+\end_layout
+
+\begin_layout Plain Layout
+
+			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 10, B2 = 10,
+\end_layout
+
+\begin_layout Plain Layout
+
+			projmethod = "axis",
+\end_layout
+
+\begin_layout Plain Layout
+
+			cores = 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Estimate the class 1 prior probability
+\end_layout
+
+\begin_layout Plain Layout
+
+	rpelda.p_hat = sum(train$y == 1)/n_train
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Choose the best value for alpha (the voting threshold) emperically
+\end_layout
+
+\begin_layout Plain Layout
+
+	rpelda.alpha_hat = RPalpha(RP.out = rpelda.out, Y = train$y, p1 = rpelda.p_hat)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Ensemble the base classifiers
+\end_layout
+
+\begin_layout Plain Layout
+
+	rpelda.class = RPEnsembleClass(RP.out = rpelda.out, n = n_train, n.test = n_test,
+\end_layout
+
+\begin_layout Plain Layout
+
+			p1 = rpelda.p_hat, alpha = rpelda.alpha_hat)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Calculate error
+\end_layout
+
+\begin_layout Plain Layout
+
+	return(mean(rpelda.class != test$y))
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -284,6 +708,134 @@ Standard toolbox classifier.
 .
 \end_layout
 
+\begin_layout Standard
+Note that 
+\begin_inset Formula $n_{\mathrm{trees}}$
+\end_inset
+
+ is analagous to 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+, and 
+\begin_inset Formula $m_{\mathrm{try}}$
+\end_inset
+
+ is analagous to 
+\begin_inset Formula $d$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+library(caret)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+compare.rf = function(data) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	train = data$train
+\end_layout
+
+\begin_layout Plain Layout
+
+	test = data$test
+\end_layout
+
+\begin_layout Plain Layout
+
+	tuneGrid <- data.frame(.mtry=(2:10))
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Run random forest
+\end_layout
+
+\begin_layout Plain Layout
+
+	rf.model <- train(y ~ ., data=train,
+\end_layout
+
+\begin_layout Plain Layout
+
+			ntree=1000,
+\end_layout
+
+\begin_layout Plain Layout
+
+			method='rf',
+\end_layout
+
+\begin_layout Plain Layout
+
+			preProcess = c("center", "scale"),
+\end_layout
+
+\begin_layout Plain Layout
+
+			tuneGrid = tuneGrid,
+\end_layout
+
+\begin_layout Plain Layout
+
+			trControl=trainControl(method='oob', verboseIter=T))
+\end_layout
+
+\begin_layout Plain Layout
+
+	rf.class = predict(rf.model, newdata = test)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Calculate error
+\end_layout
+
+\begin_layout Plain Layout
+
+	return(mean(rf.class != test$y))
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Partial least squares
 \end_layout
@@ -299,6 +851,1407 @@ Widespread method that seems like it would be well-adapted to this problem.
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+compare.pls = function(data) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	train = data$train
+\end_layout
+
+\begin_layout Plain Layout
+
+	test = data$test
+\end_layout
+
+\begin_layout Plain Layout
+
+	tuneGrid <- data.frame(.ncomp=1:5)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Run partial least squares
+\end_layout
+
+\begin_layout Plain Layout
+
+	pls.model <- train(y ~ ., data=train,
+\end_layout
+
+\begin_layout Plain Layout
+
+			method='pls',
+\end_layout
+
+\begin_layout Plain Layout
+
+			preProcess = c("center", "scale"),
+\end_layout
+
+\begin_layout Plain Layout
+
+			tuneGrid = tuneGrid,
+\end_layout
+
+\begin_layout Plain Layout
+
+			trControl=trainControl(verboseIter=T))
+\end_layout
+
+\begin_layout Plain Layout
+
+	pls.class = predict(pls.model, newdata = test)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Calculate error
+\end_layout
+
+\begin_layout Plain Layout
+
+	return(mean(pls.class != test$y))
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Linear SVM
+\end_layout
+
+\begin_layout Standard
+Standard toolbox classifier.
+ Hyperparameter 
+\begin_inset Formula $C$
+\end_inset
+
+ tuned over 
+\begin_inset Formula $\{0.005,0.01,0.05,0.1\}$
+\end_inset
+
+\SpecialChar \@.
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+compare.linear.svm = function(data) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	train = data$train
+\end_layout
+
+\begin_layout Plain Layout
+
+	test = data$test
+\end_layout
+
+\begin_layout Plain Layout
+
+	tuneGrid <- data.frame(.C = c(0.005, 0.01, 0.05, 0.1))
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Run linear SVM
+\end_layout
+
+\begin_layout Plain Layout
+
+	svm.model <- train(y ~ .,
+\end_layout
+
+\begin_layout Plain Layout
+
+			data=train,
+\end_layout
+
+\begin_layout Plain Layout
+
+			method='svmLinear',
+\end_layout
+
+\begin_layout Plain Layout
+
+			preProcess = c("center", "scale"),
+\end_layout
+
+\begin_layout Plain Layout
+
+			tuneGrid = tuneGrid,
+\end_layout
+
+\begin_layout Plain Layout
+
+			trControl=trainControl(verboseIter=T))
+\end_layout
+
+\begin_layout Plain Layout
+
+	svm.class = predict(svm.model, newdata = test)
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# Calculate error
+\end_layout
+
+\begin_layout Plain Layout
+
+	return(mean(svm.class != test$y))
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Results
+\end_layout
+
+\begin_layout Standard
+As in the paper, we run each experiment 100 times.
+ Below are the results.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="5">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\pi_{1}=0.5$
+\end_inset
+
+, 
+\begin_inset Formula $\text{Bayes risk}=1.28$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $n_{\mathrm{train}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $200$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+LDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $30.4_{8.04}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $6.91_{1.73}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.97_{0.749}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+HaarRPE-LDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $8.15_{2.39}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $6.03_{1.60}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.05_{0.976}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+AxisRPE-LDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.93_{2.45}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.77_{2.36}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.25_{2.25}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+RF
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{3.28_{0.815}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{2.60_{0.586}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{2.11_{0.498}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+PLS
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.71_{1.34}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.28_{0.931}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.16_{0.514}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Linear SVM
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.39_{1.50}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.33_{0.903}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.21_{0.561}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Misclassification rates multiplied by 100 (with standard errors as subscripts)
+ for Basic Model, with smallest in bold
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As a remark, random forest had its 
+\begin_inset Formula $n_{\mathrm{trees}}$
+\end_inset
+
+ set to a fairly large number (1000), while the two RPE variants didn't
+ have this benefit.
+ Thus, I did another run of HaarRPE-LDA and AxisRPE-LDA with 
+\begin_inset Formula $B_{2}=100$
+\end_inset
+
+ (to give it 
+\begin_inset Formula $B_{1}\times B_{2}=1000=n_{\mathrm{trees}}$
+\end_inset
+
+ of random forest).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\pi_{1}=0.5$
+\end_inset
+
+, 
+\begin_inset Formula $\text{Bayes risk}=1.28$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $n_{\mathrm{train}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $200$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+HaarRPE-LDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $7.24_{2.24}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.75_{1.34}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.88_{0.954}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+AxisRPE-LDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.76_{1.86}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.83_{1.36}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.06_{1.51}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+RF
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{3.28_{0.815}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{2.60_{0.586}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{2.11_{0.498}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+RPE-LDA misclassification rates with 
+\begin_inset Formula $B_{1}=10$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{2}=100$
+\end_inset
+
+ (with RF for comparison)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And again with 
+\begin_inset Formula $B_{1}=B_{2}=100$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\pi_{1}=0.5$
+\end_inset
+
+, 
+\begin_inset Formula $\text{Bayes risk}=1.28$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $n_{\mathrm{train}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $50$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $100$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $200$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+HaarRPE-LDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $4.10_{2.26}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.82_{1.34}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{2.09_{0.661}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+AxisRPE-LDA
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $5.18_{2.12}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.96_{1.57}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $3.19_{1.02}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+RF
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{3.28_{0.815}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{2.60_{0.586}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $2.11_{0.498}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+RPE-LDA misclassification rates with 
+\begin_inset Formula $B_{1}=100$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{2}=100$
+\end_inset
+
+ (with RF for comparison)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
