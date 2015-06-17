@@ -17,7 +17,7 @@ compare.haar.rpe.lda = function(data) {
 	
 	# Run RPE LDA with Haar measure-drawn random projections
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
-			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 10, B2 = 10,
+			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
 			cores = 1)
 	
 	# Estimate the class 1 prior probability
@@ -44,7 +44,7 @@ compare.axis.rpe.lda = function(data) {
 	
 	# Run RPE LDA with axis-aligned random projections
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
-			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 10, B2 = 10,
+			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
 			projmethod = "axis",
 			cores = 1)
 	

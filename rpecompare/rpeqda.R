@@ -1,11 +1,6 @@
-# TODO: Add comment
-# 
-# Author: Ben
-###############################################################################
+library(RPEnsemble)
 
-source("rpecompare/evaluate_misclassification_rates.R")
-
-haarasdf = function(data) {
+compare.haar.rpe.qda = function(data) {
 	train = data$train
 	test = data$test
 	n_train = length(train$y)
@@ -16,6 +11,7 @@ haarasdf = function(data) {
 	# Run RPE LDA with Haar measure-drawn random projections
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
 			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
+			base = "QDA", estmethod = "loo",
 			cores = 1)
 	
 	# Estimate the class 1 prior probability
@@ -32,7 +28,7 @@ haarasdf = function(data) {
 	return(mean(rpelda.class != test$y))
 }
 
-axisasdf = function(data) {
+compare.axis.rpe.qda = function(data) {
 	train = data$train
 	test = data$test
 	n_train = length(train$y)
@@ -40,9 +36,10 @@ axisasdf = function(data) {
 	p = ncol(train)-1
 	d = 5 ###############################
 	
-	# Run RPE LDA with axis-aligned random projections
+	# Run RPE QDA with axis-aligned random projections
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
 			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
+			base = "QDA", estmethod = "loo",
 			projmethod = "axis",
 			cores = 1)
 	
@@ -59,10 +56,3 @@ axisasdf = function(data) {
 	# Calculate error
 	return(mean(rpelda.class != test$y))
 }
-
-threadasdf = function(model) {
-	return(evaluate.misclassification.rates(model, c(haarasdf, axisasdf)))
-}
-
-out = sapply(default.models, threadasdf)
-colnames(out) = c("50", "100", "200")

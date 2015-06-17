@@ -58,3 +58,21 @@ compare.linear.svm = function(data) {
 	# Calculate error
 	return(mean(svm.class != test$y))
 }
+
+compare.rbf.svm = function(data) {
+	train = data$train
+	test = data$test
+	tuneGrid <- data.frame(.C = 1:5)
+	
+	# Run kernel SVM
+	svm.model <- train(y ~ .,
+			data=train,
+			method='svmRadialCost',
+			preProcess = c("center", "scale"),
+			tuneGrid = tuneGrid,
+			trControl=trainControl(verboseIter=T))
+	svm.class = predict(svm.model, newdata = test)
+	
+	# Calculate error
+	return(mean(svm.class != test$y))
+}

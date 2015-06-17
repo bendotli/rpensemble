@@ -16,3 +16,5 @@ misclassification.rate.evaulation.thread = function(model) {
 source("rpecompare/evaluate_misclassification_rates.R")
 out = parSapply(cl, default.models, misclassification.rate.evaulation.thread)
 colnames(out) = c("50", "100", "200")
+
+stopCluster(cl)
