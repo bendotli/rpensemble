@@ -11,7 +11,7 @@ compare.haar.rpe.knn = function(data) {
 	# Run RPE LDA with Haar measure-drawn random projections
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
 			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
-			base = "knn", estmethod = "loo", k = 1:5,
+			base = "knn", estmethod = "loo", k = 1:25,
 			cores = 1)
 	
 	# Estimate the class 1 prior probability
@@ -39,7 +39,7 @@ compare.axis.rpe.knn = function(data) {
 	# Run RPE KNN with axis-aligned random projections
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
 			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
-			base = "knn", estmethod = "loo", k = 1:5,
+			base = "knn", estmethod = "loo", k = 1:25,
 			projmethod = "axis",
 			cores = 1)
 	
@@ -68,7 +68,7 @@ compare.haar.rpe.knn2 = function(data) {
 	# Run RPE LDA with Haar measure-drawn random projections
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
 			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
-			base = "knn", estmethod = "loo", k = 1:5,
+			base = "knn", estmethod = "loo", k = 1:25,
 			cores = 1)
 	
 	# Estimate the class 1 prior probability
@@ -96,7 +96,7 @@ compare.axis.rpe.knn2 = function(data) {
 	# Run RPE KNN with axis-aligned random projections
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
 			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
-			base = "knn", estmethod = "loo", k = 1:5,
+			base = "knn", estmethod = "loo", k = 1:25,
 			projmethod = "axis",
 			cores = 1)
 	
