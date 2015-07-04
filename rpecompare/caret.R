@@ -80,7 +80,7 @@ compare.rbf.svm = function(data) {
 compare.knn = function(data) {
 	train = data$train
 	test = data$test
-	tuneGrid <- expand.grid(k=1:5)
+	tuneGrid <- expand.grid(k=1:25)
 	
 	# Run kernel SVM
 	svm.model <- train(y ~ .,
