@@ -76,3 +76,21 @@ compare.rbf.svm = function(data) {
 	# Calculate error
 	return(mean(svm.class != test$y))
 }
+
+compare.knn = function(data) {
+	train = data$train
+	test = data$test
+	tuneGrid <- expand.grid(k=1:5)
+	
+	# Run kernel SVM
+	svm.model <- train(y ~ .,
+			data=train,
+			method='knn',
+			preProcess = c("center", "scale"),
+			tuneGrid = tuneGrid,
+			trControl=trainControl(verboseIter=T))
+	svm.class = predict(svm.model, newdata = test)
+	
+	# Calculate error
+	return(mean(svm.class != test$y))
+}
