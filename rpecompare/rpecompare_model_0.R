@@ -5,36 +5,33 @@
 
 # Initialize parallel processing library
 require(snow) || install.packages("snow")
-cl = makeCluster(8)
+cl = makeCluster(3)#36)
 
-# Define our worker thread
-misclassification.rate.evaulation.thread = function(model) {
-	source("rpecompare/evaluate_misclassification_rates.R")
-	source("rpecompare/builtin_models.R")
-	source("rpecompare/rpelda.R")
-	source("rpecompare/rpeqda.R")
-	source("rpecompare/rpeknn.R")
-	return(evaluate.misclassification.rates(model,
-					compare.with = list(compare.haar.rpe.lda2,
-										compare.haar.rpe.lda,
-										compare.lda,
-										compare.haar.rpe.qda2,
-										compare.haar.rpe.qda,
-										compare.qda,
-										compare.haar.rpe.knn2,
-										compare.haar.rpe.knn)))
-}
+# Define our models & classifiers
+source("rpecompare/all_models_and_classifiers.R")
 
-# Define our models
-source("rpecompare/basicmodel.R")
 models = list(
-		function() basic.model(n_train = 50),
-		function() basic.model(n_train = 100),
-		function() basic.model(n_train = 200)
-	)
+			function() basic.model(n_train = 50),
+			function() basic.model(n_train = 100),
+			function() basic.model(n_train = 200)
+		)
+
+classifiers = list(
+			compare.haar.rpe.lda2,
+			compare.haar.rpe.lda,
+			compare.lda,
+			compare.haar.rpe.qda2,
+			compare.haar.rpe.qda,
+			compare.qda,
+			compare.haar.rpe.knn2,
+			compare.haar.rpe.knn
+		)
+
+runs = expand.grid(model = models, classifier = classifiers)
+runs.list = apply(runs, 1, as.list)
 
 source("rpecompare/evaluate_misclassification_rates.R")
-out = parSapply(cl, models, misclassification.rate.evaulation.thread)
-colnames(out) = c("50", "100", "200")
+out = parSapply(cl, runs.list, misclassification.rates)
+out = as.matrix(out, ncol=length(classifiers))
 
 stopCluster(cl)

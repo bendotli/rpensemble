@@ -35,3 +35,22 @@ evaluate.misclassification.rates = function(
 	
 	return(list(misclass=misclass.rates, misclass.sd=std.deviations))
 }
+
+# New version that doesn't deal with lists & optimized for feeding into sapply
+misclassification.rates = function(params) {
+	model = params$model
+	classifier = params$classifier
+	r = 100
+	
+	# Load model & classifier definitions
+	source("rpecompare/all_models_and_classifiers.R")
+	
+	# Make r datasets
+	data = replicate(r, model(), simplify=FALSE)
+	
+	# Run classifier on each dataset
+	runs = sapply(data, classifier)
+	
+	return(list(misclass=mean(runs), misclass.sd=sd(runs)))
+	
+}
