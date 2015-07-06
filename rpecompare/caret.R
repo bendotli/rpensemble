@@ -82,10 +82,50 @@ compare.knn = function(data) {
 	test = data$test
 	tuneGrid <- expand.grid(k=1:25)
 	
-	# Run kernel SVM
+	# Run KNN
 	model <- train(y ~ .,
 			data=train,
 			method='knn',
+			preProcess = c("center", "scale"),
+			tuneGrid = tuneGrid,
+			trControl=trainControl(verboseIter=T))
+	class = predict(model, newdata = test)
+	
+	# Calculate error
+	return(mean(class != test$y))
+}
+
+compare.boosted.dtrees = function(data) {
+	train = data$train
+	test = data$test
+	tuneGrid <- expand.grid(
+			iter=c(32, 128),
+			maxdepth=c(4, 8, 16),
+			nu = c(0.5, 0.8))
+	
+	# Run boosted trees
+	model <- train(y ~ .,
+			data=train,
+			method='ada',
+			preProcess = c("center", "scale"),
+			tuneGrid = tuneGrid,
+			trControl=trainControl(verboseIter=T))
+	class = predict(model, newdata = test)
+	
+	# Calculate error
+	return(mean(class != test$y))
+}
+
+compare.penlda = function(data) {
+	train = data$train
+	test = data$test
+	tuneGrid <- expand.grid(
+			lambda = c(0.1, 0.2, 0.5), K = c(5))
+	
+	# Run Penalized LDA
+	model <- train(y ~ .,
+			data=train,
+			method='PenalizedLDA',
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
 			trControl=trainControl(verboseIter=T))
