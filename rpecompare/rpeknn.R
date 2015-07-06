@@ -12,7 +12,7 @@ compare.haar.rpe.knn = function(data) {
 	rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
 			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
 			base = "knn", estmethod = "loo", k = 1:25,
-			cores = 1)
+			cores = 5)
 	
 	# Estimate the class 1 prior probability
 	rpelda.p_hat = sum(train$y == 1)/n_train
@@ -41,7 +41,7 @@ compare.axis.rpe.knn = function(data) {
 			XTest = data.matrix(test[-(p+1)]), d = d, B1 = 100, B2 = 100,
 			base = "knn", estmethod = "loo", k = 1:25,
 			projmethod = "axis",
-			cores = 1)
+			cores = 5)
 	
 	# Estimate the class 1 prior probability
 	rpelda.p_hat = sum(train$y == 1)/n_train
