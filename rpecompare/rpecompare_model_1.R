@@ -3,31 +3,18 @@
 # Author: Ben
 ###############################################################################
 
-# Initialize parallel processing library
-require(snow) || install.packages("snow")
-cl = makeCluster(3)
+# Define our models & classifiers
+source("rpecompare/all_models_and_classifiers.R")
 
-# Define our worker thread
-misclassification.rate.evaulation.thread = function(model) {
-	source("rpecompare/evaluate_misclassification_rates.R")
-	source("rpecompare/builtin_models.R")
-	source("rpecompare/rpeqda.R")
-	return(evaluate.misclassification.rates(model,
-					compare.with = list(compare.haar.rpe.qda,
-										compare.axis.rpe.qda,
-										compare.rbf.svm)))
-}
+models = list("ntr=50 pi=0.5" = function() model.1(n_train = 50),
+		"ntr=100 pi=0.5" = function() model.1(n_train = 100),
+		"ntr=200 pi=0.5" = function() model.1(n_train = 200),
+		"ntr=50 pi=0.33" = function() model.1(n_train = 50, pi = 0.33),
+		"ntr=100 pi=0.33" = function() model.1(n_train = 100, pi = 0.33),
+		"ntr=200 pi=0.33" = function() model.1(n_train = 200, pi = 0.33),)
 
-# Define our models
-source("rpecompare/builtin_models.R")
-models = list(
-		function() model.1(n_train = 50),
-		function() model.1(n_train = 100),
-		function() model.1(n_train = 200)
-	)
+classifiers = list(compare.haar.rpe.qda, compare.axis.rpe.qda, compare.rbf.svm)
 
-source("rpecompare/evaluate_misclassification_rates.R")
-out = parSapply(cl, models, misclassification.rate.evaulation.thread)
-colnames(out) = c("50", "100", "200")
 
-stopCluster(cl)
+source("rpecompare/core.R")
+rpecompare(models, classifiers)
