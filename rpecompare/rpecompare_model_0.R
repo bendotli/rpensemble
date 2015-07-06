@@ -11,7 +11,9 @@ cl = makeCluster(8)
 misclassification.rate.evaulation.thread = function(model) {
 	source("rpecompare/evaluate_misclassification_rates.R")
 	source("rpecompare/builtin_models.R")
+	source("rpecompare/rpelda.R")
 	source("rpecompare/rpeqda.R")
+	source("rpecompare/rpeknn.R")
 	return(evaluate.misclassification.rates(model,
 					compare.with = list(compare.haar.rpe.lda2,
 										compare.haar.rpe.lda,
