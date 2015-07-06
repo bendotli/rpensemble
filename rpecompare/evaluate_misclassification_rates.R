@@ -3,7 +3,7 @@
 # Author: Ben
 ###############################################################################
 
-source("rpecompare/lda.R")
+source("rpecompare/ldaqda.R")
 source("rpecompare/rpelda.R")
 source("rpecompare/caret.R")
 source("rpecompare/basicmodel.R")

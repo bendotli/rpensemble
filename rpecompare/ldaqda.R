@@ -17,3 +17,17 @@ compare.lda = function(data) {
 	# Calculate error
 	return(mean(lda.class != test$y))
 }
+
+compare.qda = function(data) {
+	train = data$train
+	test = data$test
+	
+	# Run QDA
+	qda.model = qda(y ~ ., data = train)
+	qda.out = predict(qda.model, newdata = test)
+	qda.class = qda.out$class
+	
+	# Calculate error
+	return(mean(qda.class != test$y))
+}
+
