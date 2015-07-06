@@ -5,7 +5,7 @@
 
 # Initialize parallel processing library
 require(snow) || install.packages("snow")
-cl = makeCluster(3)#36)
+cl = makeCluster(36)
 
 # Define our models & classifiers
 source("rpecompare/all_models_and_classifiers.R")
