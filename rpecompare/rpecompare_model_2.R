@@ -4,7 +4,7 @@
 ###############################################################################
 
 # Initialize parallel processing library
-library(snow)
+require(snow) || install.packages("snow")
 cl = makeCluster(3)
 
 # Define our worker thread
@@ -13,9 +13,10 @@ misclassification.rate.evaulation.thread = function(model) {
 	source("rpecompare/builtin_models.R")
 	source("rpecompare/rpeknn.R")
 	return(evaluate.misclassification.rates(model,
-					compare.with = list(compare.haar.rpe.knn,
+					compare.with = list(compare.haar.rpe.knn2,
+										compare.axis.rpe.knn2,
+										compare.haar.rpe.knn,
 										compare.axis.rpe.knn,
-										compare.rbf.svm,
 										compare.knn)))
 }
 
