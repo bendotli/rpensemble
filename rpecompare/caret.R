@@ -3,7 +3,7 @@
 # Author: Ben
 ###############################################################################
 
-library(caret)
+require(caret) || install.packages("caret")
 
 compare.rf = function(data) {
 	train = data$train

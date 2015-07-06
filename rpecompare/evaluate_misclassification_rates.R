@@ -8,7 +8,7 @@ source("rpecompare/rpelda.R")
 source("rpecompare/caret.R")
 source("rpecompare/basicmodel.R")
 
-library(plyr)
+require(plyr) || install.packages("plyr")
 
 default.classifiers = c(compare.lda, compare.haar.rpe.lda, compare.axis.rpe.lda,
 		compare.rf, compare.pls, compare.linear.svm)

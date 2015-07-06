@@ -1,4 +1,4 @@
-library(RPEnsemble)
+require(RPEnsemble) || install.packages("RPEnsemble")
 
 compare.haar.rpe.qda = function(data) {
 	train = data$train

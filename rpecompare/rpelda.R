@@ -3,7 +3,7 @@
 # Author: Ben
 ###############################################################################
 
-library(RPEnsemble)
+require(RPEnsemble) || install.packages("RPEnsemble")
 
 #' Compare RPE LDA with Haar measure-drawn random projections
 

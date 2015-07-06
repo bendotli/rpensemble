@@ -3,7 +3,7 @@
 # Author: Ben
 ###############################################################################
 
-library(RPEnsemble)
+require(RPEnsemble) || install.packages("RPEnsemble")
 
 model.1 = function(p = 50, n_train = 50, n_test = 100) { 
 	train.data = RPModel(1, n_train, p)

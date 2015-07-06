@@ -4,7 +4,7 @@
 ###############################################################################
 
 # Initialize parallel processing library
-library(snow)
+require(snow) || install.packages("snow")
 cl = makeCluster(1)
 
 # Define our worker thread

@@ -3,7 +3,7 @@
 # Author: Ben
 ###############################################################################
 
-library(MASS)
+require(MASS) || install.packages("MASS")
 
 compare.lda = function(data) {
 	train = data$train
