@@ -47,3 +47,14 @@ model.4 = function(p = 50, n_train = 50, n_test = 100, pi = 0.5) {
 	return(list(train = train, test = test))
 }
 
+model.5 = function(p = 50, n_train = 50, n_test = 100, pi = 0.5) {  
+	train.data = RPModel(5, n_train, p, pi)
+	train = data.frame(x = train.data$x, y = factor(train.data$y))
+	
+	test.data = RPModel(5, n_test, p, pi)
+	test = data.frame(x = test.data$x, y = factor(test.data$y))
+	
+	return(list(train = train, test = test))
+}
+
+
