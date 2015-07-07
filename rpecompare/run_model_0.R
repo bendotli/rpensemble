@@ -22,4 +22,4 @@ classifiers = list(
 
 
 source("rpecompare/core.R")
-rpecompare(models, classifiers)
+print(rpecompare(models, classifiers))

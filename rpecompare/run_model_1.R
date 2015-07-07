@@ -17,4 +17,4 @@ classifiers = list(compare.haar.rpe.qda, compare.axis.rpe.qda, compare.rf, compa
 
 
 source("rpecompare/core.R")
-rpecompare(models, classifiers)
+print(rpecompare(models, classifiers))
