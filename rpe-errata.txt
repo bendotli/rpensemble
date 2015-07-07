@@ -1,3 +1,10 @@
 RPEnsemble 0.2 errata
 - Explicit references to global variables Train.Class, Test.Class
 - Spelling error ("methed") in documentation of RPParallel
+- RPModel(4) throws error:
+Error in readChar(con, 5L, useBytes = TRUE) : cannot open the connection
+In addition: Warning message:
+In readChar(con, 5L, useBytes = TRUE) :
+  cannot open compressed file 'R.RData', probable reason 'No such file or directory'
+(wrong/hardcoded path to data file? I can directly load R.RData, so the file is there in the package.)
+- RPModel(5) not implemented, although it's pretty simple. We can put in my implementation?
