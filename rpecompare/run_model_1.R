@@ -11,9 +11,9 @@ models = list("ntr=50 pi=0.5" = function() model.1(n_train = 50),
 		"ntr=200 pi=0.5" = function() model.1(n_train = 200),
 		"ntr=50 pi=0.33" = function() model.1(n_train = 50, pi = 0.33),
 		"ntr=100 pi=0.33" = function() model.1(n_train = 100, pi = 0.33),
-		"ntr=200 pi=0.33" = function() model.1(n_train = 200, pi = 0.33),)
+		"ntr=200 pi=0.33" = function() model.1(n_train = 200, pi = 0.33))
 
-classifiers = list(compare.haar.rpe.qda, compare.axis.rpe.qda, compare.rbf.svm)
+classifiers = list(compare.haar.rpe.qda, compare.axis.rpe.qda, compare.rf, compare.rbf.svm)
 
 
 source("rpecompare/core.R")

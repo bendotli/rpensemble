@@ -3,33 +3,18 @@
 # Author: Ben
 ###############################################################################
 
-# Initialize parallel processing library
-require(snow) || install.packages("snow")
-cl = makeCluster(3)
+# Define our models & classifiers
+source("rpecompare/all_models_and_classifiers.R")
 
-# Define our worker thread
-misclassification.rate.evaulation.thread = function(model) {
-	source("rpecompare/evaluate_misclassification_rates.R")
-	source("rpecompare/builtin_models.R")
-	source("rpecompare/rpeknn.R")
-	return(evaluate.misclassification.rates(model,
-					compare.with = list(compare.haar.rpe.knn2,
-										compare.axis.rpe.knn2,
-										compare.haar.rpe.knn,
-										compare.axis.rpe.knn,
-										compare.knn)))
-}
+models = list("ntr=50 pi=0.5" = function() model.2(n_train = 50),
+		"ntr=100 pi=0.5" = function() model.2(n_train = 100),
+		"ntr=200 pi=0.5" = function() model.2(n_train = 200),
+		"ntr=50 pi=0.33" = function() model.2(n_train = 50, pi = 0.75),
+		"ntr=100 pi=0.33" = function() model.2(n_train = 100, pi = 0.75),
+		"ntr=200 pi=0.33" = function() model.2(n_train = 200, pi = 0.75))
 
-# Define our models
-source("rpecompare/builtin_models.R")
-models = list(
-		function() model.2(n_train = 50),
-		function() model.2(n_train = 100),
-		function() model.2(n_train = 200)
-	)
+classifiers = list(compare.haar.rpe.knn, compare.axis.rpe.knn, compare.rf, compare.rbf.svm)
 
-source("rpecompare/evaluate_misclassification_rates.R")
-out = parSapply(cl, models, misclassification.rate.evaulation.thread)
-colnames(out) = c("50", "100", "200")
 
-stopCluster(cl)
+source("rpecompare/core.R")
+rpecompare(models, classifiers)
