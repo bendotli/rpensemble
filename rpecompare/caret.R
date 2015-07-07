@@ -117,6 +117,28 @@ compare.boosted.dtrees = function(data) {
 	return(mean(class != test$y))
 }
 
+compare.gbm = function(data) {
+	train = data$train
+	test = data$test
+	tuneGrid <- expand.grid(
+			n.trees = c(100, 250, 500, 750, 1000),
+			interaction.depth = c(2, 8),
+			shrinkage = c(0.2, 0.05)
+	)
+	
+	# Run boosted trees
+	model <- train(y ~ .,
+			data=train,
+			method='gbm',
+			preProcess = c("center", "scale"),
+			tuneGrid = tuneGrid,
+			trControl=trainControl(method="boot", number=10, verboseIter=T))
+	class = predict(model, newdata = test)
+	
+	# Calculate error
+	return(mean(class != test$y))
+}
+
 compare.penlda = function(data) {
 	train = data$train
 	test = data$test
@@ -130,24 +152,6 @@ compare.penlda = function(data) {
 			#preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
 			trControl=trainControl(method="none"))#"boot", number=10, verboseIter=T))
-	class = predict(model, newdata = test)
-	
-	# Calculate error
-	return(mean(class != test$y))
-}
-
-compare.linear.gp = function(data) {
-	train = data$train
-	test = data$test
-	tuneGrid <- expand.grid()
-	
-	# Run linear Gaussian process classifier
-	model <- train(y ~ .,
-			data=train,
-			method='gaussprLinear',
-			preProcess = c("center", "scale"),
-			tuneGrid = tuneGrid,
-			trControl=trainControl(method="none"))
 	class = predict(model, newdata = test)
 	
 	# Calculate error
