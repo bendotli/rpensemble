@@ -13,10 +13,10 @@ models = list("ntr=50 pi=0.5" = function() basic.model(n_train = 50),
 classifiers = list(
 			"RPE-H(d=2) LDA" = compare.haar.rpe.lda2,
 			"RPE-H(d=5) LDA" = compare.haar.rpe.lda,
-			"LDA" = compare.lda,
+			#"LDA" = compare.lda,
 			"RPE-H(d=2) QDA" = compare.haar.rpe.qda2,
 			"RPE-H(d=5) QDA" = compare.haar.rpe.qda,
-			"QDA" = compare.qda,
+			#"QDA" = compare.qda,
 			"RPE-H(d=2) KNN" = compare.haar.rpe.knn2,
 			"RPE-H(d=5) KNN" = compare.haar.rpe.knn)
 

@@ -3,6 +3,7 @@
 # Author: Ben
 ###############################################################################
 
+require(e1071) || install.packages("e1071")
 require(caret) || install.packages("caret")
 
 compare.rf = function(data) {
@@ -34,7 +35,7 @@ compare.pls = function(data) {
 			method='pls',
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
-			trControl=trainControl(verboseIter=T))
+			trControl=trainControl(method="boot", number=10, verboseIter=T))
 	class = predict(model, newdata = test)
 	
 	# Calculate error
@@ -52,7 +53,7 @@ compare.linear.svm = function(data) {
 			method='svmLinear',
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
-			trControl=trainControl(verboseIter=T))
+			trControl=trainControl(method="boot", number=10, verboseIter=T))
 	class = predict(model, newdata = test)
 	
 	# Calculate error
@@ -70,7 +71,7 @@ compare.rbf.svm = function(data) {
 			method='svmRadialCost',
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
-			trControl=trainControl(verboseIter=T))
+			trControl=trainControl(method="boot", number=10, verboseIter=T))
 	class = predict(model, newdata = test)
 	
 	# Calculate error
@@ -80,7 +81,7 @@ compare.rbf.svm = function(data) {
 compare.knn = function(data) {
 	train = data$train
 	test = data$test
-	tuneGrid <- expand.grid(k=1:25)
+	tuneGrid <- expand.grid(k=c(2, 5, 10, 17, 25))
 	
 	# Run KNN
 	model <- train(y ~ .,
@@ -88,7 +89,7 @@ compare.knn = function(data) {
 			method='knn',
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
-			trControl=trainControl(verboseIter=T))
+			trControl=trainControl(method="boot", number=10, verboseIter=T))
 	class = predict(model, newdata = test)
 	
 	# Calculate error
@@ -99,9 +100,9 @@ compare.boosted.dtrees = function(data) {
 	train = data$train
 	test = data$test
 	tuneGrid <- expand.grid(
-			iter=c(32, 128),
-			maxdepth=c(4, 8, 16),
-			nu = c(0.5, 0.8))
+			iter = c(10, 20, 30),
+			maxdepth = c(5, 10),
+			nu = c(0.5))
 	
 	# Run boosted trees
 	model <- train(y ~ .,
@@ -109,7 +110,7 @@ compare.boosted.dtrees = function(data) {
 			method='ada',
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
-			trControl=trainControl(verboseIter=T))
+			trControl=trainControl(method="boot", number=10, verboseIter=T))
 	class = predict(model, newdata = test)
 	
 	# Calculate error
@@ -128,7 +129,25 @@ compare.penlda = function(data) {
 			method='PenalizedLDA',
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
-			trControl=trainControl(verboseIter=T))
+			trControl=trainControl(method="boot", number=10, verboseIter=T))
+	class = predict(model, newdata = test)
+	
+	# Calculate error
+	return(mean(class != test$y))
+}
+
+compare.linear.gp = function(data) {
+	train = data$train
+	test = data$test
+	tuneGrid <- expand.grid()
+	
+	# Run linear Gaussian process classifier
+	model <- train(y ~ .,
+			data=train,
+			method='gaussprLinear',
+			preProcess = c("center", "scale"),
+			tuneGrid = tuneGrid,
+			trControl=trainControl(method="none"))
 	class = predict(model, newdata = test)
 	
 	# Calculate error
