@@ -548,6 +548,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $3.58_{0.174}$
+\end_inset
+
 
 \end_layout
 
@@ -557,6 +560,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.68_{0.0840}$
+\end_inset
+
 
 \end_layout
 
@@ -566,6 +572,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.07_{0.0709}$
+\end_inset
+
 
 \end_layout
 
@@ -742,6 +751,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $3.62_{0.152}$
+\end_inset
+
 
 \end_layout
 
@@ -751,6 +763,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.60_{0.0808}$
+\end_inset
+
 
 \end_layout
 
@@ -760,6 +775,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.13_{0.0646}$
+\end_inset
+
 
 \end_layout
 
@@ -802,6 +820,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $3.98_{0.172}$
+\end_inset
+
 
 \end_layout
 
@@ -811,6 +832,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.60_{0.0772}$
+\end_inset
+
 
 \end_layout
 
@@ -820,6 +844,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $1.93_{0.0525}$
+\end_inset
+
 
 \end_layout
 
@@ -858,7 +885,7 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+N/A
 \end_layout
 
 \end_inset
@@ -867,7 +894,7 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+N/A
 \end_layout
 
 \end_inset
@@ -876,6 +903,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $14.5_{0.273}$
+\end_inset
+
 
 \end_layout
 
@@ -925,6 +955,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $3.88_{0.218}$
+\end_inset
+
 
 \end_layout
 
@@ -934,6 +967,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.64_{0.0883}$
+\end_inset
+
 
 \end_layout
 
@@ -943,6 +979,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.14_{0.0770}$
+\end_inset
+
 
 \end_layout
 
@@ -992,6 +1031,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $3.94_{0.188}$
+\end_inset
+
 
 \end_layout
 
@@ -1001,6 +1043,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.48_{0.104}$
+\end_inset
+
 
 \end_layout
 
@@ -1010,6 +1055,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.02_{0.0637}$
+\end_inset
+
 
 \end_layout
 
@@ -1055,6 +1103,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $11.2_{0.440}$
+\end_inset
+
 
 \end_layout
 
@@ -1064,6 +1115,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $5.97_{0.160}$
+\end_inset
+
 
 \end_layout
 
@@ -1073,6 +1127,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $4.09_{0.0778}$
+\end_inset
+
 
 \end_layout
 
@@ -1123,7 +1180,7 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathbf{1.42_{0.389}}$
+\begin_inset Formula $\mathbf{1.42_{0.0389}}$
 \end_inset
 
 
@@ -1135,7 +1192,7 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathbf{1.31_{0.344}}$
+\begin_inset Formula $\mathbf{1.31_{0.0344}}$
 \end_inset
 
 
@@ -1618,9 +1675,13 @@ Discussion
 \end_layout
 
 \begin_layout Standard
-PenLDA is hands-down the best, but it's very reassuring to see that RPE-H
- with LDA is very competitive with random forest, even beating it out in
- the rightmost column.
+PenLDA is hands-down the best, but it's very reassuring to see that 
+\emph on
+all versions
+\emph default
+ of RPE-H are very competitive with the toolbox classifiers.
+ Taking out PenLDA, the RPE classifiers seem to be on par with random forest,
+ the next best.
 \end_layout
 
 \begin_layout Section
@@ -3526,6 +3587,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $28.7_{0.527}$
+\end_inset
+
 
 \end_layout
 
@@ -3535,6 +3599,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.0_{0.423}$
+\end_inset
+
 
 \end_layout
 
@@ -3674,6 +3741,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $47.1_{0.494}$
+\end_inset
+
 
 \end_layout
 
@@ -3683,6 +3753,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $45.6_{0.535}$
+\end_inset
+
 
 \end_layout
 
@@ -3692,6 +3765,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $39.9_{0.601}$
+\end_inset
+
 
 \end_layout
 
@@ -3701,6 +3777,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $35.8_{0.492}$
+\end_inset
+
 
 \end_layout
 
@@ -3710,6 +3789,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $34.9_{0.523}$
+\end_inset
+
 
 \end_layout
 
@@ -3719,6 +3801,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $31.2_{0.538}$
+\end_inset
+
 
 \end_layout
 
@@ -3771,7 +3856,7 @@ Switching to RPE-A gives a very marked drop in performance!
 \end_layout
 
 \begin_layout Standard
-Again, RPE performs very well, coming shoulder-to-shoulder with Gaussian
+Again, RPE-H performs very well, coming shoulder-to-shoulder with Gaussian
  kernel SVM.
 \end_layout
 
@@ -4972,7 +5057,7 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathit{12.17_{0.31}}$
+\begin_inset Formula $\bi{12.17}{0.31}$
 \end_inset
 
 
@@ -4984,7 +5069,7 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathit{9.99_{0.17}}$
+\begin_inset Formula $\bi{9.99}{0.17}$
 \end_inset
 
 
@@ -4996,7 +5081,7 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathit{9.02_{0.12}}$
+\begin_inset Formula $\bi{9.02}{0.12}$
 \end_inset
 
 
@@ -5570,6 +5655,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $18.0_{0.458}$
+\end_inset
+
 
 \end_layout
 
@@ -5579,6 +5667,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $15.5_{0.414}$
+\end_inset
+
 
 \end_layout
 
@@ -5588,6 +5679,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $14.5_{0.370}$
+\end_inset
+
 
 \end_layout
 
@@ -5597,6 +5691,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $12.75_{0.454}$
+\end_inset
+
 
 \end_layout
 
@@ -5606,6 +5703,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $11.0_{0.352}$
+\end_inset
+
 
 \end_layout
 
@@ -5615,6 +5715,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $9.35_{0.303}$
+\end_inset
+
 
 \end_layout
 
@@ -5689,6 +5792,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $15.8_{0.714}$
+\end_inset
+
 
 \end_layout
 
@@ -5698,6 +5804,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $10.9_{0.365}$
+\end_inset
+
 
 \end_layout
 
@@ -5707,6 +5816,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $9.59_{0.319}$
+\end_inset
+
 
 \end_layout
 
@@ -5781,6 +5893,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $14.3_{0.507}$
+\end_inset
+
 
 \end_layout
 
@@ -5790,6 +5905,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $11.6_{0.358}$
+\end_inset
+
 
 \end_layout
 
@@ -5799,6 +5917,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $10.4_{0.320}$
+\end_inset
+
 
 \end_layout
 
@@ -5837,6 +5958,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $21.5_{0.555}$
+\end_inset
+
 
 \end_layout
 
@@ -5846,6 +5970,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $17.2_{0.434}$
+\end_inset
+
 
 \end_layout
 
@@ -5855,6 +5982,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $15.2_{0.381}$
+\end_inset
+
 
 \end_layout
 
@@ -5864,6 +5994,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $16.9_{0.527}$
+\end_inset
+
 
 \end_layout
 
@@ -5873,6 +6006,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $12.6_{0.446}$
+\end_inset
+
 
 \end_layout
 
@@ -5882,6 +6018,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $10.1_{0.325}$
+\end_inset
+
 
 \end_layout
 
@@ -5923,6 +6062,39 @@ Misclassification rates on Model 2
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Discussion
+\end_layout
+
+\begin_layout Standard
+Here, the axis-aligned version does very well, basically completely on par
+ with RPE-H
+\begin_inset Formula $_{d=2}$
+\end_inset
+
+ 
+\begin_inset Formula $k$
+\end_inset
+
+nn
+\begin_inset Formula $_{k=1:25}$
+\end_inset
+
+ (very slightly worse on 
+\begin_inset Formula $\pi_{1}=0.5$
+\end_inset
+
+, and 
+\emph on
+better
+\emph default
+ on 
+\begin_inset Formula $\pi_{1}=0.75$
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Section
@@ -6714,6 +6886,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $29.0_{0.703}$
+\end_inset
+
 
 \end_layout
 
@@ -6723,6 +6898,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $25.5_{0.562}$
+\end_inset
+
 
 \end_layout
 
@@ -6732,6 +6910,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $21.5_{0.503}$
+\end_inset
+
 
 \end_layout
 
@@ -6741,6 +6922,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $21.2_{0.995}$
+\end_inset
+
 
 \end_layout
 
@@ -6750,6 +6934,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $15.9_{0.560}$
+\end_inset
+
 
 \end_layout
 
@@ -6759,6 +6946,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $14.0_{0.359}$
+\end_inset
+
 
 \end_layout
 
@@ -7653,6 +7843,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{26.2_{0.755}}$
+\end_inset
+
 
 \end_layout
 
@@ -7662,6 +7855,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{20.3_{0.569}}$
+\end_inset
+
 
 \end_layout
 
@@ -7671,6 +7867,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{17.8_{0.471}}$
+\end_inset
+
 
 \end_layout
 
@@ -7680,6 +7879,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{15.2_{0.544}}$
+\end_inset
+
 
 \end_layout
 
@@ -7689,6 +7891,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{11.7_{0.370}}$
+\end_inset
+
 
 \end_layout
 
@@ -7698,6 +7903,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{10.4_{0.370}}$
+\end_inset
+
 
 \end_layout
 
@@ -7736,6 +7944,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $41.0_{0.669}$
+\end_inset
+
 
 \end_layout
 
@@ -7745,6 +7956,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $34.1_{0.677}$
+\end_inset
+
 
 \end_layout
 
@@ -7754,6 +7968,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.2_{0.474}$
+\end_inset
+
 
 \end_layout
 
@@ -7763,6 +7980,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.5_{0.381}$
+\end_inset
+
 
 \end_layout
 
@@ -7772,6 +7992,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $21.5_{0.460}$
+\end_inset
+
 
 \end_layout
 
@@ -7781,6 +8004,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $15.9_{0.431}$
+\end_inset
+
 
 \end_layout
 
@@ -7819,6 +8045,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $45.1_{0.508}$
+\end_inset
+
 
 \end_layout
 
@@ -7828,6 +8057,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $44.9_{0.643}$
+\end_inset
+
 
 \end_layout
 
@@ -7837,6 +8069,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $45.9_{0.557}$
+\end_inset
+
 
 \end_layout
 
@@ -7846,6 +8081,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.4_{0.610}$
+\end_inset
+
 
 \end_layout
 
@@ -7855,6 +8093,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $21.9_{0.464}$
+\end_inset
+
 
 \end_layout
 
@@ -7864,6 +8105,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $22.5_{0.445}$
+\end_inset
+
 
 \end_layout
 
@@ -7902,6 +8146,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $44.0_{0.561}$
+\end_inset
+
 
 \end_layout
 
@@ -7911,6 +8158,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $38.4_{0.581}$
+\end_inset
+
 
 \end_layout
 
@@ -7920,6 +8170,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $31.5_{0.536}$
+\end_inset
+
 
 \end_layout
 
@@ -7929,6 +8182,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $25.9_{0.465}$
+\end_inset
+
 
 \end_layout
 
@@ -7938,6 +8194,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.0_{0.422}$
+\end_inset
+
 
 \end_layout
 
@@ -7947,6 +8206,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $19.8_{0.515}$
+\end_inset
+
 
 \end_layout
 
@@ -7990,6 +8252,29 @@ Misclassification rates on Model 3
 
 \end_layout
 
+\begin_layout Subsection
+Discussion
+\end_layout
+
+\begin_layout Standard
+Here is where axis-alignment really shines!
+\end_layout
+
+\begin_layout Standard
+In the last two columns, RPE-A goes below the Bayes risk, which is worrying.
+ After some review there doesn't seem to be a way that the algorithm could
+ have cheated, and the results are reproducible, so perhaps the calculation
+ of Bayes risk for 
+\begin_inset Formula $\pi_{1}=0.75$
+\end_inset
+
+ is incorrect (intuitively it should be lower than the Bayes risk for 
+\begin_inset Formula $\pi_{1}=0.5$
+\end_inset
+
+).
+\end_layout
+
 \begin_layout Section
 Model 4
 \end_layout
@@ -8004,6 +8289,10 @@ Rotated sparse normals.
 
 \begin_layout Subsection
 Data
+\end_layout
+
+\begin_layout Standard
+Data yet to be gathered, as this
 \end_layout
 
 \begin_layout Standard
@@ -10316,6 +10605,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.2_{0.297}$
+\end_inset
+
 
 \end_layout
 
@@ -10325,6 +10617,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $22.0_{0.218}$
+\end_inset
+
 
 \end_layout
 
@@ -10334,6 +10629,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $20.6_{0.170}$
+\end_inset
+
 
 \end_layout
 
@@ -11218,6 +11516,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $22.8_{0.287}$
+\end_inset
+
 
 \end_layout
 
@@ -11227,6 +11528,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $20.6_{0.204}$
+\end_inset
+
 
 \end_layout
 
@@ -11236,6 +11540,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $19.4_{0.174}$
+\end_inset
+
 
 \end_layout
 
@@ -11274,6 +11581,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{20.7_{0.243}}$
+\end_inset
+
 
 \end_layout
 
@@ -11283,6 +11593,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $18.4_{0.214}$
+\end_inset
+
 
 \end_layout
 
@@ -11292,6 +11605,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $16.8_{0.211}$
+\end_inset
+
 
 \end_layout
 
@@ -11330,6 +11646,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $20.8_{0.276}$
+\end_inset
+
 
 \end_layout
 
@@ -11339,6 +11658,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{18.2_{0.210}}$
+\end_inset
+
 
 \end_layout
 
@@ -11348,6 +11670,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $16.5_{0.174}$
+\end_inset
+
 
 \end_layout
 
@@ -11386,6 +11711,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $21.5_{0.212}$
+\end_inset
+
 
 \end_layout
 
@@ -11395,6 +11723,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $19.9_{0.225}$
+\end_inset
+
 
 \end_layout
 
@@ -11404,6 +11735,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $18.0_{0.207}$
+\end_inset
+
 
 \end_layout
 
@@ -11445,6 +11779,20 @@ Misclassification rates on Model 5
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Discussion
+\end_layout
+
+\begin_layout Standard
+Again, axis-alignment shines, significantly beating out everything except
+ the toolbox classifiers!
+\end_layout
+
+\begin_layout Standard
+There's still a ways to go before RPE catches up with some of these toolbox
+ methods on real data, though.
 \end_layout
 
 \begin_layout Standard
