@@ -121,15 +121,15 @@ compare.penlda = function(data) {
 	train = data$train
 	test = data$test
 	tuneGrid <- expand.grid(
-			lambda = c(0.1, 0.2, 0.5), K = c(5))
+			lambda = c(0.2), K = c(1))
 	
 	# Run Penalized LDA
 	model <- train(y ~ .,
 			data=train,
 			method='PenalizedLDA',
-			preProcess = c("center", "scale"),
+			#preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
-			trControl=trainControl(method="boot", number=10, verboseIter=T))
+			trControl=trainControl(method="none"))#"boot", number=10, verboseIter=T))
 	class = predict(model, newdata = test)
 	
 	# Calculate error
