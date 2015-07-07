@@ -100,8 +100,8 @@ compare.boosted.dtrees = function(data) {
 	train = data$train
 	test = data$test
 	tuneGrid <- expand.grid(
-			iter = c(10, 20, 30),
-			maxdepth = c(5, 10),
+			iter = c(5, 10, 25, 40),
+			maxdepth = c(16),
 			nu = c(0.5))
 	
 	# Run boosted trees
