@@ -36,6 +36,8 @@ misclassification.rates = function(params) {
 rpecompare = function(models, classifiers, cores=36) {
 	# Initialize parallel processing library
 	require(snow) || install.packages("snow")
+	if(cores > length(models)*length(classifiers))
+		cores = length(models)*length(classifiers)
 	cl = makeCluster(cores)
 	
 	# Expand out all combinations of model+classifier as a list of lists
