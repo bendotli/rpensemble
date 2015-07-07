@@ -208,13 +208,8 @@ Toolbox classifiers (RF, SVM, boosted decision trees)
 
 \begin_layout Standard
 The last section adds some comparisons with a typical toolbox of classification
- algorithms (random forest, linear/radial basis function SVM, and boosted
- decision trees).
-\end_layout
-
-\begin_layout Standard
-The SVM kernel is chosen depending on whether the problem is linear or not
- (so linear SVM on Model 0, Gaussian kernel SVM on the rest).
+ algorithms (random forest, radial basis function SVM, and boosted decision
+ trees).
 \end_layout
 
 \begin_layout Standard
@@ -312,6 +307,8 @@ Data
 The best performer in the original runs was RPE-LDA; we try the axis-aligned
  version and put it side-by-side with random forest, which does very well
  on this problem.
+ I also expect the state-of-the-art linear classifiers to do very well,
+ so I try out PenLDA.
 \end_layout
 
 \begin_layout Standard
@@ -635,7 +632,7 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathbf{2.09_{0.0661}}$
+\begin_inset Formula $2.09_{0.0661}$
 \end_inset
 
 
@@ -1114,7 +1111,10 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-NR
+\begin_inset Formula $\mathbf{1.71_{0.0535}}$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -1123,7 +1123,10 @@ NR
 \begin_inset Text
 
 \begin_layout Plain Layout
-NR
+\begin_inset Formula $\mathbf{1.42_{0.389}}$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -1132,7 +1135,10 @@ NR
 \begin_inset Text
 
 \begin_layout Plain Layout
-NR
+\begin_inset Formula $\mathbf{1.31_{0.344}}$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -1407,7 +1413,7 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathbf{3.28_{0.0815}}$
+\begin_inset Formula $3.28_{0.0815}$
 \end_inset
 
 
@@ -1419,7 +1425,7 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathbf{2.60_{0.0586}}$
+\begin_inset Formula $2.60_{0.0586}$
 \end_inset
 
 
@@ -1537,6 +1543,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $5.63_{0.298}$
+\end_inset
+
 
 \end_layout
 
@@ -1546,6 +1555,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $3.52_{0.106}$
+\end_inset
+
 
 \end_layout
 
@@ -1555,6 +1567,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $2.89_{0.0921}$
+\end_inset
+
 
 \end_layout
 
@@ -1596,6 +1611,16 @@ Misclassification rates on Model 0 (Basic Model)
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Discussion
+\end_layout
+
+\begin_layout Standard
+PenLDA is hands-down the best, but it's very reassuring to see that RPE-H
+ with LDA is very competitive with random forest, even beating it out in
+ the rightmost column.
 \end_layout
 
 \begin_layout Section
@@ -2369,6 +2394,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\star$
+\end_inset
+
 RPE-H
 \begin_inset Formula $_{d=5}$
 \end_inset
@@ -2403,7 +2431,7 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathbf{14.1_{0.452}}$
+\begin_inset Formula $14.1_{0.452}$
 \end_inset
 
 
@@ -2427,6 +2455,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $18.8_{0.657}$
+\end_inset
+
 
 \end_layout
 
@@ -2436,6 +2467,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $13.1_{0.390}$
+\end_inset
+
 
 \end_layout
 
@@ -2445,6 +2479,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $11.0_{0.325}$
+\end_inset
+
 
 \end_layout
 
@@ -3376,6 +3413,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $27.6_{0.557}$
+\end_inset
+
 
 \end_layout
 
@@ -3385,6 +3425,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $22.2_{0.460}$
+\end_inset
+
 
 \end_layout
 
@@ -3394,6 +3437,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $19.2_{0.423}$
+\end_inset
+
 
 \end_layout
 
@@ -3468,6 +3514,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $31.54_{0.504}$
+\end_inset
+
 
 \end_layout
 
@@ -3560,6 +3609,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{16.4_{0.493}}$
+\end_inset
+
 
 \end_layout
 
@@ -3569,6 +3621,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{12.6_{0.315}}$
+\end_inset
+
 
 \end_layout
 
@@ -3578,6 +3633,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{10.1_{0.342}}$
+\end_inset
+
 
 \end_layout
 
@@ -3704,6 +3762,19 @@ Misclassification rates on Model 1
 
 \end_layout
 
+\begin_layout Subsection
+Discussion
+\end_layout
+
+\begin_layout Standard
+Switching to RPE-A gives a very marked drop in performance!
+\end_layout
+
+\begin_layout Standard
+Again, RPE performs very well, coming shoulder-to-shoulder with Gaussian
+ kernel SVM.
+\end_layout
+
 \begin_layout Section
 Model 2
 \end_layout
@@ -3734,7 +3805,7 @@ The paper didn't specify over what range to choose
 \begin_inset Formula $k$
 \end_inset
 
-; we try both 
+; we tried both 
 \begin_inset Formula $k=1:5$
 \end_inset
 
@@ -3743,16 +3814,17 @@ The paper didn't specify over what range to choose
 \end_inset
 
 .
- Neither of these settings is able to reproduce the paper's numbers for
- RPE-H-
+ Neither of these settings was able to reproduce the paper's numbers for
+ RPE-H with 
 \begin_inset Formula $k$
 \end_inset
 
-nn or 
+nn, or for 
 \begin_inset Formula $k$
 \end_inset
 
-nn.
+nn on its own (they always performed significantly worse), so we simply
+ include the paper's numbers.
 \end_layout
 
 \begin_layout Subsection
@@ -4103,6 +4175,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.86_{0.91}}$
+\end_inset
+
 
 \end_layout
 
@@ -4112,6 +4187,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{21.74_{0.81}}$
+\end_inset
+
 
 \end_layout
 
@@ -4121,6 +4199,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{22.90_{1.06}}$
+\end_inset
+
 
 \end_layout
 
@@ -4130,6 +4211,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.43_{0.48}}$
+\end_inset
+
 
 \end_layout
 
@@ -4139,6 +4223,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.69_{0.34}}$
+\end_inset
+
 
 \end_layout
 
@@ -4148,6 +4235,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.48_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -4194,6 +4284,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{21.14_{0.52}}$
+\end_inset
+
 
 \end_layout
 
@@ -4203,6 +4296,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{18.23_{0.35}}$
+\end_inset
+
 
 \end_layout
 
@@ -4212,6 +4308,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{17.50_{0.43}}$
+\end_inset
+
 
 \end_layout
 
@@ -4221,6 +4320,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{31.29_{0.45}}$
+\end_inset
+
 
 \end_layout
 
@@ -4230,6 +4332,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.26_{0.43}}$
+\end_inset
+
 
 \end_layout
 
@@ -4239,6 +4344,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.26_{0.31}}$
+\end_inset
+
 
 \end_layout
 
@@ -4290,6 +4398,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.49_{0.28}}$
+\end_inset
+
 
 \end_layout
 
@@ -4299,6 +4410,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{21.74_{0.22}}$
+\end_inset
+
 
 \end_layout
 
@@ -4319,6 +4433,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.35_{0.26}}$
+\end_inset
+
 
 \end_layout
 
@@ -4328,6 +4445,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{20.15_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -4374,6 +4494,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{32.97_{0.87}}$
+\end_inset
+
 
 \end_layout
 
@@ -4383,6 +4506,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{33.41_{1.03}}$
+\end_inset
+
 
 \end_layout
 
@@ -4392,6 +4518,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{38.89_{0.71}}$
+\end_inset
+
 
 \end_layout
 
@@ -4401,6 +4530,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{18.97_{0.79}}$
+\end_inset
+
 
 \end_layout
 
@@ -4410,6 +4542,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{22.95_{1.08}}$
+\end_inset
+
 
 \end_layout
 
@@ -4419,6 +4554,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.34_{1.07}}$
+\end_inset
+
 
 \end_layout
 
@@ -4439,6 +4577,8 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 RPE-H
 \begin_inset Formula $_{d=5}$
 \end_inset
@@ -4452,6 +4592,8 @@ RPE-H
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 QDA
 \end_layout
 
@@ -4461,6 +4603,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{34.91_{0.69}}$
+\end_inset
+
 
 \end_layout
 
@@ -4470,6 +4615,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{37.35_{0.75}}$
+\end_inset
+
 
 \end_layout
 
@@ -4479,6 +4627,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{40.90_{0.40}}$
+\end_inset
+
 
 \end_layout
 
@@ -4488,6 +4639,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{20.25_{0.74}}$
+\end_inset
+
 
 \end_layout
 
@@ -4497,6 +4651,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.78_{1.09}}$
+\end_inset
+
 
 \end_layout
 
@@ -4506,6 +4663,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{40.56_{0.96}}$
+\end_inset
+
 
 \end_layout
 
@@ -4568,6 +4728,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{39.95_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -4600,6 +4763,8 @@ N/A
 
 \begin_layout Plain Layout
 
+\emph on
+N/A
 \end_layout
 
 \end_inset
@@ -4621,6 +4786,9 @@ N/A
 \begin_layout Plain Layout
 
 \emph on
+\begin_inset Formula $\star$
+\end_inset
+
 RPE-H
 \begin_inset Formula $_{d=2}$
 \end_inset
@@ -4652,6 +4820,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{17.16_{0.31}}$
+\end_inset
+
 
 \end_layout
 
@@ -4661,6 +4832,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{15.02_{0.20}}$
+\end_inset
+
 
 \end_layout
 
@@ -4670,6 +4844,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{13.31_{0.14}}$
+\end_inset
+
 
 \end_layout
 
@@ -4679,6 +4856,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{13.24_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -4688,6 +4868,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{11.08_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -4697,6 +4880,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{9.51_{0.13}}$
+\end_inset
+
 
 \end_layout
 
@@ -4750,6 +4936,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{16.86_{0.27}}$
+\end_inset
+
 
 \end_layout
 
@@ -4759,6 +4948,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{15.37_{0.22}}$
+\end_inset
+
 
 \end_layout
 
@@ -4768,6 +4960,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{13.56_{0.13}}$
+\end_inset
+
 
 \end_layout
 
@@ -4777,6 +4972,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{12.17_{0.31}}$
+\end_inset
+
 
 \end_layout
 
@@ -4786,6 +4984,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{9.99_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -4795,6 +4996,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{9.02_{0.12}}$
+\end_inset
+
 
 \end_layout
 
@@ -4815,6 +5019,8 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 \begin_inset Formula $k$
 \end_inset
 
@@ -4840,6 +5046,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{20.26_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -4849,6 +5058,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{18.33_{0.18}}$
+\end_inset
+
 
 \end_layout
 
@@ -4858,6 +5070,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{16.79_{0.14}}$
+\end_inset
+
 
 \end_layout
 
@@ -4867,6 +5082,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{15.64_{0.33}}$
+\end_inset
+
 
 \end_layout
 
@@ -4876,6 +5094,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{13.71_{0.25}}$
+\end_inset
+
 
 \end_layout
 
@@ -4885,6 +5106,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{12.18_{0.13}}$
+\end_inset
+
 
 \end_layout
 
@@ -4925,6 +5149,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{38.69_{1.08}}$
+\end_inset
+
 
 \end_layout
 
@@ -4934,6 +5161,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{35.07_{1.24}}$
+\end_inset
+
 
 \end_layout
 
@@ -4943,6 +5173,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{35.19_{1.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -4952,6 +5185,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.96_{1.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -4961,6 +5197,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.69_{0.33}}$
+\end_inset
+
 
 \end_layout
 
@@ -4970,6 +5209,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.11_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -5010,6 +5252,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{40.03_{1.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -5019,6 +5264,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{38.48_{1.24}}$
+\end_inset
+
 
 \end_layout
 
@@ -5028,6 +5276,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{39.29_{1.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -5037,6 +5288,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.18_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -5046,6 +5300,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.25_{0.14}}$
+\end_inset
+
 
 \end_layout
 
@@ -5055,6 +5312,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.32_{0.13}}$
+\end_inset
+
 
 \end_layout
 
@@ -5095,6 +5355,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{21.95_{0.59}}$
+\end_inset
+
 
 \end_layout
 
@@ -5104,6 +5367,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{18.35_{0.28}}$
+\end_inset
+
 
 \end_layout
 
@@ -5113,6 +5379,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{16.98_{0.20}}$
+\end_inset
+
 
 \end_layout
 
@@ -5122,6 +5391,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{20.34_{0.44}}$
+\end_inset
+
 
 \end_layout
 
@@ -5131,6 +5403,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{18.35_{0.32}}$
+\end_inset
+
 
 \end_layout
 
@@ -5140,6 +5415,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{16.98_{0.22}}$
+\end_inset
+
 
 \end_layout
 
@@ -5180,6 +5458,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{39.24_{1.04}}$
+\end_inset
+
 
 \end_layout
 
@@ -5189,6 +5470,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{37.02_{1.15}}$
+\end_inset
+
 
 \end_layout
 
@@ -5198,6 +5482,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{38.06_{1.08}}$
+\end_inset
+
 
 \end_layout
 
@@ -5207,6 +5494,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{48.45_{2.08}}$
+\end_inset
+
 
 \end_layout
 
@@ -5216,6 +5506,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{49.10_{2.02}}$
+\end_inset
+
 
 \end_layout
 
@@ -5225,6 +5518,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{50.93_{1.98}}$
+\end_inset
+
 
 \end_layout
 
@@ -5258,7 +5554,14 @@ RPE-A
 \begin_inset Text
 
 \begin_layout Plain Layout
-QDA
+\begin_inset Formula $k$
+\end_inset
+
+nn
+\begin_inset Formula $_{k=1:25}$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -5350,7 +5653,7 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $16.3_{0.417}$
+\begin_inset Formula $\mathbf{16.3_{0.417}}$
 \end_inset
 
 
@@ -5362,7 +5665,7 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $14.2_{0.353}$
+\begin_inset Formula $\mathbf{14.2_{0.353}}$
 \end_inset
 
 
@@ -5374,7 +5677,7 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $13.2_{0.379}$
+\begin_inset Formula $\mathbf{13.2_{0.379}}$
 \end_inset
 
 
@@ -5631,9 +5934,9 @@ Gist
 \end_layout
 
 \begin_layout Standard
-Class 1 is an equal mixture of two standard Gaussians separated in 5 components;
- class 2 is independently standard Cauchy in the first 5 components, and
- standard normal in the rest.
+Class 1 is an equal mixture of two standard Gaussians separated in the first
+ 5 components; class 2 is independently standard Cauchy in the first 5 component
+s, and standard normal in the rest.
 \end_layout
 
 \begin_layout Subsection
@@ -5984,6 +6287,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{43.95_{0.63}}$
+\end_inset
+
 
 \end_layout
 
@@ -5993,6 +6299,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{42.57_{0.61}}$
+\end_inset
+
 
 \end_layout
 
@@ -6002,6 +6311,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{41.60_{0.70}}$
+\end_inset
+
 
 \end_layout
 
@@ -6011,6 +6323,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.41_{0.57}}$
+\end_inset
+
 
 \end_layout
 
@@ -6020,6 +6335,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{22.24_{0.34}}$
+\end_inset
+
 
 \end_layout
 
@@ -6029,6 +6347,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{22.31_{0.22}}$
+\end_inset
+
 
 \end_layout
 
@@ -6075,6 +6396,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{45.29_{0.49}}$
+\end_inset
+
 
 \end_layout
 
@@ -6084,6 +6408,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{44.57_{0.43}}$
+\end_inset
+
 
 \end_layout
 
@@ -6093,6 +6420,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{43.78_{0.49}}$
+\end_inset
+
 
 \end_layout
 
@@ -6102,6 +6432,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.15_{0.68}}$
+\end_inset
+
 
 \end_layout
 
@@ -6111,6 +6444,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.67_{0.43}}$
+\end_inset
+
 
 \end_layout
 
@@ -6120,6 +6456,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{22.48_{0.24}}$
+\end_inset
+
 
 \end_layout
 
@@ -6171,6 +6510,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{49.39_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -6180,6 +6522,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{49.37_{0.16}}$
+\end_inset
+
 
 \end_layout
 
@@ -6200,6 +6545,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{35.33_{0.43}}$
+\end_inset
+
 
 \end_layout
 
@@ -6209,6 +6557,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.57_{0.29}}$
+\end_inset
+
 
 \end_layout
 
@@ -6255,6 +6606,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.78_{0.57}}$
+\end_inset
+
 
 \end_layout
 
@@ -6264,6 +6618,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.34_{0.42}}$
+\end_inset
+
 
 \end_layout
 
@@ -6273,6 +6630,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.47_{0.29}}$
+\end_inset
+
 
 \end_layout
 
@@ -6282,6 +6642,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{19.36_{0.70}}$
+\end_inset
+
 
 \end_layout
 
@@ -6291,6 +6654,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{17.19_{0.44}}$
+\end_inset
+
 
 \end_layout
 
@@ -6300,6 +6666,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{15.36_{0.30}}$
+\end_inset
+
 
 \end_layout
 
@@ -6320,6 +6689,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\star$
+\end_inset
+
 RPE-H
 \begin_inset Formula $_{d=5}$
 \end_inset
@@ -6449,6 +6821,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.58_{0.34}}$
+\end_inset
+
 
 \end_layout
 
@@ -6481,6 +6856,8 @@ N/A
 
 \begin_layout Plain Layout
 
+\emph on
+N/A
 \end_layout
 
 \end_inset
@@ -6533,6 +6910,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.43_{0.39}}$
+\end_inset
+
 
 \end_layout
 
@@ -6542,6 +6922,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.48_{0.61}}$
+\end_inset
+
 
 \end_layout
 
@@ -6551,6 +6934,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.47_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -6560,6 +6946,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{19.31_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -6569,6 +6958,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{16.64_{0.26}}$
+\end_inset
+
 
 \end_layout
 
@@ -6578,6 +6970,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{14.61_{0.20}}$
+\end_inset
+
 
 \end_layout
 
@@ -6631,6 +7026,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.36_{0.38}}$
+\end_inset
+
 
 \end_layout
 
@@ -6640,6 +7038,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.29_{0.29}}$
+\end_inset
+
 
 \end_layout
 
@@ -6649,6 +7050,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.38_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -6658,6 +7062,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{19.93_{0.40}}$
+\end_inset
+
 
 \end_layout
 
@@ -6667,6 +7074,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{18.82_{0.36}}$
+\end_inset
+
 
 \end_layout
 
@@ -6676,6 +7086,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{14.74_{0.18}}$
+\end_inset
+
 
 \end_layout
 
@@ -6696,6 +7109,8 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 \begin_inset Formula $k$
 \end_inset
 
@@ -6721,6 +7136,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{34.46_{0.32}}$
+\end_inset
+
 
 \end_layout
 
@@ -6730,6 +7148,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{31.26_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -6739,6 +7160,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.88_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -6748,6 +7172,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{22.46_{0.20}}$
+\end_inset
+
 
 \end_layout
 
@@ -6757,6 +7184,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{19.85_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -6766,6 +7196,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{17.70_{0.16}}$
+\end_inset
+
 
 \end_layout
 
@@ -6806,6 +7239,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{48.34_{0.22}}$
+\end_inset
+
 
 \end_layout
 
@@ -6815,6 +7251,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{48.97_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -6824,6 +7263,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{49.21_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -6833,6 +7275,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.54_{0.50}}$
+\end_inset
+
 
 \end_layout
 
@@ -6842,6 +7287,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.05_{0.42}}$
+\end_inset
+
 
 \end_layout
 
@@ -6851,6 +7299,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.26_{0.29}}$
+\end_inset
+
 
 \end_layout
 
@@ -6891,6 +7342,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{47.67_{0.42}}$
+\end_inset
+
 
 \end_layout
 
@@ -6900,6 +7354,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{47.69_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -6909,6 +7366,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{47.83_{0.32}}$
+\end_inset
+
 
 \end_layout
 
@@ -6918,6 +7378,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.03_{0.16}}$
+\end_inset
+
 
 \end_layout
 
@@ -6927,6 +7390,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.12_{0.15}}$
+\end_inset
+
 
 \end_layout
 
@@ -6936,6 +7402,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.63_{0.14}}$
+\end_inset
+
 
 \end_layout
 
@@ -6976,6 +7445,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{45.44_{0.52}}$
+\end_inset
+
 
 \end_layout
 
@@ -6985,6 +7457,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{44.86_{0.55}}$
+\end_inset
+
 
 \end_layout
 
@@ -6994,6 +7469,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{43.27_{0.51}}$
+\end_inset
+
 
 \end_layout
 
@@ -7003,6 +7481,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.65_{0.42}}$
+\end_inset
+
 
 \end_layout
 
@@ -7012,6 +7493,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{21.89_{0.27}}$
+\end_inset
+
 
 \end_layout
 
@@ -7021,6 +7505,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{21.63_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -7061,6 +7548,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{48.40_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -7070,6 +7560,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{48.91_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -7079,6 +7572,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{49.29_{0.16}}$
+\end_inset
+
 
 \end_layout
 
@@ -7088,6 +7584,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{32.26_{0.59}}$
+\end_inset
+
 
 \end_layout
 
@@ -7097,6 +7596,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{35.35_{0.53}}$
+\end_inset
+
 
 \end_layout
 
@@ -7106,6 +7608,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{38.54_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -7845,6 +8350,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{32.65_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -7854,6 +8362,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.34_{0.22}}$
+\end_inset
+
 
 \end_layout
 
@@ -7863,6 +8374,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.33_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -7872,6 +8386,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.83_{0.45}}$
+\end_inset
+
 
 \end_layout
 
@@ -7881,6 +8398,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{24.42_{0.26}}$
+\end_inset
+
 
 \end_layout
 
@@ -7890,6 +8410,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{22.9_{0.18}}$
+\end_inset
+
 
 \end_layout
 
@@ -7910,8 +8433,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\star$
+\end_inset
 
-\emph on
 RPE-H
 \begin_inset Formula $_{d=5}$
 \end_inset
@@ -7925,8 +8449,6 @@ RPE-H
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\emph on
 LDA
 \end_layout
 
@@ -8032,6 +8554,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{38.47_{0.25}}$
+\end_inset
+
 
 \end_layout
 
@@ -8041,6 +8566,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{32.86_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -8061,6 +8589,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{32.96_{0.33}}$
+\end_inset
+
 
 \end_layout
 
@@ -8070,6 +8601,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.95_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -8116,6 +8650,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{33.35_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -8125,6 +8662,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.37_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -8134,6 +8674,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.41_{0.18}}$
+\end_inset
+
 
 \end_layout
 
@@ -8143,6 +8686,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.33_{0.50}}$
+\end_inset
+
 
 \end_layout
 
@@ -8152,6 +8698,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.54_{0.33}}$
+\end_inset
+
 
 \end_layout
 
@@ -8161,6 +8710,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.76_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -8181,6 +8733,8 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 RPE-H
 \begin_inset Formula $_{d=5}$
 \end_inset
@@ -8194,6 +8748,8 @@ RPE-H
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 QDA
 \end_layout
 
@@ -8203,6 +8759,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{33.87_{0.31}}$
+\end_inset
+
 
 \end_layout
 
@@ -8212,6 +8771,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{31.02_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -8221,6 +8783,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.60_{0.16}}$
+\end_inset
+
 
 \end_layout
 
@@ -8230,6 +8795,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.70_{0.46}}$
+\end_inset
+
 
 \end_layout
 
@@ -8239,6 +8807,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.39_{0.32}}$
+\end_inset
+
 
 \end_layout
 
@@ -8248,6 +8819,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.56_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -8310,6 +8884,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{44.25_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -8342,6 +8919,8 @@ N/A
 
 \begin_layout Plain Layout
 
+\emph on
+N/A
 \end_layout
 
 \end_inset
@@ -8394,6 +8973,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{34.36_{0.39}}$
+\end_inset
+
 
 \end_layout
 
@@ -8403,6 +8985,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{31.12_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -8412,6 +8997,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.99_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -8421,6 +9009,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.35_{0.34}}$
+\end_inset
+
 
 \end_layout
 
@@ -8430,6 +9021,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.25_{0.28}}$
+\end_inset
+
 
 \end_layout
 
@@ -8439,6 +9033,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.69_{0.20}}$
+\end_inset
+
 
 \end_layout
 
@@ -8492,6 +9089,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{34.33_{0.38}}$
+\end_inset
+
 
 \end_layout
 
@@ -8501,6 +9101,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{31.44_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -8510,6 +9113,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.07_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -8519,6 +9125,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.59_{0.35}}$
+\end_inset
+
 
 \end_layout
 
@@ -8528,6 +9137,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{24.71_{0.25}}$
+\end_inset
+
 
 \end_layout
 
@@ -8537,6 +9149,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.11_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -8557,6 +9172,8 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 \begin_inset Formula $k$
 \end_inset
 
@@ -8582,6 +9199,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{39.53_{0.32}}$
+\end_inset
+
 
 \end_layout
 
@@ -8591,6 +9211,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{38.16_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -8600,6 +9223,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{37.06_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -8609,6 +9235,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.70_{0.39}}$
+\end_inset
+
 
 \end_layout
 
@@ -8618,6 +9247,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.68_{0.25}}$
+\end_inset
+
 
 \end_layout
 
@@ -8627,6 +9259,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.36_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -8667,6 +9302,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{34.73_{0.50}}$
+\end_inset
+
 
 \end_layout
 
@@ -8676,6 +9314,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{31.87_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -8685,6 +9326,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.27_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -8694,6 +9338,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.06_{0.55}}$
+\end_inset
+
 
 \end_layout
 
@@ -8703,6 +9350,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{27.74_{0.45}}$
+\end_inset
+
 
 \end_layout
 
@@ -8712,6 +9362,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.13_{0.34}}$
+\end_inset
+
 
 \end_layout
 
@@ -8752,6 +9405,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{37.80_{0.58}}$
+\end_inset
+
 
 \end_layout
 
@@ -8761,6 +9417,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{34.28_{0.44}}$
+\end_inset
+
 
 \end_layout
 
@@ -8770,6 +9429,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.76_{0.27}}$
+\end_inset
+
 
 \end_layout
 
@@ -8779,6 +9441,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.05_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -8788,6 +9453,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{24.83_{0.43}}$
+\end_inset
+
 
 \end_layout
 
@@ -8797,6 +9465,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.81_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -8837,6 +9508,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{35.74_{0.56}}$
+\end_inset
+
 
 \end_layout
 
@@ -8846,6 +9520,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{31.44_{0.37}}$
+\end_inset
+
 
 \end_layout
 
@@ -8855,6 +9532,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{28.18_{0.17}}$
+\end_inset
+
 
 \end_layout
 
@@ -8864,6 +9544,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.80_{0.33}}$
+\end_inset
+
 
 \end_layout
 
@@ -8873,6 +9556,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{24.43_{0.20}}$
+\end_inset
+
 
 \end_layout
 
@@ -8882,6 +9568,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.20_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -8922,6 +9611,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{34.95_{0.54}}$
+\end_inset
+
 
 \end_layout
 
@@ -8931,6 +9623,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{32.06_{0.39}}$
+\end_inset
+
 
 \end_layout
 
@@ -8940,6 +9635,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.39_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -8949,6 +9647,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{32.95_{0.57}}$
+\end_inset
+
 
 \end_layout
 
@@ -8958,6 +9659,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{31.03_{0.46}}$
+\end_inset
+
 
 \end_layout
 
@@ -8967,6 +9671,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.78_{0.36}}$
+\end_inset
+
 
 \end_layout
 
@@ -9000,7 +9707,7 @@ RPE-A
 \begin_inset Text
 
 \begin_layout Plain Layout
-QDA
+LDA
 \end_layout
 
 \end_inset
@@ -9359,6 +10066,20 @@ UCI Ozone data set.
 \end_layout
 
 \begin_layout Subsection
+Note
+\end_layout
+
+\begin_layout Standard
+None of the 
+\begin_inset Formula $d=5$
+\end_inset
+
+ versions were reported (it was not explained why).
+ Here we operate under the assumption that they were left out because they
+ did not perform well, and thus it would not be valuable to run them.
+\end_layout
+
+\begin_layout Subsection
 Data
 \end_layout
 
@@ -9570,8 +10291,9 @@ Classifier
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\star$
+\end_inset
 
-\emph on
 RPE-H
 \begin_inset Formula $_{d=2}$
 \end_inset
@@ -9585,8 +10307,6 @@ RPE-H
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\emph on
 LDA
 \end_layout
 
@@ -9661,6 +10381,8 @@ LDA
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -9670,6 +10392,8 @@ LDA
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -9679,6 +10403,8 @@ LDA
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -9729,6 +10455,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{34.47_{0.38}}$
+\end_inset
+
 
 \end_layout
 
@@ -9738,6 +10467,9 @@ N/A
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{24.46_{0.25}}$
+\end_inset
+
 
 \end_layout
 
@@ -9784,6 +10516,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.12_{0.34}}$
+\end_inset
+
 
 \end_layout
 
@@ -9793,6 +10528,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.03_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -9802,6 +10540,9 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{21.56_{0.23}}$
+\end_inset
+
 
 \end_layout
 
@@ -9822,6 +10563,8 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 RPE-H
 \begin_inset Formula $_{d=5}$
 \end_inset
@@ -9835,6 +10578,8 @@ RPE-H
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 QDA
 \end_layout
 
@@ -9845,6 +10590,8 @@ QDA
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -9854,6 +10601,8 @@ QDA
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -9863,6 +10612,8 @@ QDA
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -9925,6 +10676,8 @@ N/A
 
 \begin_layout Plain Layout
 
+\emph on
+N/A
 \end_layout
 
 \end_inset
@@ -9977,6 +10730,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.82_{0.39}}$
+\end_inset
+
 
 \end_layout
 
@@ -9986,6 +10742,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.75_{0.26}}$
+\end_inset
+
 
 \end_layout
 
@@ -9995,6 +10754,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{22.14_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -10049,6 +10811,8 @@ nn
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -10058,6 +10822,8 @@ nn
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -10067,6 +10833,8 @@ nn
 
 \begin_layout Plain Layout
 
+\emph on
+NR
 \end_layout
 
 \end_inset
@@ -10086,6 +10854,8 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 \begin_inset Formula $k$
 \end_inset
 
@@ -10111,6 +10881,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.94_{0.28}}$
+\end_inset
+
 
 \end_layout
 
@@ -10120,6 +10893,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.93_{0.19}}$
+\end_inset
+
 
 \end_layout
 
@@ -10129,6 +10905,9 @@ nn
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{24.52_{0.18}}$
+\end_inset
+
 
 \end_layout
 
@@ -10169,6 +10948,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.98_{0.35}}$
+\end_inset
+
 
 \end_layout
 
@@ -10178,6 +10960,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.71_{0.31}}$
+\end_inset
+
 
 \end_layout
 
@@ -10187,6 +10972,9 @@ PenLDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{29.66_{0.27}}$
+\end_inset
+
 
 \end_layout
 
@@ -10227,6 +11015,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{26.55_{0.38}}$
+\end_inset
+
 
 \end_layout
 
@@ -10236,6 +11027,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.51_{0.32}}$
+\end_inset
+
 
 \end_layout
 
@@ -10245,6 +11039,9 @@ NSC
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{24.30_{0.21}}$
+\end_inset
+
 
 \end_layout
 
@@ -10285,6 +11082,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{25.60_{0.32}}$
+\end_inset
+
 
 \end_layout
 
@@ -10294,6 +11094,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{23.39_{0.26}}$
+\end_inset
+
 
 \end_layout
 
@@ -10303,6 +11106,9 @@ SCRDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{19.66_{0.25}}$
+\end_inset
+
 
 \end_layout
 
@@ -10343,6 +11149,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.70_{0.31}}$
+\end_inset
+
 
 \end_layout
 
@@ -10352,6 +11161,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.63_{0.26}}$
+\end_inset
+
 
 \end_layout
 
@@ -10361,6 +11173,9 @@ IR
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathit{30.67_{0.22}}$
+\end_inset
+
 
 \end_layout
 
@@ -10382,7 +11197,7 @@ IR
 
 \begin_layout Plain Layout
 RPE-A
-\begin_inset Formula $_{d=5}$
+\begin_inset Formula $_{d=2}$
 \end_inset
 
 
@@ -10394,7 +11209,7 @@ RPE-A
 \begin_inset Text
 
 \begin_layout Plain Layout
-QDA
+LDA
 \end_layout
 
 \end_inset
