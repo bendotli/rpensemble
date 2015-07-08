@@ -21,9 +21,9 @@ basic.model = function(
 	
 	# Generate test and training data
 	train = data.frame(x = t(cbind(train.class1, train.class2)),
-			y = factor(c(rep(1, n_train/2), rep(2, n_train/2), c("Class 1", "Class 2"))))
+			y = factor(c(rep(1, n_train/2), rep(2, n_train/2), labels = c("Class 1", "Class 2"))))
 	test = data.frame(x = t(cbind(test.class1, test.class2)),
-			y = factor(c(rep(1, n_test/2), rep(2, n_test/2), c("Class 1", "Class 2"))))
+			y = factor(c(rep(1, n_test/2), rep(2, n_test/2), labels = c("Class 1", "Class 2"))))
 	
 	return(list(train=train, test=test))
 }
