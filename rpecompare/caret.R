@@ -122,7 +122,7 @@ require(boot) || install.packages("boot") # inv.logit
 calibrate = function(y, y_predicted_probabilities, new_predicted_probabilities) {
 	data = data.frame(y = y, x = inv.logit(y_predicted_probabilities))
 	newdata = data.frame(x = inv.logit(new_predicted_probabilities))
-	cal.model = glm(y ~ x, data = data, family = "binomial")
+	cal.model = glm(y ~ x + 1, data = data, family = "binomial")
 
 	class = factor(predict(cal.model, newdata =  newdata, type = "response") > 0.5)
 	levels(class)[levels(class) == "FALSE"] = "class.1"
@@ -130,21 +130,18 @@ calibrate = function(y, y_predicted_probabilities, new_predicted_probabilities) 
 	return(class)
 }
 
-compare.gbm = function(data) {
+compare.cb.trees = function(data) {
 	train = data$train
 	test = data$test
 	tuneGrid <- expand.grid(
-			n.trees = c(20, 50, 100, 250, 500, 750, 1000, 1250),
-			interaction.depth = c(2, 5, 10),
-			shrinkage = c(0.2, 0.05, 0.01),
-			n.minobsinnode = c(1, 2, 4)
-	)
+			iter = c(5, 10, 25, 40, 75, 150, 400),
+			maxdepth = c(8, 16, 24),
+			nu = c(0.9, 0.5, 0.1, 0.02))
 	
-	# Run calibrated gradient boosted trees
+	# Run calibrated boosted trees
 	model <- train(y ~ .,
 			data=train,
-			method='gbm',
-			#metric="accuracy",
+			method='ada',
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
 			trControl = trainControl(
