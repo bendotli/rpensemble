@@ -117,23 +117,42 @@ compare.boosted.dtrees = function(data) {
 	return(mean(class != test$y))
 }
 
+require(boot) || install.packages("boot") # inv.logit
+
+calibrate = function(y, y_predicted_probabilities, new_predicted_probabilities) {
+	data = data.frame(y = y, x = inv.logit(y_predicted_probabilities))
+	newdata = data.frame(x = inv.logit(new_predicted_probabilities))
+	cal.model = glm(y ~ x, data = data, family = "binomial")
+
+	class = factor(predict(cal.model, newdata =  newdata, type = "response") > 0.5)
+	levels(class)[levels(class) == "FALSE"] = "class.1"
+	levels(class)[levels(class) == "TRUE"] = "class.2"
+	return(class)
+}
+
 compare.gbm = function(data) {
 	train = data$train
 	test = data$test
 	tuneGrid <- expand.grid(
-			n.trees = c(100, 250, 500, 750, 1000),
-			interaction.depth = c(2, 8),
-			shrinkage = c(0.2, 0.05)
+			n.trees = c(20, 50, 100, 250, 500, 750, 1000, 1250),
+			interaction.depth = c(2, 5, 10),
+			shrinkage = c(0.2, 0.05, 0.01),
+			n.minobsinnode = c(1, 2, 4)
 	)
 	
-	# Run boosted trees
+	# Run calibrated gradient boosted trees
 	model <- train(y ~ .,
 			data=train,
 			method='gbm',
+			#metric="accuracy",
 			preProcess = c("center", "scale"),
 			tuneGrid = tuneGrid,
-			trControl=trainControl(method="boot", number=10, verboseIter=T))
-	class = predict(model, newdata = test)
+			trControl = trainControl(
+				method="boot", number=10,
+				classProbs=T, verboseIter=T))
+	train_predictions = predict(model, type = "prob")$class.2
+	predictions = predict(model, type = "prob", newdata = test)$class.2
+	class = calibrate(train$y, train_predictions, predictions)
 	
 	# Calculate error
 	return(mean(class != test$y))
