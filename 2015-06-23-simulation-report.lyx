@@ -222,6 +222,8 @@ key "CN06"
 
 , an emprical survey of classification techniques against a diverse set
  of models and a diverse set of error metrics.
+ (However, they weren't particularly strong on the accuracy/misclassification
+ rate metric, and in the below results they always lost out to random forest.)
 \end_layout
 
 \begin_layout Subsection
@@ -300,7 +302,7 @@ This model was not in the paper; see the previous report for a detailed
 \end_layout
 
 \begin_layout Subsection
-Data
+Notes
 \end_layout
 
 \begin_layout Standard
@@ -1698,15 +1700,6 @@ Standard Laplace versus standard normal, shifted apart by the vector
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Subsection
-Data
-\end_layout
-
-\begin_layout Standard
-As this problem has a round decision boundary, it made sense that RBF-SVM,
- one of the simplest and most common nonlinear classifiers.
 \end_layout
 
 \begin_layout Standard
@@ -3852,12 +3845,14 @@ Discussion
 \end_layout
 
 \begin_layout Standard
-Switching to RPE-A gives a very marked drop in performance!
+As this problem has a round decision boundary, it made sense that Gaussian
+ kernel SVM, one of the simplest and most common nonlinear classifiers,
+ performed well.
+ But RPE-H performs essentially just as well, a very impressive showing.
 \end_layout
 
 \begin_layout Standard
-Again, RPE-H performs very well, coming shoulder-to-shoulder with Gaussian
- kernel SVM.
+Switching to RPE-A gives a very marked drop in performance!
 \end_layout
 
 \begin_layout Section
@@ -3910,10 +3905,6 @@ nn, or for
 
 nn on its own (they always performed significantly worse), so we simply
  include the paper's numbers.
-\end_layout
-
-\begin_layout Subsection
-Data
 \end_layout
 
 \begin_layout Standard
@@ -6111,10 +6102,6 @@ Class 1 is an equal mixture of two standard Gaussians separated in the first
 s, and standard normal in the rest.
 \end_layout
 
-\begin_layout Subsection
-Data
-\end_layout
-
 \begin_layout Standard
 \begin_inset Float table
 placement H
@@ -8287,14 +8274,6 @@ Gist
 Rotated sparse normals.
 \end_layout
 
-\begin_layout Subsection
-Data
-\end_layout
-
-\begin_layout Standard
-Data yet to be gathered, as this
-\end_layout
-
 \begin_layout Standard
 \begin_inset Float table
 placement H
@@ -8747,6 +8726,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $34.9_{0.533}$
+\end_inset
+
 
 \end_layout
 
@@ -8756,6 +8738,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $32.7_{0.467}$
+\end_inset
+
 
 \end_layout
 
@@ -8765,6 +8750,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $32.6_{0.544}$
+\end_inset
+
 
 \end_layout
 
@@ -8774,6 +8762,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $28.1_{0.711}$
+\end_inset
+
 
 \end_layout
 
@@ -8783,6 +8774,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $23.2_{0.517}$
+\end_inset
+
 
 \end_layout
 
@@ -8792,6 +8786,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $22.6_{0.457}$
+\end_inset
+
 
 \end_layout
 
@@ -8939,7 +8936,7 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathit{33.35_{0.37}}$
+\begin_inset Formula $\bi{33.35}{0.37}$
 \end_inset
 
 
@@ -8951,7 +8948,7 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathit{30.37_{0.21}}$
+\begin_inset Formula $\bi{30.37}{0.21}$
 \end_inset
 
 
@@ -8963,7 +8960,7 @@ QDA
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathit{28.41_{0.18}}$
+\begin_inset Formula $\bi{28.41}{0.18}$
 \end_inset
 
 
@@ -10005,6 +10002,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $37.5_{0.607}$
+\end_inset
+
 
 \end_layout
 
@@ -10014,6 +10014,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $34.8_{0.554}$
+\end_inset
+
 
 \end_layout
 
@@ -10023,6 +10026,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $33.3_{0.448}$
+\end_inset
+
 
 \end_layout
 
@@ -10032,6 +10038,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $28.6_{0.657}$
+\end_inset
+
 
 \end_layout
 
@@ -10041,6 +10050,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $25.0_{0.484}$
+\end_inset
+
 
 \end_layout
 
@@ -10050,6 +10062,9 @@ LDA
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $23.9_{0.490}$
+\end_inset
+
 
 \end_layout
 
@@ -10088,6 +10103,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $37.0_{0.604}$
+\end_inset
+
 
 \end_layout
 
@@ -10097,6 +10115,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $34.3_{0.554}$
+\end_inset
+
 
 \end_layout
 
@@ -10106,6 +10127,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $31.9_{0.459}$
+\end_inset
+
 
 \end_layout
 
@@ -10115,6 +10139,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{23.8_{0.474}}$
+\end_inset
+
 
 \end_layout
 
@@ -10124,6 +10151,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{23.7_{0.497}}$
+\end_inset
+
 
 \end_layout
 
@@ -10133,6 +10163,9 @@ RF
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\mathbf{21.9_{0.423}}$
+\end_inset
+
 
 \end_layout
 
@@ -10171,6 +10204,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $36.4_{0.603}$
+\end_inset
+
 
 \end_layout
 
@@ -10180,6 +10216,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $34.6_{0.488}$
+\end_inset
+
 
 \end_layout
 
@@ -10189,6 +10228,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $31.0_{0.530}$
+\end_inset
+
 
 \end_layout
 
@@ -10198,6 +10240,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.8_{0.488}$
+\end_inset
+
 
 \end_layout
 
@@ -10207,6 +10252,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $23.8_{0.443}$
+\end_inset
+
 
 \end_layout
 
@@ -10216,6 +10264,9 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $22.8_{0.426}$
+\end_inset
+
 
 \end_layout
 
@@ -10254,6 +10305,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $38.3_{0.565}$
+\end_inset
+
 
 \end_layout
 
@@ -10263,6 +10317,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $35.9_{0.485}$
+\end_inset
+
 
 \end_layout
 
@@ -10272,6 +10329,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $35.0_{0.523}$
+\end_inset
+
 
 \end_layout
 
@@ -10281,6 +10341,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $26.0_{0.447}$
+\end_inset
+
 
 \end_layout
 
@@ -10290,6 +10353,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.4_{0.461}$
+\end_inset
+
 
 \end_layout
 
@@ -10299,6 +10365,9 @@ Boosted Decision Trees
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $24.4_{0.389}$
+\end_inset
+
 
 \end_layout
 
@@ -10342,6 +10411,34 @@ Misclassification rates on Model 4
 
 \end_layout
 
+\begin_layout Subsection
+Discussion
+\end_layout
+
+\begin_layout Standard
+It's worth noting that the re-run of RPE-H
+\begin_inset Formula $_{d=5}$
+\end_inset
+
+ QDA was barely worse in every column than the original run of the 
+\begin_inset Formula $d=2$
+\end_inset
+
+ version (as opposed to barely better in every column in the original run).
+\end_layout
+
+\begin_layout Standard
+Also interesting: the toolbox classifiers are awful for 
+\begin_inset Formula $\pi_{1}=0.5$
+\end_inset
+
+, but great when 
+\begin_inset Formula $\pi_{1}=0.75$
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Section
 Model 5
 \end_layout
@@ -10366,10 +10463,6 @@ None of the
  versions were reported (it was not explained why).
  Here we operate under the assumption that they were left out because they
  did not perform well, and thus it would not be valuable to run them.
-\end_layout
-
-\begin_layout Subsection
-Data
 \end_layout
 
 \begin_layout Standard
@@ -11670,7 +11763,7 @@ RBF-SVM
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $16.5_{0.174}$
+\begin_inset Formula $\mathbf{16.5_{0.174}}$
 \end_inset
 
 
@@ -11786,13 +11879,13 @@ Discussion
 \end_layout
 
 \begin_layout Standard
-Again, axis-alignment shines, significantly beating out everything except
- the toolbox classifiers!
+There's still a ways to go before RPE-H catches up with some of these toolbox
+ methods on real data.
 \end_layout
 
 \begin_layout Standard
-There's still a ways to go before RPE catches up with some of these toolbox
- methods on real data, though.
+But again, axis-alignment shines, significantly beating out everything except
+ the toolbox classifiers!
 \end_layout
 
 \begin_layout Standard

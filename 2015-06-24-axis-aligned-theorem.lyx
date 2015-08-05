@@ -1,0 +1,1863 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass amsart
+\begin_preamble
+\renewcommand\thesubsection    {{\bf \thesection.\arabic{subsection}}\bf}
+\usepackage[sc]{mathpazo}
+\linespread{1.05}    
+\usepackage[T1]{fontenc}	
+\usepackage{eulervm}
+\usepackage{tikz-cd}
+
+
+\usepackage{beramono} % better typewriter font, for code listings
+%\usepackage{courier} % another option
+
+\usepackage{caption} % have to declare these here instead of letting LyX do it
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+\end_preamble
+\options reqno
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.5in
+\topmargin 1.5in
+\rightmargin 1.5in
+\bottommargin 1.5in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\listings_params "basicstyle={\footnotesize\ttfamily},breaklines=true,commentstyle={\color[rgb]{0,0.6,0}},framexbottommargin=4pt,framexleftmargin=17pt,framexrightmargin=5pt,keywordstyle={\color{blue}},language=R,numbers=right,numbersep=8pt,numberstyle={\tiny\ttfamily\color[rgb]{0.2,0.2,0.2}},rulecolor={\color{black}},showspaces=false,showstringspaces=false,showtabs=false,stepnumber=1,stringstyle={\color[rgb]{0.588,0.345,0.475}},xleftmargin=17pt"
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Theorem 1 for Axis-Aligned Projections
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Theorem on Axis-Aligned RPE
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Ben Li
+\end_layout
+
+\begin_layout Address
+Quincy House, Harvard College, Cambridge, MA 02138
+\end_layout
+
+\begin_layout Email
+jiachengli@college.harvard.edu
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\cbayes}{C^{\mathrm{Bayes}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\crpnhat}{\hat{C}_{n}^{\mathrm{RP}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\crpnhatstar}{\hat{C}_{n}^{\mathrm{RP*}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\risk}{\mathcal{L}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\rrisk}{\mathcal{R}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Background
+\end_layout
+
+\begin_layout Subsection
+Introduction
+\end_layout
+
+\begin_layout Standard
+Random projection ensemble classification was a method introduced for the
+ problem of high-dimensional classification.
+ Given a base classifier, the fundamental idea is to apply it to random
+ lower-dimensional projections of the feature vectors, and aggregate their
+ responses.
+\end_layout
+
+\begin_layout Standard
+The specifics of the methodology discussed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "CS15"
+
+\end_inset
+
+ involve drawing 
+\begin_inset Formula $B_{1}\times B_{2}$
+\end_inset
+
+ 
+\begin_inset Formula $d$
+\end_inset
+
+-dimensional projections from Haar measure on the space of all such projection
+ matrices, running the base classifier with each of these projections, and
+ then choosing the best of every 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+ projections, giving a final ensemble of 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ projections.
+ This is where a possible improvement may be made.
+\end_layout
+
+\begin_layout Standard
+As the dimension 
+\begin_inset Formula $p$
+\end_inset
+
+ of the original data goes up, the cardinality of this projection matrix
+ space increases exponentially, as the paper shows.
+ It makes sense to restrict the set of projections on 
+\begin_inset Formula $A$
+\end_inset
+
+ to be axis-aligned.
+ An axis-aligned projection simply picks 
+\begin_inset Formula $d$
+\end_inset
+
+ basis vectors and drops the rest, bounding the set to 
+\begin_inset Formula $\binom{p}{d}\leq p^{d}/d!$
+\end_inset
+
+ which is polynomial in 
+\begin_inset Formula $d$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Glossary
+\end_layout
+
+\begin_layout Definition
+The 
+\series bold
+risk
+\series default
+ of a classifier is defined as the 
+\series bold
+misclassification rate
+\series default
+ 
+\begin_inset Formula 
+\[
+\rrisk(C):=\mathbb{P}\left\{ C(X)\neq Y\right\} 
+\]
+
+\end_inset
+
+When 
+\begin_inset Formula $C$
+\end_inset
+
+ is based on data, we write 
+\begin_inset Formula $\hat{C}$
+\end_inset
+
+ and use the letter 
+\begin_inset Formula $\risk$
+\end_inset
+
+ instead of 
+\begin_inset Formula $\rrisk$
+\end_inset
+
+ to denote risk.
+ The 
+\series bold
+excess risk
+\series default
+ of 
+\begin_inset Formula $\hat{C}$
+\end_inset
+
+ is defined by 
+\begin_inset Formula $\risk(\hat{C})-\rrisk(C^{\mathrm{Bayes}})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+There are analogous definitions for estimates of risk based on the training
+ data:
+\end_layout
+
+\begin_layout Definition
+The 
+\series bold
+test risk
+\series default
+ of a classifier (which I will sometimes refer to as the 
+\series bold
+risk estimate
+\series default
+) replaces 
+\begin_inset Formula $\risk$
+\end_inset
+
+ with some estimator of risk based on the data 
+\begin_inset Formula $\hat{L}$
+\end_inset
+
+, and the 
+\series bold
+excess test risk
+\series default
+ (or 
+\series bold
+excess risk estimate
+\series default
+) is similarly 
+\begin_inset Formula $\hat{L}(\hat{\theta})-\rrisk(\hat{\theta}^{\mathrm{Bayes}})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Finally, central to this paper, we define the projection matrix space, and
+ the distribution on it:
+\end_layout
+
+\begin_layout Definition
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+ is the subset of 
+\begin_inset Formula $d$
+\end_inset
+
+-projection matrices that we draw our random projections from.
+ Each 
+\begin_inset Formula $A$
+\end_inset
+
+ is a matrix-valued random variable with some distribution on 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+.
+ The symbol 
+\begin_inset Formula $A_{1}$
+\end_inset
+
+ is used to denote a filtered random projection, the best matrix chosen
+ out of 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+ i.i.d.
+ candidates drawn from the distribution on 
+\begin_inset Formula $A$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Analogous assumptions and theorems
+\end_layout
+
+\begin_layout Standard
+The original method made three assumptions in order to deduce that excess
+ risk 
+\begin_inset Formula $\risk(\crpnhat)-\rrisk(\cbayes)$
+\end_inset
+
+ is bounded by a sum of expressions that do not depend on 
+\begin_inset Formula $p$
+\end_inset
+
+.
+ They are, in order and paraphrased:
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Assumption (A.1).
+
+\series default
+ 
+\begin_inset Formula $G_{n,1}$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{n,2}$
+\end_inset
+
+ have second derivatives at the voting threshold 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, where, given the true joint distribution of the training data 
+\begin_inset Formula $(X,Y)$
+\end_inset
+
+, 
+\begin_inset Formula $G_{n,i}$
+\end_inset
+
+ is the CDF of the probability that the base classifier 
+\begin_inset Formula $\hat{C}_{n}$
+\end_inset
+
+ will classify a random projection of 
+\begin_inset Formula $X$
+\end_inset
+
+ as class 
+\begin_inset Formula $i$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This assumption is used to show that the test error of the finite RPE classifier
+ 
+\begin_inset Formula $\crpnhat$
+\end_inset
+
+ (with choices of base classifier 
+\begin_inset Formula $\hat{C}_{n}$
+\end_inset
+
+, voting threshold 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, and finite ensemble size parameters 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+) is well-approximated by that of the infinite-simulation RPE classifier
+ 
+\begin_inset Formula $\crpnhatstar$
+\end_inset
+
+ (with the same choices of 
+\begin_inset Formula $\hat{C}_{n}$
+\end_inset
+
+ and 
+\begin_inset Formula $\alpha$
+\end_inset
+
+).
+ This result is 
+\series bold
+Theorem 1
+\series default
+, and does not involve the distribution on the projection matrices 
+\begin_inset Formula $A_{i}$
+\end_inset
+
+ other than that they are independent and identically distributed, and independe
+nt of 
+\begin_inset Formula $(X,Y)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We will be deriving an improved version of Theorem 1 from a tightened Assumption
+ (A.1) later on in this paper, and showing that the axis-aligned filtering
+ procedure implemented in the package satisfies (A.1).
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Theorem 2
+\series default
+, bounding 
+\begin_inset Formula $\risk(\crpnhatstar)-\rrisk(\cbayes)$
+\end_inset
+
+, does not involve the distribution on the projection matrices 
+\begin_inset Formula $A_{i}$
+\end_inset
+
+ other than that they are independent and identically distributed, and independe
+nt of 
+\begin_inset Formula $(X,Y)$
+\end_inset
+
+.
+ Thus, this result pulls smoothly into the axis-aligned case.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The next assumption involves the production of a good selection of random
+ projections by taking the best projection in each row from a 
+\begin_inset Formula $B_{1}\times B_{2}$
+\end_inset
+
+-sized grid of i.i.d.
+ random projections from some base distribution (Haar measure as generally
+ discussed in the original paper).
+ To make conclusions about the test error of such a screened-Haar RPE classifier
+, we define 
+\begin_inset Formula $\beta_{n}(j)$
+\end_inset
+
+ as the discrete CDF of 
+\begin_inset Formula $n\left(\hat{L}_{n}^{A}-\hat{L}_{n}^{*}\right)$
+\end_inset
+
+ (which is the random variable 
+\begin_inset Formula $n\hat{L}_{n}^{A}=\sum_{(x,y)}I(\hat{C}_{n}^{A}(x)\neq y)$
+\end_inset
+
+ minus a constant, where 
+\begin_inset Formula $X,Y$
+\end_inset
+
+ are known and 
+\begin_inset Formula $A$
+\end_inset
+
+ is random).
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Assumption (A.2).
+
+\series default
+ There is some 
+\begin_inset Formula $B_{0}\in(0,1)$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta,\rho>0$
+\end_inset
+
+ such that the histogram 
+\begin_inset Formula $\beta_{n}(j)$
+\end_inset
+
+ is bounded below by the discrete CDF 
+\begin_inset Formula $\beta_{0}+\frac{\beta j^{\rho}}{n^{\rho}}$
+\end_inset
+
+ for all 
+\begin_inset Formula $j$
+\end_inset
+
+ below 
+\begin_inset Formula $n\left(\frac{\log^{2}B_{2}}{\beta B_{2}}\right)^{1/\rho}+1$
+\end_inset
+
+.
+ It is particularly noted that as 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+ goes up, the strength of the condition decreases (a smaller bit of the
+ left side of the CDF is constrained).
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From this, 
+\series bold
+Proposition 3
+\series default
+ bounds the expected excess risk 
+\begin_inset Formula $\mathbb{E}(\risk_{n}^{A_{1}})-\rrisk(\cbayes)$
+\end_inset
+
+ of a 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+-filtered projection by an expression involving 
+\begin_inset Formula $\hat{L}_{n}^{*}-\rrisk(\cbayes)$
+\end_inset
+
+, the excess risk estimate of the infinite-projection RPE classifier, which
+ leads naturally to the next step of trying to bound that.
+ Intuitively, we expect this to be small when the Bayes classifier indeed
+ only takes into account 
+\begin_inset Formula $d$
+\end_inset
+
+ of the dimensions, which leads to the following definition and assumption:
+\end_layout
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\cabayes}{C^{A-\mathrm{Bayes}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\rabayes}{\rrisk^{A-\mathrm{Bayes}}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Definition
+Let 
+\begin_inset Formula $\cabayes$
+\end_inset
+
+ be the 
+\series bold
+projected Bayes classifier
+\series default
+, defined as the Bayes classifier on the joint distribution 
+\begin_inset Formula $(AX,Y)$
+\end_inset
+
+, and 
+\begin_inset Formula $\rabayes$
+\end_inset
+
+ its risk.
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Assumption (A.3).
+
+\series default
+ There is some projection 
+\begin_inset Formula $A^{*}\in\mathcal{A}$
+\end_inset
+
+ such that the Bayes classifier and the projected Bayes classifier are the
+ same except on a set of measure zero.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Proposition 4
+\series default
+ goes to show that (A.3) holds under the sufficient dimension reduction condition
+ (there exists a dimension reduction 
+\begin_inset Formula $R$
+\end_inset
+
+ such that 
+\begin_inset Formula $R(X)$
+\end_inset
+
+ is sufficient, ie.
+ 
+\begin_inset Formula $Y\,|\, R(X)$
+\end_inset
+
+ has the same distribution as 
+\begin_inset Formula $Y\,|\, X$
+\end_inset
+
+).
+ Naturally one would expect that if (A.3) holds, 
+\begin_inset Formula $\hat{L}_{n}^{*}$
+\end_inset
+
+ the estimated risk of the infinite-projection RPE classifier, close to
+ 
+\begin_inset Formula $\rrisk(\cbayes)$
+\end_inset
+
+ (which is the term we left off with after Proposition 3), which is quantified
+ in 
+\series bold
+Theorem 5
+\series default
+.
+\end_layout
+
+\begin_layout Section
+Axis-Aligned Theory
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename G_ni.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename G_ni_axis.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The emprical 
+\begin_inset Formula $G_{n,i}$
+\end_inset
+
+ curves for the standard run (
+\begin_inset Formula $B_{1}=B_{2}=100$
+\end_inset
+
+) of Model 1 (
+\begin_inset Formula $n_{\mathrm{train}}=50$
+\end_inset
+
+) with RPE-H LDA (left) versus RPE-A LDA (right), averaged over 10 instances.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "std-run-g-curves"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The natural place to wedge in our axis-aligned version of the method would
+ be right in the beginning at Assumption (A.1) -- central to Theorem 1, the
+ most involved theoretical result in the paper, are the 
+\begin_inset Formula $G_{n,i}$
+\end_inset
+
+ curves.
+ They are estimated and plotted in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "std-run-g-curves"
+
+\end_inset
+
+ for a standard run of Model 1 with both RPE-H LDA and RPE-A LDA.
+ (Note that adjusting 
+\begin_inset Formula $n_{\mathrm{train}}$
+\end_inset
+
+ changes the shape of these curves, which is why they've been averaged over
+ 10 instances instead of simply run on 10 times more data.)
+\end_layout
+
+\begin_layout Standard
+Although it's not evident in these plots, observe that finite 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+ implies a discrete distribution on 
+\begin_inset Formula $A$
+\end_inset
+
+, which implies that the 
+\begin_inset Formula $G_{n,i}$
+\end_inset
+
+ are step functions -- a much stronger assumption than second-differentiablility
+ at the voting threshold 
+\begin_inset Formula $\alpha$
+\end_inset
+
+!
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename G_ni_mini.png
+	scale 40
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename G_ni_mini_axis.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The emperical 
+\begin_inset Formula $G_{n,i}$
+\end_inset
+
+ curves for a mini-run (Model 0 with 
+\begin_inset Formula $p=5$
+\end_inset
+
+ and 
+\begin_inset Formula $d=2$
+\end_inset
+
+), again with RPE-H LDA (left) and RPE-A LDA (right), averaged over 10 instances.
+ The difference is much clearer.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "mini-run-g-curves"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As a much clearer illustration, Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "mini-run-g-curves"
+
+\end_inset
+
+ shows these curves for Model 0 with 
+\begin_inset Formula $p=5$
+\end_inset
+
+ and 
+\begin_inset Formula $d=2$
+\end_inset
+
+, giving 
+\begin_inset Formula $||\mathcal{A}||=\binom{5}{2}=10$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Theorem 2 does not depend on the distribution of 
+\begin_inset Formula $A$
+\end_inset
+
+ as the last paragraph of Section 2 of the original paper clearly states.
+ After this point (ie.
+ in Section 3), 
+\begin_inset Formula $A$
+\end_inset
+
+ refers to a non-filtered random projection, and 
+\begin_inset Formula $A_{1}$
+\end_inset
+
+ refers to a filtered random projection.
+\end_layout
+
+\begin_layout Standard
+The CDF 
+\begin_inset Formula $\beta_{n}(j)$
+\end_inset
+
+ can still be defined, where 
+\begin_inset Formula $A$
+\end_inset
+
+ is now distributed uniformly on the set of axis-aligned projection matrices,
+ so Assumption (A.2) and Proposition 3 can remain unchanged (where 
+\begin_inset Formula $A_{1}$
+\end_inset
+
+ is now distributed as 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+-filtered axis-aligned projection matrices).
+\end_layout
+
+\begin_layout Standard
+Assumption (A.3) has a simple modification (compatible with Proposition 4)
+ to make Theorem 5 hold for axis-aligned projections:
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Assumption (A.3').
+
+\series default
+ There is some 
+\emph on
+axis-aligned
+\emph default
+ projection 
+\begin_inset Formula $A^{*}\in\mathcal{A}$
+\end_inset
+
+ such that the Bayes classifier and the projected Bayes classifier are the
+ same except on a set of measure zero.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, all that's left to fill in are the new (A.1) and Theorem 1 (and replacing
+ the Theorem 1-derived part in Theorem 5's bound with the corresponding
+ new and improved expression).
+\end_layout
+
+\begin_layout Section
+New Theorem
+\end_layout
+
+\begin_layout Standard
+We revise Assumption (A.1):
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Assumption (A.1').
+
+\series default
+ 
+\begin_inset Formula $G_{n,1}$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{n,2}$
+\end_inset
+
+ are constant in a neighborhood of 
+\begin_inset Formula $\alpha$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is easy to show that this assumption holds for our axis-aligned case.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proposition
+Assumption (A.1') holds for 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+ as the set of axis-aligned 
+\begin_inset Formula $d\times p$
+\end_inset
+
+ projections (or any subset thereof) and 
+\begin_inset Formula $A$
+\end_inset
+
+ a matrix-valued random variable with this set as its support (with some
+ distribution
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+for example, uniform over 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+, or as is done in the package, chosen from the best of 
+\begin_inset Formula $B_{2}$
+\end_inset
+
+ uniform candidates
+\end_layout
+
+\end_inset
+
+ given by probabilities 
+\begin_inset Formula $q_{B}$
+\end_inset
+
+ for all 
+\begin_inset Formula $B\in\mathcal{A}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Proof
+We have that 
+\begin_inset Formula 
+\begin{eqnarray*}
+G_{n,1}(\alpha) & = & \mathbb{P}\left\{ \mathbb{P}\left\{ \hat{C}_{n}^{A}(X)=1\,\Big|\, X\right\} \leq\alpha\,\Big|\, Y=1\right\} \\
+ & = & \mathbb{P}\left\{ \sum_{B\in\mathcal{A}}q_{B}I\left\{ \hat{C}_{n}^{B}(X)=1\right\} \leq\alpha\,\Big|\, Y=1\right\} 
+\end{eqnarray*}
+
+\end_inset
+
+ is the CDF of a finite weighted sum of indicators.
+ It can be seen as a step function with 
+\begin_inset Formula $||\mathcal{A}||$
+\end_inset
+
+ jumps; let the set of the horizontal locations of these jumps be 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+ and let the corresponding vertical heights be 
+\begin_inset Formula $s_{r}$
+\end_inset
+
+ (ie.
+ such that 
+\begin_inset Formula $\sum_{r\in R_{1}}s_{r}=1$
+\end_inset
+
+).
+ Note that 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+ has measure zero inside 
+\begin_inset Formula $[0,1]$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{n,1}$
+\end_inset
+
+ is flat (thus has zero first and second derivatives) outside of 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Proof
+The same holds for 
+\begin_inset Formula $G_{n,2}$
+\end_inset
+
+; let the horizontal locations of its jumps be 
+\begin_inset Formula $R_{2}$
+\end_inset
+
+ and the vertical heights be 
+\begin_inset Formula $t_{r}$
+\end_inset
+
+ analogously.
+\end_layout
+
+\begin_layout Proof
+Then 
+\begin_inset Formula $R=R_{1}\cup R_{2}$
+\end_inset
+
+ satisfies the assumption.
+\end_layout
+
+\begin_layout Standard
+Note that the set 
+\begin_inset Formula $R$
+\end_inset
+
+ has cardinality at most 
+\begin_inset Formula $2||\mathcal{A}||=2\binom{p}{d}\leq2\frac{p^{d}}{d!}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now we design an analogous version of Theorem 1:
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+Theorem 1'.
+
+\series default
+ 
+\emph on
+Assume (A.1').
+ Then 
+\begin_inset Formula 
+\[
+\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)=o\left(B_{1}^{-M}\right)
+\]
+
+\end_inset
+
+ as 
+\begin_inset Formula $B_{1}\to\infty$
+\end_inset
+
+ for all 
+\begin_inset Formula $M\in\mathbb{N}$
+\end_inset
+
+.
+\emph default
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\noindent
+Note that here 
+\begin_inset Formula $\crpnhatstar$
+\end_inset
+
+ represents the infinite axis-aligned projection RPE classifier, so that
+ although this bound is tighter, the infinite projection classifier we're
+ approximating may be farther from the Bayes classifier than the general
+ case.
+ To deal with this, we modify (A.3) so that 
+\begin_inset Formula $A^{*}$
+\end_inset
+
+ must be axis-aligned.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+As before we have 
+\begin_inset Formula 
+\begin{eqnarray*}
+\risk(\crpnhat) & = & \pi_{1}\mathbb{P}\left\{ \crpnhat(X)=2\,|\, Y=1\right\} +\pi_{2}\mathbb{P}\left\{ \crpnhat(X)=1\,|\, Y=2\right\} \\
+ & = & \pi_{1}\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)<\alpha\,|\, Y=1\right\} +\pi_{2}\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)\geq\alpha\,|\, Y=2\right\} 
+\end{eqnarray*}
+
+\end_inset
+
+ where 
+\begin_inset Formula $\hat{\nu}_{n}^{B_{1}}(x):=\frac{1}{B_{1}}\sum_{b_{1}=1}^{B_{1}}I\left\{ \hat{C}_{n}^{A_{b_{1}}}(x)=1\right\} $
+\end_inset
+
+.
+ Conditional on the mean 
+\begin_inset Formula $\hat{\mu}_{n}(X)=\theta$
+\end_inset
+
+ of the 
+\begin_inset Formula $I\left\{ \hat{C}_{n}^{A_{b_{1}}}(x)=1\right\} $
+\end_inset
+
+, they are i.i.d.
+ 
+\begin_inset Formula $\mathrm{Bern}(\theta)$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $G_{n,1}$
+\end_inset
+
+ is the CDF of 
+\begin_inset Formula $\hat{\mu}_{n}(X)\,|\,\{Y=1\}$
+\end_inset
+
+, we can write 
+\begin_inset Formula 
+\begin{eqnarray*}
+\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)<\alpha\,|\, Y=1\right\}  & = & \int_{0}^{1}\!\mathbb{P}\left\{ \frac{1}{B_{1}}\sum_{b_{1}=1}^{B_{1}}I\left\{ \hat{C}_{n}^{A_{b_{1}}}(x)=1\right\} <\alpha\,\bigg|\,\hat{\mu}_{n}(X)=\theta\right\} \, dG_{n,1}(\theta)\\
+ & = & \int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)\, dG_{n,1}(\theta)
+\end{eqnarray*}
+
+\end_inset
+
+ for 
+\begin_inset Formula $T\sim\mathrm{Bin}(B_{1},\theta)$
+\end_inset
+
+.
+ Combining with the similar result for 
+\begin_inset Formula $G_{n,2}$
+\end_inset
+
+ gives 
+\begin_inset Formula 
+\[
+\risk(\crpnhat)=\pi_{2}+\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)\, dG_{n}^{\circ}(\theta)
+\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $G_{n}^{\circ}=\pi_{1}G_{n,1}-\pi_{2}G_{n,2}$
+\end_inset
+
+.
+ Combining with the fact that 
+\begin_inset Formula 
+\[
+\risk\left(\crpnhatstar\right)=\pi_{1}G_{n,1}(\alpha)+\pi_{2}\left(1-G_{n,2}(\alpha)\right)
+\]
+
+\end_inset
+
+ gives 
+\begin_inset Formula 
+\[
+\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)=\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\, dG_{n}^{\circ}(\theta)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+As before we show that 
+\begin_inset Formula 
+\[
+\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\, dG_{n}^{\circ}(\theta)=\int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\, dG_{n}^{\circ}(\theta)+o(B_{1}^{-M})
+\]
+
+\end_inset
+
+ as 
+\begin_inset Formula $B_{1}\to\infty$
+\end_inset
+
+ for all 
+\begin_inset Formula $M\in\mathbb{N}$
+\end_inset
+
+, by Hoeffding's inequality: for 
+\begin_inset Formula $\epsilon=\frac{\log B_{1}}{\sqrt{B_{1}}}$
+\end_inset
+
+ and all 
+\begin_inset Formula $M$
+\end_inset
+
+ we have 
+\begin_inset Formula 
+\[
+\sup_{|\theta-\alpha|\geq\epsilon}\left|\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\right|\leq\sup_{|\theta-\alpha|\geq\epsilon}\exp\left\{ -2B_{1}(\theta-\alpha)^{2}\right\} \leq e^{-2\log^{2}B_{1}}=o(B_{1}^{-M})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+Let 
+\begin_inset Formula $I=(\alpha-\epsilon,\alpha+\epsilon)$
+\end_inset
+
+.
+ Note that 
+\begin_inset Formula $G_{n,1}$
+\end_inset
+
+ is the CDF of a discrete random variable with values 
+\begin_inset Formula $r\in R_{1}$
+\end_inset
+
+ and probabilities 
+\begin_inset Formula $s_{r}$
+\end_inset
+
+, so that 
+\begin_inset Formula 
+\begin{eqnarray*}
+\int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\, dG_{n}^{\circ}(\theta) & = & \pi_{1}\sum_{r\in R_{1}\cap I}s_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)\\
+ &  & -\pi_{2}\sum_{r\in R_{2}\cap I}s_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)
+\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+From here, we can already conclude: we can make both 
+\begin_inset Formula $R_{1}\cap I$
+\end_inset
+
+ and 
+\begin_inset Formula $R_{2}\cap I$
+\end_inset
+
+ empty by setting 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ high enough that 
+\begin_inset Formula $\epsilon<\min_{r\in R_{1}\cup R_{2}}|\alpha-r|$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $\epsilon=\frac{\log B_{1}}{\sqrt{B_{1}}}$
+\end_inset
+
+ is strictly decreasing in 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ for all 
+\begin_inset Formula $B_{1}>1$
+\end_inset
+
+, and has inverse involving the Lambert 
+\begin_inset Formula $W$
+\end_inset
+
+ function: 
+\begin_inset Formula $B_{1}=\exp\left(-2W_{-1}(-\frac{\epsilon}{2})\right)$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In other words, one can get bounds exponentially close to 
+\begin_inset Formula $\crpnhatstar$
+\end_inset
+
+ (the infinite axis-aligned projection classifier), as opposed to only linearly
+ close to the general infinite projection classifier.
+ Unfortunately this exponential behavior does not kick in until 
+\begin_inset Formula $B_{1}>\exp\left(-2W_{-1}(-\frac{\min|\alpha-r|}{2})\right)$
+\end_inset
+
+, which grows very quickly in 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $d$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+An issue might arise with the determination of 
+\begin_inset Formula $\min|\alpha-r|$
+\end_inset
+
+.
+ In real life, we only know 
+\begin_inset Formula $\hat{\pi}_{1}n_{\mathrm{train}}$
+\end_inset
+
+ elements of 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+, which is generally not anywhere close to the cardinality of 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+ (which can be as big as 
+\begin_inset Formula $2^{||\mathcal{A}||}=2^{\binom{p}{d}}$
+\end_inset
+
+).
+ However, we can estimate 
+\begin_inset Formula $\min|\alpha-r_{1}|$
+\end_inset
+
+ by the following procedure:
+\end_layout
+
+\begin_layout Enumerate
+Smooth 
+\begin_inset Formula $\hat{g}_{n,1}$
+\end_inset
+
+ (by, for instance, taking 
+\begin_inset Formula $\tilde{g}_{n,1}$
+\end_inset
+
+ as the sum of Gaussians at each known element of 
+\begin_inset Formula $R_{1}$
+\end_inset
+
+ with some specified bandwidth).
+\end_layout
+
+\begin_layout Enumerate
+Evaluate this smoothed emperical density at 
+\begin_inset Formula $\alpha$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Note that on average, a 
+\begin_inset Formula $\tilde{g}_{n,1}(\alpha)\times\delta$
+\end_inset
+
+ slice of the density will contain 
+\begin_inset Formula $\tilde{g}_{n,1}\delta||R_{1}||$
+\end_inset
+
+ points; setting this to 1 gives 
+\begin_inset Formula $\delta=\frac{1}{\tilde{g}_{n,1}(\alpha)\cdot||R_{1}||}$
+\end_inset
+
+ as our estimate for 
+\begin_inset Formula $\min|\alpha-r_{1}|$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\tilde{g}_{n,1}(\alpha)$
+\end_inset
+
+ doesn't vanish quickly enough, this expression will be dominated by the
+ exponential behavior of 
+\begin_inset Formula $||R_{1}||$
+\end_inset
+
+.
+ Combined with previous observations, this means that generally we need
+ 
+\begin_inset Formula 
+\[
+B_{1}>\exp\left\{ -2W_{-1}\left(-\frac{1}{2^{\binom{p}{d}+1}\tilde{g}_{n,1}(\alpha)}\right)\right\} 
+\]
+
+\end_inset
+
+ (unfortunately 
+\begin_inset Formula $W_{-1}$
+\end_inset
+
+, also known as the product logarithm, vanishes more slowly than the logarithm
+ -- see the next section).
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename aa-b1-as-func-of-eps.PNG
+	scale 80
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Lower bound for 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ as a function of upper bound for 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "aa-b1-as-func-of-eps"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Although the theorem is impressive at first glance, the lower bound for
+ 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ before the exponential decay of error in Theorem 1' kicks in is very large
+ and grows extremely quickly in 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $d$
+\end_inset
+
+, as a result of the exponential (see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "aa-b1-as-func-of-eps"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+If we have a good method of optimizing projections, then 
+\begin_inset Formula $g_{n,1}$
+\end_inset
+
+ and 
+\begin_inset Formula $g_{n,2}$
+\end_inset
+
+ (the distribution functions from which we draw 
+\begin_inset Formula $r_{1}\in R_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $r_{2}\in R_{2}$
+\end_inset
+
+ respectively) would tend to be skewed far left and far right respectively.
+ Optimal values of 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ would then be in the middle, where 
+\begin_inset Formula $R_{1}\cup R_{2}$
+\end_inset
+
+ is much less dense, and thus 
+\begin_inset Formula $\min|r-\alpha|$
+\end_inset
+
+ larger, allowing for exponential behavior with lower 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename r1_dist.png
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $g_{n,1}$
+\end_inset
+
+ (the distribution of 
+\begin_inset Formula $r_{1}=\mathbb{P}\left(\hat{C}_{n}^{A}(X)=1\,|\, X,Y=1\right)$
+\end_inset
+
+) for Model 1 with standard parameters, estimated from 10 runs.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "r1-dist"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This theoretical result would go hand-in-hand with a good algorithm for
+ choosing projections.
+ For instance, if the projection optimization algorithm never (or very rarely)
+ gives 
+\begin_inset Formula $A_{1}$
+\end_inset
+
+ for which 
+\begin_inset Formula $\max r_{1}<\alpha-\varepsilon$
+\end_inset
+
+ or 
+\begin_inset Formula $\max r_{2}>\alpha+\varepsilon$
+\end_inset
+
+ -- ie.
+ if 
+\begin_inset Formula $\alpha=0.5$
+\end_inset
+
+ and 
+\begin_inset Formula $\varepsilon=0.01$
+\end_inset
+
+ and the projection optimization algorithm's chosen projections shows 
+\begin_inset Formula $\max r_{1}<0.49$
+\end_inset
+
+ and 
+\begin_inset Formula $\min r_{2}>0.51$
+\end_inset
+
+ on the data, then we have a fairly good guarantee that on the true population,
+ 
+\begin_inset Formula $r_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $r_{2}$
+\end_inset
+
+ very rarely cross these thresholds, so that the point at which exponential
+ behavior starts might be reasonable.
+\end_layout
+
+\begin_layout Standard
+Of course, to quantify this 
+\begin_inset Quotes eld
+\end_inset
+
+very rarely
+\begin_inset Quotes erd
+\end_inset
+
+ we can refer back to the final note in the previous section -- we need
+ 
+\begin_inset Formula $g_{n,1}(\alpha)$
+\end_inset
+
+ at a value of 
+\begin_inset Formula $2^{-\binom{p}{d}+1}$
+\end_inset
+
+ to put the minimum 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ for exponential behavior at 
+\begin_inset Formula $74.2$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Ideally (and this is a statement that doesn't only apply to Theorem 1',
+ but to Theorem 1 as well!) we would have an algorithm for 
+\begin_inset Formula $A_{1}$
+\end_inset
+
+ that never lets 
+\begin_inset Formula $r_{1}$
+\end_inset
+
+ or 
+\begin_inset Formula $r_{2}\in(\alpha-\varepsilon,\alpha+\varepsilon)$
+\end_inset
+
+ -- then 
+\begin_inset Formula $\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)$
+\end_inset
+
+ would decay exponentially in 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ without a minimum 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ that depends on 
+\begin_inset Formula $p$
+\end_inset
+
+ and 
+\begin_inset Formula $d$
+\end_inset
+
+.
+ This would apply even to Haar or other base distibutions on projection
+ matrix space.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "2015-06-24-axis-aligned-theorem-references"
+options "amsalpha"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

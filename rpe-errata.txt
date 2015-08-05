@@ -8,3 +8,5 @@ In readChar(con, 5L, useBytes = TRUE) :
   cannot open compressed file 'R.RData', probable reason 'No such file or directory'
 (wrong/hardcoded path to data file? I can directly load R.RData, so the file is there in the package.)
 - RPModel(5) not implemented, although it's pretty simple. We can put in my implementation?
+- RPalpha: G.n.1 and G.n.2 are between 1 and 2 (instead of between 0 and 1), although this is accounted for in
+  optimise()
