@@ -88,7 +88,7 @@ mcmc_step = function(m) {
 
 #' Main routine
 #' 
-mcmc_optimize = function(data, R = 10000, p = 50, d = 5, initialmethod = "Haar",
+mcmc_optimize = function(data, B2 = 1000, p = 50, d = 5, initialmethod = "Haar",
 		classifier = "lda", estmethod = "insample") {
 	
 	# Generate random matrix (ie. from prior specified by initialmethod)
@@ -99,7 +99,7 @@ mcmc_optimize = function(data, R = 10000, p = 50, d = 5, initialmethod = "Haar",
 	cat(paste0("Initial misclassification rate: ", m_err, "\n"))
 	
 	# Run Markov chain for a total of R steps
-	for(i in 1:R) {
+	for(i in 1:B2) {
 		#cat(paste0("Iteration ", i, "\n"))
 		
 		# Make proposal

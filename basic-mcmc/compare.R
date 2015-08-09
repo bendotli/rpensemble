@@ -23,14 +23,14 @@ compare.no.optimization = function(R = 100) {
 		" pm ", sd(results)/sqrt(R), "\n\n"))
 }
 
-# Compare performance of 1 projection, filtered out of n_filter
-compare.filter = function(R = 100, n_filter = 10000) {
+# Compare performance of 1 projection, filtered out of B2
+compare.filter = function(R = 100, B2 = 1000) {
 	cl = makeCluster(detectCores() - 1)
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 
 	results = parSapply(cl, 1:R, function(i) {
 				data = basic.model()$train
-				err = replicate(n_filter,
+				err = replicate(B2,
 						run_classifier(project(data, generate_random_matrix())))
 				return(min(err))
 			})
@@ -43,13 +43,13 @@ compare.filter = function(R = 100, n_filter = 10000) {
 
 
 # Compare performance of 1 projection, MCMC optimization
-compare.mcmc = function(R = 100) {
+compare.mcmc = function(R = 100, B2 = 1000) {
 	cl = makeCluster(detectCores() - 1)
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 	
 	results = parSapply(cl, 1:R, function(i) {
 				data = basic.model()$train
-				m = mcmc_optimize(data)
+				m = mcmc_optimize(data, B2 = B2)
 				return(run_classifier(project(data, m)))
 			})
 	
