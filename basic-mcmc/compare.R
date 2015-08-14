@@ -12,9 +12,9 @@ compare.no.optimization = function(R = 100) {
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 	
 	results = parSapply(cl, 1:R, function(i) {
-				data = basic.model()$train
+				dte = basic.model()$test
 				m = generate_random_matrix()
-				return(run_classifier(project(data, m)))
+				return(run_classifier(project(dte, m)))
 			})
 	
 	stopCluster(cl)
@@ -29,10 +29,13 @@ compare.filter = function(R = 100, B2 = 1000) {
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 
 	results = parSapply(cl, 1:R, function(i) {
-				data = basic.model()$train
-				err = replicate(B2,
-						run_classifier(project(data, generate_random_matrix())))
-				return(min(err))
+				data = basic.model()
+				mats = lapply(1:B2, function(...)
+						return(generate_random_matrix()))
+				errs = lapply(mats, function(mat)
+						return(run_classifier(project(data$train, mat))))
+				mat = mats[[which.min(errs)]]
+				return(run_classifier(project(data$test, mat)))
 			})
 
 	stopCluster(cl)
@@ -48,9 +51,9 @@ compare.mcmc = function(R = 100, B2 = 1000) {
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 	
 	results = parSapply(cl, 1:R, function(i) {
-				data = basic.model()$train
-				m = mcmc_optimize(data, B2 = B2)
-				return(run_classifier(project(data, m)))
+				data = basic.model()
+				m = mcmc_optimize(data$train, B2 = B2)
+				return(run_classifier(project(data$test, m)))
 			})
 	
 	stopCluster(cl)
@@ -59,6 +62,7 @@ compare.mcmc = function(R = 100, B2 = 1000) {
 		" pm ", sd(results)/sqrt(R), "\n\n"))
 }
 
+
 # Small utility functions
 class.labels.to.integers = function(label) {
 	if(label == "class.1") return(1); return(2);
@@ -66,6 +70,7 @@ class.labels.to.integers = function(label) {
 class.labels.to.strings = function(label) {
 	if(label == 1) return("class.1"); return("class.2");
 }
+
 
 # Compare performance of B1 projections, MCMC optimization
 compare.ensemble.mcmc = function(R = 100, B1 = 100, B2 = 100) {
