@@ -82,7 +82,7 @@ summarize.ensemble.mcmc = function(R = 100, B1 = 100, B2 = 100) {
 	cat("Ensemble, MCMC posterior predictive sampling\n")
 	
 	info = function(modelnum) {
-		results = parSapply(1:R, function(i) {
+		results = parSapply(cl, 1:R, function(i) {
 					data = match.fun(paste0("model.", modelnum))()
 					
 					# Get B1 (independently) optimized projections over training set
