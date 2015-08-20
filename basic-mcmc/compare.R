@@ -117,7 +117,7 @@ summarize.ensemble.mcmc = function(R = 100, B1 = 100, B2 = 100) {
 					out = sapply(vote, class.labels.to.strings)
 					
 					# Return misclassification rate on test set
-					return(out != data$test$y)
+					return(mean(out != data$test$y))
 				})
 		cat(paste0("Model ", modelnum, ": ", mean(results),
 						" pm ", sd(results)/sqrt(R), "\n"))
@@ -129,6 +129,25 @@ summarize.ensemble.mcmc = function(R = 100, B1 = 100, B2 = 100) {
 	stopCluster(cl)
 }
 
-summarize.ensemble.bruteforce = function(R = 100, B1 = 100, B2 = 100) {
+summarize.ensemble.bruteforce = function(R = 100) {
+	cl = makeCluster(detectCores() - 1)
+	clusterEvalQ(cl, source("basic-mcmc/core.R"))
+	clusterExport(cl, "class.labels.to.integers")
+	clusterExport(cl, "class.labels.to.strings")
 	
+	cat("Ensemble, bruteforce optimization\n")
+	
+	info = function(modelnum) {
+		results = parSapply(cl, 1:R, function(i) {
+					data = match.fun(paste0("model.", modelnum))()
+					return(compare.haar.rpe.lda(data))
+				})
+		cat(paste0("Model ", modelnum, ": ", mean(results),
+						" pm ", sd(results)/sqrt(R), "\n"))
+	}
+	lapply(1:5, info)
+	
+	cat("\n")
+	
+	stopCluster(cl)
 }
