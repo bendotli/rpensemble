@@ -1,8 +1,16 @@
 require(RPEnsemble) || install.packages("RPEnsemble")
 
+#' RPEnsemble package expects class labels to be integers in {1, 2}
+
+format.class.labels = function(train) {
+	train$y = sapply(train$y, function(label) {
+				if(label == "class.1") return(1); return(2); })
+	return(train)
+}
+
 compare.haar.rpe.knn = function(data) {
-	train = data$train
-	test = data$test
+	train = format.class.labels(data$train)
+	test = format.class.labels(data$test)
 	n_train = length(train$y)
 	n_test = length(test$y)
 	p = ncol(train)-1
@@ -29,8 +37,8 @@ compare.haar.rpe.knn = function(data) {
 }
 
 compare.axis.rpe.knn = function(data) {
-	train = data$train
-	test = data$test
+	train = format.class.labels(data$train)
+	test = format.class.labels(data$test)
 	n_train = length(train$y)
 	n_test = length(test$y)
 	p = ncol(train)-1
@@ -58,8 +66,8 @@ compare.axis.rpe.knn = function(data) {
 }
 
 compare.haar.rpe.knn2 = function(data) {
-	train = data$train
-	test = data$test
+	train = format.class.labels(data$train)
+	test = format.class.labels(data$test)
 	n_train = length(train$y)
 	n_test = length(test$y)
 	p = ncol(train)-1
@@ -86,8 +94,8 @@ compare.haar.rpe.knn2 = function(data) {
 }
 
 compare.axis.rpe.knn2 = function(data) {
-	train = data$train
-	test = data$test
+	train = format.class.labels(data$train)
+	test = format.class.labels(data$test)
 	n_train = length(train$y)
 	n_test = length(test$y)
 	p = ncol(train)-1
