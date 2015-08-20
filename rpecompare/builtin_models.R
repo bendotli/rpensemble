@@ -50,8 +50,8 @@ model.4 = function(p = 50, n_train = 50, n_test = 100, pi = 0.5) {
 model.5 = function(n_train = 50) { 
 	data("Ozone")
 	indicators = sample(1:512, size = n_train)
-	train = data.frame(x = Ozone$x[indicators,], y = factor(Ozone$y[indicators], labels = c("class.1", "class.2")))
-	test = data.frame(x = Ozone$x[-indicators,], y = factor(Ozone$y[-indicators], labels = c("class.1", "class.2")))
+	train = data.frame(x = Ozone$x[indicators, 1:50], y = factor(Ozone$y[indicators], labels = c("class.1", "class.2")))
+	test = data.frame(x = Ozone$x[-indicators, 1:50], y = factor(Ozone$y[-indicators], labels = c("class.1", "class.2")))
 	
 	return(list(train = train, test = test))
 }
