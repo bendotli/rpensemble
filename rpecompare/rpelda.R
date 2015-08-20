@@ -8,7 +8,7 @@ require(RPEnsemble) || install.packages("RPEnsemble")
 #' RPEnsemble package expects class labels to be integers in {1, 2}
 
 format.class.labels = function(train) {
-	train$y = lapply(train$y, function(label) {
+	train$y = sapply(train$y, function(label) {
 				if(label == "class.1") return(1); return(2); })
 	return(train)
 }
