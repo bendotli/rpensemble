@@ -88,7 +88,7 @@ mcmc_step = function(m) {
 
 #' Main routine
 #' 
-mcmc_optimize = function(data, B2 = 1000, p = 50, d = 5, initialmethod = "Haar",
+mcmc_optimize = function(data, B2 = 100, p = 50, d = 5, initialmethod = "Haar",
 		classifier = "lda", estmethod = "insample") {
 	
 	# Generate random matrix (ie. from prior specified by initialmethod)

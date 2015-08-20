@@ -24,7 +24,7 @@ compare.no.optimization = function(R = 100) {
 }
 
 # Compare performance of 1 projection, filtered out of B2
-compare.filter = function(R = 100, B2 = 1000) {
+compare.filter = function(R = 100, B2 = 100) {
 	cl = makeCluster(detectCores() - 1)
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 
@@ -46,7 +46,7 @@ compare.filter = function(R = 100, B2 = 1000) {
 
 
 # Compare performance of 1 projection, MCMC optimization
-compare.mcmc = function(R = 100, B2 = 1000) {
+compare.mcmc = function(R = 100, B2 = 100) {
 	cl = makeCluster(detectCores() - 1)
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 	
