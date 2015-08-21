@@ -44,8 +44,8 @@ mcmc_accept = function(oldcost, newcost) {
 	# the probabilities. Here, our cost functions are misclassification rates
 	# so we take their difference from 1 to obtain the state probabilities.
 	hastings_ratio = (1-newcost)/(1-oldcost)
-	# Let's make it really cold
-	hastings_ratio = hastings_ratio^100
+#	# Let's make it really cold
+#	hastings_ratio = hastings_ratio^100
 	return(runif(1) < hastings_ratio)
 }
 
