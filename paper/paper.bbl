@@ -1,0 +1,84 @@
+\begin{thebibliography}{6}
+% BibTex style file: imsart-number.bst, 2013-01-28
+% Default style options (sort=1,type=number).
+% Used options (sort=1,type=number).
+
+\bibitem{Breiman01}
+\begin{barticle}[author]
+\bauthor{\bsnm{Breiman},~\bfnm{Leo}\binits{L.}}
+(\byear{2001}).
+\btitle{Random Forests}.
+\bjournal{Machine Learning}
+\bvolume{45}
+\bpages{5-32}.
+\bdoi{10.1023/A:1010933404324}
+\end{barticle}
+\endbibitem
+
+\bibitem{CS15}
+\begin{barticle}[author]
+\bauthor{\bsnm{Cannings},~\bfnm{Timothy~I.}\binits{T.~I.}} \AND
+  \bauthor{\bsnm{Samworth},~\bfnm{Richard~J.}\binits{R.~J.}}
+(\byear{2015}).
+\btitle{Random projection ensemble classification}.
+\bjournal{pre-print}.
+\bnote{arXiv:1504.04595v1}.
+\end{barticle}
+\endbibitem
+
+\bibitem{CGHJK96}
+\begin{binproceedings}[author]
+\bauthor{\bsnm{Corless},~\bfnm{R.~M.}\binits{R.~M.}},
+  \bauthor{\bsnm{Gonnet},~\bfnm{G.~H.}\binits{G.~H.}},
+  \bauthor{\bsnm{Hare},~\bfnm{D.~E.~G.}\binits{D.~E.~G.}},
+  \bauthor{\bsnm{Jeffrey},~\bfnm{D.~J.}\binits{D.~J.}} \AND
+  \bauthor{\bsnm{Knuth},~\bfnm{D.~E.}\binits{D.~E.}}
+(\byear{1996}).
+\btitle{On the Lambert W Function}.
+In \bbooktitle{Advances in Computational Mathematics}
+\bpages{329--359}.
+\end{binproceedings}
+\endbibitem
+
+\bibitem{DG03}
+\begin{barticle}[author]
+\bauthor{\bsnm{Dasgupta},~\bfnm{Sanjoy}\binits{S.}} \AND
+  \bauthor{\bsnm{Gupta},~\bfnm{Anupam}\binits{A.}}
+(\byear{2003}).
+\btitle{An elementary proof of a theorem of Johnson and Lindenstrauss}.
+\bjournal{Random Structures \& Algorithms}
+\bvolume{22}
+\bpages{60--65}.
+\bdoi{10.1002/rsa.10073}
+\end{barticle}
+\endbibitem
+
+\bibitem{FY98}
+\begin{barticle}[author]
+\bauthor{\bsnm{Fan},~\bfnm{Jianqing}\binits{J.}} \AND
+  \bauthor{\bsnm{Yao},~\bfnm{Qiwei}\binits{Q.}}
+(\byear{1998}).
+\btitle{Efficient estimation of conditional variance functions in stochastic
+  regression}.
+\bjournal{Biometrika}
+\bvolume{85}
+\bpages{645-660}.
+\bdoi{10.1093/biomet/85.3.645}
+\end{barticle}
+\endbibitem
+
+\bibitem{MRRTT53}
+\begin{barticle}[author]
+\bauthor{\bsnm{Metropolis},~\bfnm{Nicholas}\binits{N.}},
+  \bauthor{\bsnm{Rosenbluth},~\bfnm{Arianna~W.}\binits{A.~W.}},
+  \bauthor{\bsnm{Rosenbluth},~\bfnm{Marshall~N.}\binits{M.~N.}},
+  \bauthor{\bsnm{Teller},~\bfnm{Augusta~H.}\binits{A.~H.}} \AND
+  \bauthor{\bsnm{Teller},~\bfnm{Edward}\binits{E.}}
+(\byear{1953}).
+\btitle{Equation of State Calculations by Fast Computing Machines}.
+\bjournal{The Journal of Chemical Physics}
+\bvolume{21}.
+\end{barticle}
+\endbibitem
+
+\end{thebibliography}

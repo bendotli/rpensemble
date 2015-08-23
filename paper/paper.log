@@ -1,0 +1,440 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2015.8.19)  23 AUG 2015 11:34
+entering extended mode
+**paper.tex
+(C:\Users\Ben\Dropbox\root\Code\rpensemble\paper\paper.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
+abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
+croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
+lician, german, german-x-2013-05-26, greek, gujarati, hindi, hungarian, iceland
+ic, indonesian, interlingua, irish, italian, kannada, kurmanji, latin, latvian,
+ lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerman, n
+german-x-2013-05-26, nynorsk, oriya, panjabi, pinyin, polish, portuguese, roman
+ian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swissgerm
+an, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, usengl
+ishmax, welsh, loaded.
+(C:\Users\Ben\Dropbox\root\Code\rpensemble\paper\imsart.cls
+Document Class: imsart 2010/04/27 driver class for package imsart.sty
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\article.cls"
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\size10.clo"
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(C:\Users\Ben\Dropbox\root\Code\rpensemble\paper\imsart.sty
+File: imsart.sty 2014/10/16IMS article style (VS)
+
+No file imsart.cnf.
+\c@firstpage=\count87
+\c@lastpage=\count88
+\c@thanks=\count89
+\c@addressref=\count90
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+\c@emailref=\count91
+\c@author=\count92
+\c@address=\count93
+\sv@mathsurround=\dimen103
+\sv@parindent=\dimen104
+\fm@box=\box26
+\fm@size=\dimen105
+\t@xtheight=\dimen106
+\abstract@box=\box27
+\keyword@box=\box28
+\pre@kwd@depth=\dimen107
+\authors@list=\toks15
+\keywords@list=\toks16
+
+No file imsart-ejs.cnf.
+)) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amscls\amsthm.sty"
+Package: amsthm 2004/08/06 v2.20
+\thm@style=\toks17
+\thm@bodyfont=\toks18
+\thm@headfont=\toks19
+\thm@notefont=\toks20
+\thm@headpunct=\toks21
+\thm@preskip=\skip43
+\thm@postskip=\skip44
+\thm@headsep=\skip45
+\dth@everypar=\toks22
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsmath.sty"
+Package: amsmath 2013/01/14 v2.14 AMS math features
+\@mathmargin=\skip46
+
+For additional information on amsmath, use the `?' option.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amstext.sty"
+Package: amstext 2000/06/29 v2.01
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks23
+\ex@=\dimen108
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen109
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsmath\amsopn.sty"
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count94
+LaTeX Info: Redefining \frac on input line 210.
+\uproot@=\count95
+\leftroot@=\count96
+LaTeX Info: Redefining \overline on input line 306.
+\classnum@=\count97
+\DOTSCASE@=\count98
+LaTeX Info: Redefining \ldots on input line 378.
+LaTeX Info: Redefining \dots on input line 381.
+LaTeX Info: Redefining \cdots on input line 466.
+\Mathstrutbox@=\box29
+\strutbox@=\box30
+\big@size=\dimen110
+LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
+\macc@depth=\count99
+\c@MaxMatrixCols=\count100
+\dotsspace@=\muskip10
+\c@parentequation=\count101
+\dspbrk@lvl=\count102
+\tag@help=\toks24
+\row@=\count103
+\column@=\count104
+\maxfields@=\count105
+\andhelp@=\toks25
+\eqnshift@=\dimen111
+\alignsep@=\dimen112
+\tagshift@=\dimen113
+\tagwidth@=\dimen114
+\totwidth@=\dimen115
+\lineht@=\dimen116
+\@envbody=\toks26
+\multlinegap=\skip47
+\multlinetaggap=\skip48
+\mathdisplay@stack=\toks27
+LaTeX Info: Redefining \[ on input line 2665.
+LaTeX Info: Redefining \] on input line 2666.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\amssymb.sty"
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty"
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+
+
+Package amsfonts Warning: The 'psamsfonts' option is obsolete in AMSFonts v3.
+
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count106
+))
+\Gin@req@height=\dimen117
+\Gin@req@width=\dimen118
+)
+\c@definition=\count107
+\c@proposition=\count108
+\c@theorem=\count109
+
+(C:\Users\Ben\Dropbox\root\Code\rpensemble\paper\paper.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count110
+\scratchdimen=\dimen119
+\scratchbox=\box31
+\nofMPsegments=\count111
+\nofMParguments=\count112
+\everyMPshowfont=\toks28
+\MPscratchCnt=\count113
+\MPscratchDim=\dimen120
+\MPnumerator=\count114
+\makeMPintoPDFobject=\count115
+\everyMPtoPDFconversion=\toks29
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 45.
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 45.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [0{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}
+
+] [1]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 179.
+
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 179.
+ [2]
+Underfull \hbox (badness 10000) in paragraph at lines 186--190
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 192--197
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 217--226
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 228--235
+
+ []
+
+
+Overfull \hbox (3.61967pt too wide) in paragraph at lines 237--245
+[]\OT1/cmr/m/n/10 From this, \OT1/cmr/bx/n/10 Propo-si-tion 3 \OT1/cmr/m/n/10 b
+ounds the ex-pected ex-cess risk $\U/msb/m/n/10 E\OT1/cmr/m/n/10 (\OMS/cmsy/m/n
+/10 L[]\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10   R\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 
+C[]\OT1/cmr/m/n/10 )$
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 253--256
+
+ []
+
+<G_ni.png, id=36, 481.8pt x 481.8pt>
+File: G_ni.png Graphic file (type png)
+ <use G_ni.png>
+Package pdftex.def Info: G_ni.png used on input line 291.
+(pdftex.def)             Requested size: 168.63252pt x 168.63252pt.
+
+<G_ni_axis.png, id=37, 481.8pt x 481.8pt>
+File: G_ni_axis.png Graphic file (type png)
+ <use G_ni_axis.png>
+Package pdftex.def Info: G_ni_axis.png used on input line 291.
+(pdftex.def)             Requested size: 168.63252pt x 168.63252pt.
+ [4 <C:/Users/Ben/Dropbox/root/Code/rpensemble/paper/G_ni.png> <C:/Users/Ben/Dr
+opbox/root/Code/rpensemble/paper/G_ni_axis.png>] <G_ni_mini.png, id=47, 481.8pt
+ x 481.8pt>
+File: G_ni_mini.png Graphic file (type png)
+
+<use G_ni_mini.png>
+Package pdftex.def Info: G_ni_mini.png used on input line 318.
+(pdftex.def)             Requested size: 168.63252pt x 168.63252pt.
+ <G_ni_mini_axis.png, id=48, 481.8pt x 481.8pt>
+File: G_ni_mini_axis.png Graphic file (type png)
+
+<use G_ni_mini_axis.png>
+Package pdftex.def Info: G_ni_mini_axis.png used on input line 318.
+(pdftex.def)             Requested size: 168.63252pt x 168.63252pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 342--344
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 346--350
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 359--360
+
+ []
+
+[5 <C:/Users/Ben/Dropbox/root/Code/rpensemble/paper/G_ni_mini.png> <C:/Users/Be
+n/Dropbox/root/Code/rpensemble/paper/G_ni_mini_axis.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 361--363
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 395--396
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 398--399
+
+ []
+
+[6]
+Overfull \hbox (17.43484pt too wide) in paragraph at lines 423--428
+$\OML/cmm/m/it/10 $ \OT1/cmr/m/n/10 of the $\OML/cmm/m/it/10 I []$\OT1/cmr/m/n
+/10 , they are i.i.d. $[](\OML/cmm/m/it/10 \OT1/cmr/m/n/10 )$. As $\OML/cmm/m/
+it/10 G[]$ \OT1/cmr/m/n/10 is the CDF of $[](\OML/cmm/m/it/10 X\OT1/cmr/m/n/10 
+) \OMS/cmsy/m/n/10 j f\OML/cmm/m/it/10 Y \OT1/cmr/m/n/10 =$
+ []
+
+
+Overfull \hbox (49.01749pt too wide) in alignment at lines 428--431
+ [][][] []
+ []
+
+
+Overfull \hbox (18.77658pt too wide) detected at line 450
+[][]  \U/msb/m/n/10 P\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 T < B[]\OT1/cmr/m/n/10 
+) \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 I\OMS/cmsy/m/n/10 f\OML/cmm/m/it/10  < 
+\OMS/cmsy/m/n/10 g \OML/cmm/m/it/10 dG[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 \OT1
+/cmr/m/n/10 ) = [][]  \U/msb/m/n/10 P\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 T < B[]
+\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 I\OMS/cmsy/m/n/10 f\OML/c
+mm/m/it/10  < \OMS/cmsy/m/n/10 g \OML/cmm/m/it/10 dG[]\OT1/cmr/m/n/10 (\OML/c
+mm/m/it/10 \OT1/cmr/m/n/10 ) + \OML/cmm/m/it/10 o\OT1/cmr/m/n/10 (\OML/cmm/m/i
+t/10 B[]\OT1/cmr/m/n/10 )
+ []
+
+
+Overfull \hbox (36.10918pt too wide) detected at line 455
+[] [] \OMS/cmsy/m/n/10  [] [] []  \OML/cmm/m/it/10 e[] \OT1/cmr/m/n/10 = \OML
+/cmm/m/it/10 o\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 B[]\OT1/cmr/m/n/10 )
+ []
+
+
+Overfull \hbox (19.47643pt too wide) in alignment at lines 461--464
+ [][][] []
+ []
+
+[7]
+Overfull \hbox (3.66873pt too wide) in paragraph at lines 491--495
+[]\OT1/cmr/m/n/10 Note that on av-er-age, a $[](\OML/cmm/m/it/10 \OT1/cmr/m/n/
+10 ) \OMS/cmsy/m/n/10  \OML/cmm/m/it/10 $ \OT1/cmr/m/n/10 slice of the den-si
+ty will con-tain $[]\OML/cmm/m/it/10 \OMS/cmsy/m/n/10 jj\OML/cmm/m/it/10 R[]\O
+MS/cmsy/m/n/10 jj$
+ []
+
+<aa-b1-as-func-of-eps.PNG, id=62, 295.85532pt x 194.22563pt>
+File: aa-b1-as-func-of-eps.PNG Graphic file (type png)
+
+<use aa-b1-as-func-of-eps.PNG>
+Package pdftex.def Info: aa-b1-as-func-of-eps.PNG used on input line 512.
+(pdftex.def)             Requested size: 236.68456pt x 155.3807pt.
+ [8] <r1_dist.png, id=68, 481.8pt x 481.8pt>
+File: r1_dist.png Graphic file (type png)
+
+<use r1_dist.png>
+Package pdftex.def Info: r1_dist.png used on input line 541.
+(pdftex.def)             Requested size: 240.8994pt x 240.8994pt.
+ <illustration1.png, id=69, 564.1075pt x 343.2825pt>
+File: illustration1.png Graphic file (type png)
+
+<use illustration1.png>
+Package pdftex.def Info: illustration1.png used on input line 595.
+(pdftex.def)             Requested size: 225.63899pt x 137.31056pt.
+ [9 <C:/Users/Ben/Dropbox/root/Code/rpensemble/paper/aa-b1-as-func-of-eps.PNG>]
+ [10 <C:/Users/Ben/Dropbox/root/Code/rpensemble/paper/r1_dist.png> <C:/Users/Be
+n/Dropbox/root/Code/rpensemble/paper/illustration1.png>] <illustration2.png, id
+=79, 564.1075pt x 343.2825pt>
+File: illustration2.png Graphic file (type png)
+ <use illustration2.png>
+Package pdftex.def Info: illustration2.png used on input line 607.
+(pdftex.def)             Requested size: 225.63899pt x 137.31056pt.
+
+[11 <C:/Users/Ben/Dropbox/root/Code/rpensemble/paper/illustration2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 674--675
+
+ []
+
+[12] [13] [14] [15] (C:\Users\Ben\Dropbox\root\Code\rpensemble\paper\paper.bbl
+Underfull \hbox (badness 6063) in paragraph at lines 72--83
+[]\OT1/cmr/m/sc/10 Metropolis, N.\OT1/cmr/m/n/10 , \OT1/cmr/m/sc/10 Rosen-bluth
+, A. W.\OT1/cmr/m/n/10 , \OT1/cmr/m/sc/10 Rosen-bluth, M. N.\OT1/cmr/m/n/10 ,
+ []
+
+) [16] (C:\Users\Ben\Dropbox\root\Code\rpensemble\paper\paper.aux) ) 
+Here is how much of TeX's memory you used:
+ 2912 strings out of 493921
+ 36234 string characters out of 3144882
+ 92422 words of memory out of 3000000
+ 6171 multiletter control sequences out of 15000+200000
+ 14595 words of font info for 54 fonts, out of 3000000 for 9000
+ 841 hyphenation exceptions out of 8191
+ 34i,12n,26p,646b,261s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbsy10.pfb><C:/Program 
+Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb><C:/Progr
+am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Program File
+s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Program File
+s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program Files
+ (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files (
+x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><C:/Program Files
+ (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files (
+x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files (x86
+)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program Files (x86)/M
+iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files (x86)/MiKT
+eX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files (x86)/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Program Files (x86)/MiKTeX 2
+.9/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb><C:/Program Files (x86)/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 2
+.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files (x86)/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts
+/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/typ
+e1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/p
+ublic/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/pub
+lic/amsfonts/cm/cmsy5.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public
+/amsfonts/cm/cmsy6.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/am
+sfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfo
+nts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts
+/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/c
+m/cmti8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
+mtt8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols
+/msbm10.pfb>
+Output written on paper.pdf (17 pages, 477322 bytes).
+PDF statistics:
+ 192 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+

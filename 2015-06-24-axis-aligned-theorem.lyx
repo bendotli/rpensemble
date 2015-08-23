@@ -699,11 +699,11 @@ Proposition 4
 
  is sufficient, ie.
  
-\begin_inset Formula $Y\,|\, R(X)$
+\begin_inset Formula $Y\,|\,R(X)$
 \end_inset
 
  has the same distribution as 
-\begin_inset Formula $Y\,|\, X$
+\begin_inset Formula $Y\,|\,X$
 \end_inset
 
 ).
@@ -1093,8 +1093,8 @@ for example, uniform over
 We have that 
 \begin_inset Formula 
 \begin{eqnarray*}
-G_{n,1}(\alpha) & = & \mathbb{P}\left\{ \mathbb{P}\left\{ \hat{C}_{n}^{A}(X)=1\,\Big|\, X\right\} \leq\alpha\,\Big|\, Y=1\right\} \\
- & = & \mathbb{P}\left\{ \sum_{B\in\mathcal{A}}q_{B}I\left\{ \hat{C}_{n}^{B}(X)=1\right\} \leq\alpha\,\Big|\, Y=1\right\} 
+G_{n,1}(\alpha) & = & \mathbb{P}\left\{ \mathbb{P}\left\{ \hat{C}_{n}^{A}(X)=1\,\Big|\,X\right\} \leq\alpha\,\Big|\,Y=1\right\} \\
+ & = & \mathbb{P}\left\{ \sum_{B\in\mathcal{A}}q_{B}I\left\{ \hat{C}_{n}^{B}(X)=1\right\} \leq\alpha\,\Big|\,Y=1\right\} 
 \end{eqnarray*}
 
 \end_inset
@@ -1243,8 +1243,8 @@ Note that here
 As before we have 
 \begin_inset Formula 
 \begin{eqnarray*}
-\risk(\crpnhat) & = & \pi_{1}\mathbb{P}\left\{ \crpnhat(X)=2\,|\, Y=1\right\} +\pi_{2}\mathbb{P}\left\{ \crpnhat(X)=1\,|\, Y=2\right\} \\
- & = & \pi_{1}\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)<\alpha\,|\, Y=1\right\} +\pi_{2}\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)\geq\alpha\,|\, Y=2\right\} 
+\risk(\crpnhat) & = & \pi_{1}\mathbb{P}\left\{ \crpnhat(X)=2\,|\,Y=1\right\} +\pi_{2}\mathbb{P}\left\{ \crpnhat(X)=1\,|\,Y=2\right\} \\
+ & = & \pi_{1}\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)<\alpha\,|\,Y=1\right\} +\pi_{2}\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)\geq\alpha\,|\,Y=2\right\} 
 \end{eqnarray*}
 
 \end_inset
@@ -1279,8 +1279,8 @@ As before we have
 , we can write 
 \begin_inset Formula 
 \begin{eqnarray*}
-\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)<\alpha\,|\, Y=1\right\}  & = & \int_{0}^{1}\!\mathbb{P}\left\{ \frac{1}{B_{1}}\sum_{b_{1}=1}^{B_{1}}I\left\{ \hat{C}_{n}^{A_{b_{1}}}(x)=1\right\} <\alpha\,\bigg|\,\hat{\mu}_{n}(X)=\theta\right\} \, dG_{n,1}(\theta)\\
- & = & \int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)\, dG_{n,1}(\theta)
+\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)<\alpha\,|\,Y=1\right\}  & = & \int_{0}^{1}\!\mathbb{P}\left\{ \frac{1}{B_{1}}\sum_{b_{1}=1}^{B_{1}}I\left\{ \hat{C}_{n}^{A_{b_{1}}}(x)=1\right\} <\alpha\,\bigg|\,\hat{\mu}_{n}(X)=\theta\right\} \,dG_{n,1}(\theta)\\
+ & = & \int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)\,dG_{n,1}(\theta)
 \end{eqnarray*}
 
 \end_inset
@@ -1297,7 +1297,7 @@ As before we have
  gives 
 \begin_inset Formula 
 \[
-\risk(\crpnhat)=\pi_{2}+\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)\, dG_{n}^{\circ}(\theta)
+\risk(\crpnhat)=\pi_{2}+\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)\,dG_{n}^{\circ}(\theta)
 \]
 
 \end_inset
@@ -1318,7 +1318,7 @@ As before we have
  gives 
 \begin_inset Formula 
 \[
-\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)=\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\, dG_{n}^{\circ}(\theta)
+\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)=\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta)
 \]
 
 \end_inset
@@ -1330,7 +1330,7 @@ As before we have
 As before we show that 
 \begin_inset Formula 
 \[
-\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\, dG_{n}^{\circ}(\theta)=\int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\, dG_{n}^{\circ}(\theta)+o(B_{1}^{-M})
+\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta)=\int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta)+o(B_{1}^{-M})
 \]
 
 \end_inset
@@ -1383,7 +1383,7 @@ Let
 , so that 
 \begin_inset Formula 
 \begin{eqnarray*}
-\int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\, dG_{n}^{\circ}(\theta) & = & \pi_{1}\sum_{r\in R_{1}\cap I}s_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)\\
+\int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta) & = & \pi_{1}\sum_{r\in R_{1}\cap I}s_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)\\
  &  & -\pi_{2}\sum_{r\in R_{2}\cap I}s_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)
 \end{eqnarray*}
 
@@ -1708,7 +1708,7 @@ status open
 \end_inset
 
  (the distribution of 
-\begin_inset Formula $r_{1}=\mathbb{P}\left(\hat{C}_{n}^{A}(X)=1\,|\, X,Y=1\right)$
+\begin_inset Formula $r_{1}=\mathbb{P}\left(\hat{C}_{n}^{A}(X)=1\,|\,X,Y=1\right)$
 \end_inset
 
 ) for Model 1 with standard parameters, estimated from 10 runs.
@@ -1851,7 +1851,7 @@ Ideally (and this is a statement that doesn't only apply to Theorem 1',
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "2015-06-24-axis-aligned-theorem-references"
+bibfiles "references"
 options "amsalpha"
 
 \end_inset
