@@ -23,8 +23,10 @@ generate_random_matrix = function(p = 50, d = 5, method="Haar") {
 #' Later: add option to use k-fold CV or bootstrap.
 #' 
 run_classifier = function(data, classifier = "lda", estmethod="insample") {
-	# TODO: don't ignore arguments
-	return(compare.lda(list(train = data, test = data)))
+	# TODO: don't ignore estmethod
+	if(classifier == "lda") return(compare.lda(list(train = data, test = data)))
+	if(classifier == "qda") return(compare.qda(list(train = data, test = data)))
+	if(classifier == "knn") return(compare.knn(list(train = data, test = data)))
 }
 
 
@@ -119,3 +121,60 @@ mcmc_optimize = function(data, B2 = 100, p = 50, d = 5, initialmethod = "Haar",
 	return(m)
 }
 
+
+
+# Small utility functions
+class.labels.to.integers = function(label) {
+	if(label == "class.1") return(1); return(2);
+}
+class.labels.to.strings = function(label) {
+	if(label == 1) return("class.1"); return("class.2");
+}
+
+ensemble.mcmc = function(data, B1=100, B2=100, p=50, d=5, classifier="lda", estmethod="insample") {
+	# Get B1 (independently) optimized projections over training set
+	mats = lapply(1:B1, function(...) mcmc_optimize(data$train, B2 = B2))
+	
+	# Fit B1 models
+	models = lapply(mats, function(mat) {
+				return(match.fun(classifier)(y ~ ., data = project(data$train, mat)))
+			})
+	
+	# Obtain B1 class predictions on training set
+	# (we transform the class labels into integers {1, 2} for use
+	# with RPalpha)
+	tr.pred = mapply(function(model, mat) {
+				class = predict(model)$class
+				return(sapply(class, class.labels.to.integers))
+			}, models, mats)
+	
+	# Compute estimate of alpha (well, alpha+1)
+	Y = sapply(data$train$y, class.labels.to.integers)
+	alpha.hat = RPalpha(tr.pred, Y, 2 - mean(Y))
+	
+	# Obtain B1 class predictions on test set
+	# (again, transforming class labels into integers)
+	te.pred = mapply(function(model, mat) {
+				class = predict(model, newdata = project(data$test, mat))$class
+				return(sapply(class, class.labels.to.integers))
+			}, models, mats)
+	
+	# Consolidate into ensemble predictions using alpha
+	vote = 1 + as.numeric(rowMeans(te.pred) > alpha.hat)
+	out = sapply(vote, class.labels.to.strings)
+	
+	# Return misclassification rate on test set
+	return(mean(out != data$test$y))
+}
+
+
+run.experiment = function(task, R=100, title="Experiment") {
+	cl = makeCluster(detectCores() - 1)
+	clusterEvalQ(cl, source("basic-mcmc/core.R"))
+	
+	results = parSapply(cl, 1:R, task)
+	cat(paste0(title, ": ", mean(results),
+					" pm ", sd(results)/sqrt(R), "\n"))
+	
+	stopCluster(cl)
+}
