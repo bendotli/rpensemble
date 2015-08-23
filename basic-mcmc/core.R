@@ -133,7 +133,7 @@ class.labels.to.strings = function(label) {
 
 ensemble.mcmc = function(data, B1=100, B2=100, p=50, d=5, classifier="lda", estmethod="insample") {
 	# Get B1 (independently) optimized projections over training set
-	mats = lapply(1:B1, function(...) mcmc_optimize(data$train, B2 = B2,
+	mats = lapply(1:B1, function(...) mcmc_optimize(data$train, B2 = B2, p, d,
 						classifier = classifier, estmethod = estmethod))
 	
 	# Fit B1 models
