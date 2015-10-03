@@ -766,6 +766,8 @@ To speed up computation, we memoize a standard $5^\circ$ counterclockwise isocli
 
 Instead of starting from the prior (discarding information) $B_1$ times, efficiency can be gained by sampling all the $A_i$ from the same Markov chain -- in other words, sampling an ensemble (or emperical CDF) from $\tilde\pi$. However, the problem with sampling multiple projections from the same simple M-H chain is that M-H will get stuck in local minima, threatening the independence assumption as well as ensemble diversity.
 
+Details and references for these methods can be found in the book \cite{LLC10}.
+
 \subsubsection{Sequential importance resampling}
 
 One way to sample an ensemble avoiding this issue is to use Sequential Importance Resampling (SIR), also often known as particle filtering. For example:

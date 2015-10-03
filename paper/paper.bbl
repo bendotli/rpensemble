@@ -1,4 +1,4 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{10}
 % BibTex style file: imsart-number.bst, 2013-01-28
 % Default style options (sort=1,type=number).
 % Used options (sort=1,type=number).
@@ -72,6 +72,17 @@ In \bbooktitle{Advances in Computational Mathematics}
 \bauthor{\bsnm{Geyer},~\bfnm{Charles~J.}\binits{C.~J.}}
 (\byear{2012}).
 \btitle{Lecture Notes on Markov Chains}.
+\end{bbook}
+\endbibitem
+
+\bibitem{LLC10}
+\begin{bbook}[author]
+\bauthor{\bsnm{Liang},~\bfnm{Faming}\binits{F.}},
+  \bauthor{\bsnm{Liu},~\bfnm{Chuanhai}\binits{C.}} \AND
+  \bauthor{\bsnm{Carroll},~\bfnm{Raymond~J.}\binits{R.~J.}}
+(\byear{2010}).
+\btitle{Advanced Markov Chain Monte Carlo Methods}.
+\bpublisher{Wiley}.
 \end{bbook}
 \endbibitem
 
