@@ -1,4 +1,4 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{8}
 % BibTex style file: imsart-number.bst, 2013-01-28
 % Default style options (sort=1,type=number).
 % Used options (sort=1,type=number).
@@ -79,6 +79,24 @@ In \bbooktitle{Advances in Computational Mathematics}
 \bjournal{The Journal of Chemical Physics}
 \bvolume{21}.
 \end{barticle}
+\endbibitem
+
+\bibitem{MT93}
+\begin{bbook}[author]
+\bauthor{\bsnm{Meyn},~\bfnm{S.~P.}\binits{S.~P.}} \AND
+  \bauthor{\bsnm{Tweedie},~\bfnm{R.~L.}\binits{R.~L.}}
+(\byear{1993}).
+\btitle{Markov Chains and Stochastic Stability}.
+\bpublisher{Springer-Verlag}.
+\end{bbook}
+\endbibitem
+
+\bibitem{Sarig08}
+\begin{bbook}[author]
+\bauthor{\bsnm{Sarig},~\bfnm{Omri}\binits{O.}}
+(\byear{2008}).
+\btitle{Lecture Notes on Ergodic Theory}.
+\end{bbook}
 \endbibitem
 
 \end{thebibliography}

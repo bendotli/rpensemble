@@ -13,6 +13,7 @@
 \usepackage{graphicx}
 %\usepackage{graphicx}
 %\usepackage{esint}
+\usepackage{bm}
 
 \newtheorem{definition}{Definition}
 \newtheorem{proposition}{Proposition}
@@ -93,11 +94,13 @@ University of Cambridge\\
 
 A supervised classification problem requires prediction of class labels $Y$ from covariates $X$ given training data. Increasingly often, classification problems are high-dimensional: specifically, the dimension of the feature vectors $p$ is greater than the length of the training set $n$. This violates assumptions in many classification methods, causing poor performance or failure (as in linear discriminant analysis, where the sample covariance matrix when $p\geq n$ is not invertible). Current methods tailored to this situation make strong linearity, sparsity, and/or independence assumptions, as surveyed in \cite{CS15}.
 
-This limits their expressivity, in exchange for statistical power on problems that do fit the assumptions. Ensembling, as used for instance in random forests \cite{Breiman01}, is able to expand expressivity. Random forest performs bootstrap aggregation (bagging), in which the votes of component classifiers trained on bootstrapped data are aggregated, which enables, for instance, nonlinear decision boundaries with linear base classifiers.
+This limits their expressivity, in exchange for statistical power on problems that do fit the assumptions. Ensembling, as used for instance in random forests \cite{Breiman01}, is able to expand expressivity. In that example bootstrap aggregation (bagging), in which the votes of component classifiers trained on bootstrapped data are aggregated, enables the algorithm to express nonlinear decision boundaries even with linear base classifiers.
 
-But bagging is unhelpful in high-dimensional classification -- instead of training component classifiers on ``row-sampled'' data (which effectively reduces $n$, not $p$!), it would be nice to train them on ``column-sampled'' data. This motivation is especially strong because we have a powerful guarantee on this ``column-sampling.''
+But bagging is unhelpful in high-dimensional classification -- instead of training component classifiers on ``row-sampled'' data (which effectively reduces $n$), it would be nice to train them on ``column-sampled'' data (reducing $p$).
 
-The Johnson-Lindenstrauss Lemma \cite{DG03} states that for any $\epsilon\in(0,1)$ there is some projection $A$ to $\mathbb R^d$ where $d>\frac{8\log n}{\epsilon^2}$ \footnote{Note that this is independent of $p$.} that preserves squared pairwise distances between data points within $\epsilon$, and in fact this matrix can be found stochastically in polynomial time.
+This motivation is especially strong because we have a powerful guarantee on this ``column-sampling.'' The Johnson-Lindenstrauss Lemma \cite{DG03} states that for any $\epsilon\in(0,1)$ there is some projection $A$ to $\mathbb R^d$ where $d>\frac{8\log n}{\epsilon^2}$ \footnote{Note that this is independent of $p$.} that preserves squared pairwise distances between data points within $\epsilon$, and in fact this matrix can be found stochastically in polynomial time.
+
+We would then be able to perform fairly accurate approximate classification in $\mathbb R^d$. If we aggregate over many classifications on such projected spaces, the idea is that we would have a very accurate consensus estimate, just as bootstrapping obtains via row subsampling.
 
 
 \subsection{Introduction}
@@ -107,25 +110,24 @@ The fundamental idea is that we can improve the expressiveness and power of any 
 
 The specifics of the methodology discussed in \cite{CS15} involve drawing $B_{1}\times B_{2}$ $d$-dimensional projections from Haar measure on the space of all such projection matrices, running the base classifier with each of these projections, and then choosing the best of every $B_{2}$ projections, giving a final ensemble of $B_{1}$ projections.
 
-In this paper, we detail two separate improvements, corresponding exactly to the two separate halves of the bound on excess test risk in \cite{CS15}. (Below we use notation which we will go over in Sections~\ref{sec:glossary} and \ref{sec:review}).
+In this paper, we detail two separate improvements, corresponding exactly to the two separate halves of the bound on excess risk in \cite{CS15}. (Below we use notation which we will go over in Sections~\ref{sec:glossary} and \ref{sec:review}).
 
 \subsubsection{First half}
 
-In the first half (Theorem 1), no distribution on the $B_1$ matrices $\{A_i\}$ is assumed, and it is shown that
+In the first half (Theorem 1 of \cite{CS15}), no distribution on the $B_1$ matrices $\{A_i\}$ is assumed, and it is shown that
 \begin{equation}
 \risk(\crpnhat) - \risk(\crpnhatstar) \leq O\left(\frac{1}{B_1}\right)
 \label{eqn:first-half}
 \end{equation}
-asymptotically in $B_1$.
+asymptotically in $B_1$. This is a bound on the difference in risk from only having $B_1$ projections, rather than infinitely many.
 
-As the dimension $p$ of the original data goes up, the space of projections $\mathbb{R}^p\to\mathbb{R}^d$ grows exponentially, as the paper remarks.
-It makes sense to restrict the set of projections on $A$ to be axis-aligned. An axis-aligned projection simply picks $d$ basis vectors and drops the rest, bounding the set to $\binom{p}{d}\leq p^{d}/d!$ which is polynomial in $d$.
+As the dimension $p$ of the original data goes up, the space of projections $\mathbb{R}^p\to\mathbb{R}^d$ grows exponentially. It makes some sense to restrict the set of projections on $A$ to be axis-aligned in order to restrict this space. An axis-aligned projection simply picks $d$ basis vectors and drops the rest, bounding the set to $\binom{p}{d}\leq p^{d}/d!$ which is polynomial in $d$.
 
 It turns out that restricting projections to the axis-aligned subspace causes the bound in Equation~\ref{eqn:first-half} to become exponential in $B_1$, and for the bound to hold non-asymptotically under certain conditions!
 
 \subsubsection{Second half}
 
-In the second half (Theorem 2, Proposition 3, and Theorem 5), the best-of-$B_2$ algorithm (hereafter referred to as \textit{bruteforce}) is assumed and it is shown that with $A_i$ chosen by this algorithm, 
+In the second half (Theorem 2, Proposition 3, and Theorem 5 of \cite{CS15}), the best-of-$B_2$ algorithm is assumed and it is shown that with the $A_i$ chosen by this algorithm, 
 \begin{align*}
 \risk(\crpnhatstar) - \rrisk(\cbayes)
 	&\leq \frac1{\alpha(1-\alpha)}\big[
@@ -141,11 +143,11 @@ In the second half (Theorem 2, Proposition 3, and Theorem 5), the best-of-$B_2$ 
 	&\quad	+ \text{terms from Assumption (A.2)}
 		\big] \qquad\text{(Theorem 5)}
 \end{align*}
-The sum of this with the first-half inequality is then the desired bound.
+The sum of this with the first-half inequality is then the desired bound on the excess risk of $\crpnhat$.
 
-Choosing the $A_i$ by brute force reuses no previous information. In addition, unlike the tidy first-half inequality, the second-half inequality requires the unnatural Assumption (A.2) and multiple steps to prove, resulting in a bound with complicated terms.
+Choosing the $A_i$ by best-of-$B_2$ reuses no previous information. An avenue for improvement, then, might be to find an algorithm that does reuse previous information.
 
-A more elegant way to derive good projection matrices would be to sample them from the posterior distribution of $A^*$, the true sufficient dimension reduction matrix from Assumption (A.3). We give a Metropolis-Hastings algorithm for this, and prove a new second-half bound.
+We propose Bayesian Random Projection Optimization as an elegant way to derive good projection matrices by sampling them from the posterior distribution of $A^*$, the true sufficient dimension reduction matrix from Assumption (A.3). We give a Metropolis-Hastings algorithm for this, and prove a new second-half bound.
 
 \subsection{Glossary}\label{sec:glossary}
 \begin{definition}
@@ -204,7 +206,7 @@ RPE classifier $\crpnhatstar$ (with the same choices of $\hat{C}_{n}$
 and $\alpha$). This result is \textbf{Theorem 1}, and does not involve
 the distribution on the projection matrices $A_{i}$ other than that
 they are independent and identically distributed, and independent
-of $(X,Y)$. This concludes the first-half bound.
+of $(X,Y)$. This concludes the first-half bound.\\
 
 
 \textbf{Theorem 2}, bounding $\risk(\crpnhatstar)-\rrisk(\cbayes)$,
@@ -214,15 +216,7 @@ and independent of $(X,Y)$. Thus, this result pulls smoothly into
 the axis-aligned case.
 
 
-The next assumption involves the production of a good selection of
-random projections by taking the best projection in each row from
-a $B_{1}\times B_{2}$-sized grid of i.i.d. random projections from
-some base distribution (Haar measure as generally discussed in the
-original paper). To make conclusions about the test error of such
-a screened-Haar RPE classifier, we define $\beta_{n}(j)$ as the discrete
-CDF of $n\left(\hat{L}_{n}^{A}-\hat{L}_{n}^{*}\right)$ (which is
-the random variable $n\hat{L}_{n}^{A}=\sum_{(x,y)}I(\hat{C}_{n}^{A}(x)\neq y)$
-minus a constant, where $X,Y$ are known and $A$ is random).\\
+The next assumption involves the production of a good selection of random projections by taking the best projection in each row from a $B_{1}\times B_{2}$-sized grid of i.i.d. random projections from some base distribution (Haar measure as generally discussed in the original paper). To make conclusions about the test error, we define $\beta_{n}(j)$ as the discrete CDF of $n\left(\hat{L}_{n}^{A}-\hat{L}_{n}^{*}\right)$ (which is the random variable $n\hat{L}_{n}^{A}=\sum_{(x,y)}I(\hat{C}_{n}^{A}(x)\neq y)$ minus a constant, where $A$ is random).\\
 
 
 \noindent \textbf{Assumption (A.2).} There is some $B_{0}\in(0,1)$
@@ -235,10 +229,9 @@ is constrained).\\
 
 
 From this, \textbf{Proposition 3} bounds the expected excess risk
-$\mathbb{E}(\risk_{n}^{A_{1}})-\rrisk(\cbayes)$ of a $B_{2}$-filtered
+$\mathbb{E}(\risk_{n}^{A_{1}})-\rrisk(\cbayes)$ of a best-of-$B_{2}$
 projection by an expression involving $\hat{L}_{n}^{*}-\rrisk(\cbayes)$,
-the minimum excess risk estimate over all $A\in\mathcal A$,
-which leads naturally to the next step of trying to bound that. Intuitively,
+the minimum excess risk estimate over all $A\in\mathcal A$. Intuitively,
 we expect this to be small when the Bayes classifier indeed only takes
 into account $d$ of the dimensions, which leads to the following
 definition and assumption:
@@ -284,51 +277,49 @@ is quantified in \textbf{Theorem 5}.
 
 \section{Axis-aligned RPE theory}
 
-\subsection{$G_{n,i}$ curves}
+\subsection{Effect of axis-alignment on $G_{n,i}$ curves}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[scale=0.35]{G_ni}\includegraphics[scale=0.35]{G_ni_axis}
+\includegraphics[scale=0.35]{G_ni}%\includegraphics[scale=0.35]{G_ni_axis}
 \par\end{centering}
 
-\caption{The empirical $G_{n,i}$ curves for the standard run ($B_{1}=B_{2}=100$)
-of Model 1 ($n_{\mathrm{train}}=50$) with RPE-H LDA (left) versus
-RPE-A LDA (right), averaged over 10 instances.}
+\caption{The empirical $G_{n,i}$ curves for standard runs
+of Model 1 in \cite{CS15} ($n_{\mathrm{train}}=50$ and $B_{1}=B_{2}=100$) with RPE-H LDA,
+% (left) versus RPE-A LDA (right),
+averaged over 10 instances.}
 
 \label{fig:std-run-g-curves}
 \end{figure}
 
 
-The natural place to wedge in an axis-aligned version of the method
-would be right in the beginning at Assumption (A.1). Central to
-Theorem 1, the most involved theoretical result in the paper, are
+Central to Theorem 1, the most involved theoretical result in the paper, are
 the $G_{n,i}$ curves. They are estimated and plotted in Figure~\ref{fig:std-run-g-curves}
 for a standard run of Model 1 with both RPE-H LDA and RPE-A LDA. (Note
 that adjusting $n_{\mathrm{train}}$ changes the shape of these curves,
 which is why they've been averaged over 10 instances instead of simply
 run on 10 times more data.)
 
-Although it's not evident in these plots, observe that finite $\mathcal{A}$
-implies a discrete distribution on $A$, which implies that the $G_{n,i}$
+What effect would imposing axis-alignment have on these centrally-important curves? Finite $\mathcal{A}$ implies a discrete distribution on $A$, which means that the $G_{n,i}$
 are step functions -- a much stronger assumption than second-differentiability
 at the voting threshold $\alpha$!
 
-\begin{figure}
-\begin{centering}
-\includegraphics[scale=0.35]{G_ni_mini}\includegraphics[scale=0.35]{G_ni_mini_axis}
-\par\end{centering}
-
-\caption{The empirical $G_{n,i}$ curves for $p=5$
-and $d=2$, again with RPE-H LDA (left) and RPE-A LDA (right), averaged
-over 10 instances. The difference is much clearer.}
-
-
-\label{fig:mini-run-g-curves}
-\end{figure}
-
-
-As a much clearer illustration, Figure~\ref{fig:mini-run-g-curves} shows
-these curves with $p=5$ and $d=2$.
+%\begin{figure}
+%\begin{centering}
+%\includegraphics[scale=0.35]{G_ni_mini}\includegraphics[scale=0.35]{G_ni_mini_axis}
+%\par\end{centering}
+%
+%\caption{The empirical $G_{n,i}$ curves for $p=5$
+%and $d=2$, again with RPE-H LDA (left) and RPE-A LDA (right), averaged
+%over 10 instances. The difference is much clearer.}
+%
+%
+%\label{fig:mini-run-g-curves}
+%\end{figure}
+%
+%
+%As a much clearer illustration, Figure~\ref{fig:mini-run-g-curves} shows
+%these curves with $p=5$ and $d=2$.
 
 \subsection{Effect of axis-alignment on second-half bound}
 
@@ -337,7 +328,7 @@ Restricting $\mathcal A$ to axis-aligned projections does not affect Theorem 2, 
 The CDF $\beta_{n}(j)$ can still be defined, where $A$ is now distributed
 uniformly on the set of axis-aligned projection matrices, so Assumption
 (A.2) and Proposition 3 can remain unchanged (where $A_{1}$ is now
-distributed as $B_{2}$-filtered axis-aligned projection matrices).
+a best-of-$B_{2}$ axis-aligned projection matrix).
 
 Assumption (A.3) has a simple modification (compatible with Proposition
 4) to make Theorem 5 hold for axis-aligned projections:\\
@@ -365,7 +356,7 @@ It is easy to show that this assumption holds for our axis-aligned
 case.
 
 \begin{proposition}
-Allowing infinitesimal perturbation of $\alpha$\footnote{Practically, we would choose $\alpha$ with its distance to an element of $R$ in mind, as we discuss later, so this is somewhat irrelevant.}, Assumption (A.1$'$) holds for $\mathcal{A}$ as the set of axis-aligned
+Allowing infinitesimal perturbation of $\alpha$,\footnote{Practically, we would choose $\alpha$ with its distance to an element of $R$ in mind, as we discuss later, so this is somewhat irrelevant.} Assumption (A.1$'$) holds for $\mathcal{A}$ as the set of axis-aligned
 $d\times p$ projections (or any subset thereof) and $A$ a matrix-valued
 random variable with this set as its support, with some distribution\footnote{For example, uniform over $\mathcal{A}$, or as is done in the package,
 chosen from the best of $B_{2}$ uniform candidates.} given by probabilities $q_{B}$ for all $B\in\mathcal{A}$.
@@ -408,11 +399,11 @@ the infinite projection classifier we're approximating may be farther
 from the Bayes classifier than the general case. But this doesn't affect our theory, as
 we modified (A.3) so that $A^{*}$ must be axis-aligned.}
 
-Moreover, there exists some $C>0$ such that for all $B_1\geq C$, the non-asymptotic bound
+\emph{Moreover, there exists some $C>0$ such that for all $B_1\geq C$, the non-asymptotic bound
 \[
 \risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)=e^{-2\log^2 B_1}
 \]
-holds.
+holds.}
 
 
 \begin{proof}
@@ -457,14 +448,14 @@ for $\epsilon=\frac{\log B_{1}}{\sqrt{B_{1}}}$ and all $M$ we have
 
 Let $I=(\alpha-\epsilon,\alpha+\epsilon)$. Note that $G_{n,1}$ is
 the CDF of a discrete random variable with values $r\in R_{1}$ and
-probabilities $s_{r}$, so that 
+probabilities $s_{r}$, and $G_{n,2}$ the same for $t_r$, so that 
 \begin{eqnarray*}
 \int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta) & = & \pi_{1}\sum_{r\in R_{1}\cap I}s_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)\\
- &  & -\pi_{2}\sum_{r\in R_{2}\cap I}s_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)
+ &  & -\pi_{2}\sum_{r\in R_{2}\cap I}t_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)
 \end{eqnarray*}
 
 
-From here, we can already conclude: we can make both $R_{1}\cap I$
+This leads to the conclusion: we can make both $R_{1}\cap I$
 and $R_{2}\cap I$ empty by setting $B_{1}$ high enough that $\epsilon<\min_{r\in R_{1}\cup R_{2}}|\alpha-r|$.
 \end{proof}
 
@@ -474,14 +465,13 @@ linearly close to the general infinite projection classifier.
 
 As $\epsilon=\frac{\log B_{1}}{\sqrt{B_{1}}}$ is strictly decreasing in $B_{1}$ for all $B_{1}>1$, and has inverse $B_{1}=\exp\left(-2W_{-1}(-\frac{\epsilon}{2})\right)$ involving the Lambert $W$ function \cite{CGHJK96}, this exponential behavior kicks in non-asymptotically at
 \[
-B_{1}>\exp\left(-2W_{-1}\left(-\frac{\min|\alpha-r|}{2}\right)\right)
+B_{1}>\exp\left(-2W_{-1}\left(-\frac{\min|\alpha-r|}{2}\right)\right).
 \]
-which unfortunately grows very quickly in $p$ and $d$.
 
 \subsection{Estimating $\min|\alpha-r|$}
 
 In the process of determining this lower bound, an issue arises with the determination of $\min|\alpha-r|$.
-We only know $\hat{\pi}_{1}n_{\mathrm{train}}$ elements of $R_{1}$, which is generally not anywhere close to the cardinality of $R_{1}$ (which can be as big as $2^{||\mathcal{A}||}=2^{\binom{p}{d}}$).
+We only know $\hat{\pi}_{1}n_{\mathrm{train}}$ elements of $R_{1}$, which is generally not close to the cardinality of $R_{1}$ (which can be as big as $2^{||\mathcal{A}||}=2^{\binom{p}{d}}$).
 However, we can estimate $\min|\alpha-r_{1}|$ by the following procedure:
 \begin{enumerate}
 \item Smooth $\hat{g}_{n,1}$ (by, for instance, taking $\tilde{g}_{n,1}$
@@ -518,7 +508,7 @@ expression will be dominated by the exponential behavior of $||R||$.
 \end{figure}
 
 
-Although the theorem is impressive at first glance, the lower bound
+Although the theorem is an impressive statement, the lower bound
 for $B_{1}$ before the exponential decay of error in Theorem 1$'$ kicks
 in is very large and grows extremely quickly in $p$ and $d$, as
 a result of the exponential (see Figure~\ref{fig:b1-as-func-of-eps}).
@@ -526,15 +516,7 @@ For instance, we need $\max_i g_{n,i}(\alpha)$
 at a value of $2^{-\binom{p}{d}+1}$ to put the minimum $B_{1}$ for
 exponential behavior at $74.2$.
 
-This theoretical result would go hand-in-hand with a good algorithm
-for choosing projections.
-If we have a good method of optimizing projections, then $g_{n,1}$
-and $g_{n,2}$ (the distribution functions from which we draw $r_{1}\in R_{1}$
-and $r_{2}\in R_{2}$ respectively) would tend to be skewed far left
-and far right respectively. Optimal values of $\alpha$ would then
-be in the middle, where $R_{1}\cup R_{2}$ is much less dense, and
-thus $\min|r-\alpha|$ larger, allowing for exponential behavior with
-lower $B_{1}$.
+This theoretical result would go hand-in-hand with a good algorithm for choosing projections. If we have a good method of optimizing projections, then $g_{n,1}$ and $g_{n,2}$ (the density functions from which we draw $r_{1}\in R_{1}$ and $r_{2}\in R_{2}$ respectively -- see Figure~\ref{fig:r1-dist}) would tend to be skewed far left and far right respectively. Optimal values of $\alpha$ would then be in the middle, where $R_{1}\cup R_{2}$ is much less dense, and thus $\min|r-\alpha|$ larger, allowing for exponential behavior with lower $B_{1}$.
 
 \begin{figure}
 \begin{centering}
@@ -588,130 +570,185 @@ A simple example would be to have the sampler purposefully reject any such draw 
 
 \section{Bayesian random projection optimization}
 
-The second part of this paper deals with the second-half inequality, bounding $\risk(\crpnhatstar) - \rrisk(\cbayes)$ by more efficiently sampling $B_1$ projections that comprise the ensemble.
+The second part of this paper deals with the second-half inequality, bounding $\risk(\crpnhatstar) - \rrisk(\cbayes)$ by more efficiently sampling $B_1$ projections that comprise the ensemble. We make no assumptions about $\mathcal A$, rendering this part independent of (but complementary to) the axis-aligned theory above.
+
+However, Assumption (A.3) plays a crucial part, perhaps moreso than in the original method, in that we use it word-for-word as the core of our Bayesian model. Our model states that there \emph{is} a true $A^*$, and we use it as our model parameter $\theta$.
+
+Ultimately, our goal is to utilize the Bayesian framework to obtain a ``best-possible'' ensemble classifier, in the sense that we've used all information available to us, and the remaining error is irreducible.
+
+\subsection{Bayesian motivation}
+
+Define the following quantities:
+
+\begin{center}
+	\begin{tabular}{r|l}
+		Parameter & $A^*$ \\
+		Data & $D=(X,Y)$ \\
+		Model (likelihood) & $f(D\,|\,A^*)$ \\
+		Prior & $\tau(A^*)=$ Haar measure on $\mathcal{A}$ \\
+		Marginal & $m(D) = \int\!f(D\,|\,A^*)\pi(A^*)\,dA^*$ \\
+		Posterior & $\pi(A^*\,|\,D) = \frac{f(D\,|\,A^*)\pi(A^*)}{m(D)}$
+	\end{tabular}
+\end{center}
+
+\subsubsection{Illustration}
 
 \begin{figure}
 \begin{centering}
 \includegraphics[scale=0.4]{illustration1}
-\caption{An example posterior density $\pi(A=A^*\,|\,\mathrm{data})$, visualized in one dimension.
+\caption{An example posterior density $\pi(A^*\,|\,\mathrm{data})$, visualized in one dimension.
 \label{fig:illust1}}
 \par\end{centering}
 \end{figure}
 
-In Figure~\ref{fig:illust1}, point (A) would be the single (point) estimate $\widehat{A^*}$ in the original method of drawing the $A_i$; as projection with the minimum test error (``likelihood'') out of $B_2$ projections drawn from the prior (uniformly).
+In Figure~\ref{fig:illust1}, point (A) would be the single (point) estimate $\widehat{A^*}$ in the original method of drawing the $A_i$ (each one as the projection with the minimum test error or ``highest likelihood'' out of $B_2$ projections drawn from the prior).
 
-However, maybe the real $A^*$ is at point (B). Or possibly in an entirely separate probability cluster, at point (C). If we do greedy bruteforce optimization, we'll never get representatives from the smaller peak.
+However, the distribution itself provides much more information than the point estimate. There is ample probability of finding $A^*$ at (B), slightly off from the mode, or at (C) in an entirely separate probability cluster. In particular for (C), the best-of-$B_2$ method will nearly never draw representatives from the smaller peak. In fact, the chance becomes vanishingly small as $B_2\to\infty$.
 
 \begin{figure}
 \begin{centering}
 \includegraphics[scale=0.4]{illustration2}
 \par\end{centering}
-\caption{An ensemble representing (approximating) $\pi(A=A^*\,|\,\mathrm{data})$.}
+\caption{An ensemble representing (approximating) $\pi(A^*\,|\,\mathrm{data})$.}
 \label{fig:illust2}
 \end{figure}
 
-The original method is basically trying to find the MAP estimate. It would be nice to use the full information of the posterior distribution, rather than just the single-point MAP estimate. The best way to do this would be to draw $B_1$ samples from $\pi$, as shown in Figure~\ref{fig:illust2}.
+\subsubsection{Bootstrap MAP versus density estimation}
 
-Here, we work directly from the sufficient dimension reduction theorem (skipping Proposition 4 and Assumption (A.3)), which we call the new \textbf{Assumption (A.3)$'$}.
+For this section think of the likelihood of $A^*$ as the classification accuracy on $A^*X$ by the base classifier. We will give a principled explanation for why this makes sense further on.
 
-\subsection{Outline}
+In Bayesian terminology, the original method of \cite{CS15} is approximating the MAP (maximum a posteriori) estimate via best-of-$B_2$, and then maintaining some variation in that estimate by repeating this $B_1$ times and ensembling the results. This technique has proven quite effective, and might be referred to as a ``\textbf{bootstrap MAP}'' approach from our Bayesian perspective.
 
-Let $g(\pi)=\E_{A\sim\pi}(\risk_n^A)$ be our target functional. Let $\pi_0(\theta)=\delta_{A^*}(\theta)$ be the true density of $A^*$, ie.
+Note that the information from $B_1(B_2-1)$ of the projection matrices drawn goes largely unused. It would be nice to fully utilize the likelihoods calculated for all $B_1B_2$ samples. This is equivalent to saying we should use a full density estimate, not just a series of MAP estimates, in our ensemble method.
+
+\subsection{Bayesian framework}
+
+\subsubsection{Drawing directly from $\pi(A^*\,|\,\mathrm{data})$}
+
+It would be nice to use the full information of the posterior distribution, rather than $B_1$ independent resamples of the single-point MAP estimate. The objectively-best way to do this would be to draw our $B_1$ projection matrices \emph{directly from $\pi(A^*\,|\,\mathrm{data})$}, the posterior density on projection matrix space, as shown in Figure~\ref{fig:illust2}.
+
+The accuracy of an RPE classifier based directly on $\pi(A^*\,|\,\mathrm{data})$ is, in the Bayesian sense, the best possible performance we can get with the assumptions and data we have. As we obtain more data (as $n\to\infty$), $\pi(A^*\,|\,\mathrm{data})$ will approach the true distribution $\pi_0 = \delta_{A^*_\mathrm{true}}$, and the risk will approach the Bayes risk.
+
+Let $g(p)=\E_{A\sim p}(\risk_n^A)$ be a functional taking some distribution of projection matrices $p$ to the expected risk over that distribution. In other words, if we drew infinitely many $A_i$ from $p$, the risk of the resulting RPE classifier would be $g(p)$.
+
+For $n$ fixed, $g(\pi)-g(\pi_0)=\epsilon_\mathrm{irr}$ is the irreducible error in our scenario.
+
+\subsubsection{Drawing from an ergodic Markov chain with stationary distribution $\pi(A^*\,|\,\mathrm{data})$}
+
+Drawing directly from $\pi(A^*\,|\,\mathrm{data})$ is infeasible (it would require computing the partition function $m(D)$ which would take $||\mathcal A||$ evaluations of the base classifier).
+
+However, if we have an ergodic Markov chain with $\pi(A^*\,|\,\mathrm{data})$ as its stationary distribution, there is an powerful result we can invoke from ergodic theory. This theorem can be interpreted as a type of law of large numbers, saying that for an ergodic random process, the time average moves closer to the space average as time goes on.
+
+The textbook \cite{MT93} is a general reference for ergodic theory on Markov chains, while the lecture notes \cite{Sarig08} provide a more concise summary. The weak ergodic theorem cited here is Theorem 2.1 (von Neumann's Mean Ergodic Theorem) from \cite{Sarig08}; Theorem 2.2 (Birkhoff's Pointwise Ergodic Theorem) is a stronger result (almost everywhere convergence) that we don't need. The geometric ergodic theorem is given two entire chapters, Chapters 15 \& 16, in \cite{MT93}, and also appears a remark at the end of Section 1.5.4.3 (Proof of the Ergodic Theorem for Markov chains) of \cite{Sarig08}, after the proof.
+
+\begin{theorem}
+(Weak ergodic theorem) For any functional $g(p)=\E_{A\sim p}(h(A))$, 
+\[
+\sum_{i=1}^{B_1}\frac{1}{B_1} h(A_i) \overset{p}{\to} g(\pi)
+\]
+as $B_1\to\infty$, where the $A_i$ are drawn from an ergodic Markov chain $\bm{\Phi}$ with stationary distribution $\pi$.
+\end{theorem}
+
+\begin{theorem}
+(Geometric ergodic theorem) If $\bm\Phi$ is uniformly ergodic (satisfying one of the seven equivalent conditions in Theorem 16.0.2 of \cite{MT93}), then for any functional $g(p)=\E_{A\sim p}(h(A))$, 
+\[
+\left|\sum_{i=1}^{B_1}\frac{1}{B_1} h(A_i)-g(\pi)\right|\leq C\cdot \rho^{B_1}
+\]
+in probability for some $\rho<1$, independent of the initial state.
+\end{theorem}
+
+Ergodicity is implied by irreducibility, aperiodicity, and positive recurrence, which Metropolis-Hastings algorithms satisfy (this is the type of inference algorithm we will apply). \{Note to Tim: uniform ergodicity seems a lot more complicated to prove -- although the intro to \cite{MT93} Ch. 16 notes that geometric ergodicity is the norm rather than the exception for most problems. Since our projection matrix space is finite-dimensional and normal in a lot of respects, my intuition is that it should hold. It certainly does for finite state spaces (mentioned in \cite{Sarig08}), so any ergodic chain on axis-aligned projection matrix space would guarantee geometric ergodicity. Anyhow, this is a to-do item.\}
+
+\{Also, I couldn't find direct references for the version of the geometric ergodic theorem I wanted to use (ie. in terms of weak convergence, and in terms of a time average). \cite{MT93} uses convergence in $V$-norm, and I'm not sure if their notation denotes taking a time average, or merely the distribution of the $B_1$th sample. Need to spend the time to derive the version I want. It seems to be mentioned everywhere, but formally found nowhere...\}
+
+Let $\pi_0(\theta)=\delta_{A^*}(\theta)$ be the true density of $A^*$, ie.
 \[
 \int_R\!\pi_0(A)\,\mu(A)=I(A^*\in R\,|\,\text{true }A^*)
 \]
-We want to sample the $A_i$ from some $\tilde \pi_{B_2}$ such that $g(\tilde \pi_{B_2})$ is as close as possible to $g(\pi_0)=\risk_n^{A^*}$ (ie. picking up from Theorem 2).
-
-This process is split into three steps:
+We want to sample the $A_i$ from some $\hat{\bm{\Phi}}^{B_1}$ such that $g(\hat{\bm{\Phi}}^{B_1})$ is as close as possible to $g(\pi_0)=\risk_n^{A^*}$ (ie. picking up from Theorem 2). This process is split into three steps:
 \[
-\tilde\pi_{B_2} \to \pi_{B_2} \to \pi \to \pi_0
+\hat{\bm{\Phi}}^{B_1} \to \bm{\Phi}^{B_1} \to \pi \to \pi_0
 \]
-We start with the first arrow.
+The arrow $\pi\to\pi_0$ is $\epsilon_\mathrm{irr}$, and the arrow $\bm{\Phi}^{B_1}\to\pi$ is $o(\rho^{-B_1})$. The leftmost arrow depends on our likelihood approximation, which is in terms of the performance of our base classifier $\hat C_n$. For now, we make it our Assumption (A.2)$'$ that this is bounded by $\epsilon$. \{Note to Tim: I think perhaps a better result can be proven here, perhaps obtaining an expression for $\epsilon$ in terms of the base classifier. For instance, would assuming LDA/QDA/$k$nn be helpful?\}
 
-\subsection{Posterior distribution of $A^*$}
+\subsection{Deriving the likelihood from the base classifier}
 
-Recall the sufficient dimension reduction theorem posited the existence of a projection $A^*$ such that conditioned on $A^*X$, $X$ is independent of $Y$. Let $A^*=\theta$ be the unknown parameter in a Bayesian inference setting. Define the following quantities:
+Recall the sufficient dimension reduction theorem posited the existence of a projection $A^*$ such that conditioned on $A^*X$, $X$ is independent of $Y$.
 
-\begin{center}
-\begin{tabular}{r|l}
-Parameter & $\theta=A^*$ \\
-Data & $D=(X,Y)$ \\
-Model (likelihood) & $f(D\,|\,\theta)$ \\
-Prior & $\pi(\theta)=$ Haar measure on $\mathcal{A}$ \\
-Marginal & $m(D) = \int\!f(D\,|\,\theta)\pi(\theta)\,d\theta$ \\
-Posterior & $\pi(\theta\,|\,D) = \frac{f(D\,|\,\theta)\pi(\theta)}{m(D)}$
-\end{tabular}
-\end{center}
-
-We would like the posterior $\pi(\theta\,|\,D)$ to converge to $\delta_{A^*}$ as $n\to\infty$, which it will if we use the correct model $f$.
-
-Note that formally we need a lot of information (including a distribution on the conditionally independent ``noise'' component $\theta^\perp(X)=(I_{p\times p}-\theta)(X)$):
+We are applying a parametric model with parameter $\theta=A^*$. The likelihood splits into a distribution on the conditionally independent ``noise'' component $A^{*\perp}(X)$ (where $A^{*\perp}$ denotes the orthogonal complement of $A^*$) and the model on $(A^*X,Y)$:
 \begin{equation}
-f(D\,|\,\theta)=f(\theta X, \theta^\perp X,Y\,|\,\theta)=f(\theta^\perp X\,|\,\theta X, \theta)f(\theta X, Y\,|\,\theta)
+f(D\,|\,A^*)=f(A^* X, A^{*\perp} X,Y\,|\,A^*)=f(A^{*\perp} X\,|\,A^* X, A^*)f(A^* X, Y\,|\,A^*)
 \label{eqn:likelihood-decomposition}
 \end{equation}
-by Assumption (A.3)$'$. Clearly there is no way we can use the actual $f$ for general classification, because it would require making too many model assumptions.
 
 \newcommand{\approxpropto}{\mathrel{\vcenter{
   \offinterlineskip\halign{\hfil$##$\cr
     \propto\cr\noalign{\kern2pt}\sim\cr\noalign{\kern-2pt}}}}}
 
-Luckily, however, we only need a function proportional to $f(D\,|\,\theta)$ for the sampling algorithm we are about to use, and in addition, we will make some approximations. For the second term of Equation~\ref{eqn:likelihood-decomposition}, we can substitute the test accuracy of our base classifier $\hat C$:\footnote{In fact, if we are learning the $A_i$ iteratively in parallel, we could use the previous iteration's $\hat C^{\mathrm{RP}}$ for an even better approximation.}
-\[
-f(\theta X, Y\,|\,\theta) \approxpropto 1-\hat L_n^{\theta} = \sum_i \frac1n I (\hat C(\theta X_i) = Y_i)
-\]
+\subsubsection{Noise}
 
-For the first term of Equation~\ref{eqn:likelihood-decomposition}, instead of making a model assumption about noise, we can substitute a term that represents the independence of $\theta^\perp X$ from $Y$ (requiring the estimation of conditional covariances\footnote{For example see \cite{FY98} for a method to estimate conditional covariance. Alternatively, we can approximate the conditional covariances by nonconditional covariances, which are then extremely easy to calculate.}):
+The term $f_\theta(A^{*\perp} X\,|\,A^* X)$ represents a noise model for the orthogonal complement component. This noise is allowed to depend on the signal, but gives no additional information towards $Y$. We give some examples of assumptions on noise, and then for the rest of the paper assume a noninformative noise model (just as the original RPE method does).
+
+We could, for instance, assume multivariate Gaussian noise independent of $A^*X$ with mean $\mu$ and covariance matrix $\Sigma$, giving us
+\[
+f_\theta(A^{*\perp} X = x \,|\,A^* X)=\frac{1}{\sqrt{(2\pi)^{k}|\Sigma|}}
+\exp\left(-\frac{1}{2}({x}-{\mu})^\mathrm{T}{\Sigma}^{-1}({x}-{\mu})
+\right)
+\]
+Then we could add $\mu$ and $\Sigma$ to the parameter set $\theta$ and perform inference on them simultaneously with $A^*$.
+
+As another example, instead of making a model assumption about noise, we can substitute a term that represents the assumed lack of correlation between $A^{*\perp}X$ and $Y$ (requiring the estimation of conditional covariances\footnote{For example see \cite{FY98} for a method to estimate conditional covariance. Alternatively, we can approximate the conditional covariances by nonconditional covariances, which are then extremely easy to calculate.}):
 \[
 f(\theta^\perp X\,|\,\theta X, \theta) \approxpropto 1 - \frac{1}{p-d} \sum_i \sqrt\frac{\sigma^2_{(\theta^\perp X)_i,Y\,|\,\theta X}}{\sigma_{(\theta^\perp X)_i\,|\,\theta X}\sigma_{Y\,|\,\theta X}}
 \]
-However, for the rest of this paper we will focus on the accuracy term, and omit the noise independence term, which will be left to future work.
 
-Also, to state the obvious: when faced with a classification problem for which there \emph{is} a good model for $(\theta X,Y)$ or $\theta^\perp X$ or both, plugging them in above will increase power.
+There are a variety of possible noise models, and often the application area will suggest suitable models that can then be used to improve the power of our classifier -- this is one of the advantages of a Bayesian framework.
 
-\subsection{Assuming $\tilde f$ is a good approximation of $f$}
+From this point forward, we will use the null noise model $f_\theta(A^{*\perp} X \,|\,A^* X) \propto 1$ so that the noise component of $X$ has no effect on our inference.
 
-Let $\tilde f(D\,|\,\theta)$ represent one of the above approximations, and $\tilde\pi(\theta\,|\,D)$ represent the corresponding posterior derived from $\tilde f$. Next, let $\tilde \pi_{B_2}$ and $\pi_{B_2}$ represent the distribution of a sample from a Markov chain with corresponding stationary distribution after $B_2$ iterations (more on this later). The major assumption we will make is:\\
+\subsubsection{Signal}
 
-\noindent\textbf{Assumption (A.2)$'$}. For the given data $D$ and some $\epsilon>0$, $|g(\tilde\pi_{B_2})-g(\pi_{B_2})|<\epsilon$.
+A classifier is a ``device,'' not a model specification. Yet we want to rely on the model assumptions of our base classifier for $(A^*X,Y)$ after the parent RPE algorithm has performed the dimension reduction, instead of making our own.\footnote{A classifier using the RPE framework, but given a likelihood instead of a base classifier -- that would also be interesting!}
 
-\subsection{Markov Convergence Theorem and Ergodic Theorem}
-
-Markov chains have many nice properties -- for example, $\pi_{B_2}\to \pi$ in distribution as $B_2 \to \infty$ by the Markov Convergence Theorem, which already implies $g(\pi_{B_2})\to g(\pi)$.
-
-However, there is in fact a far stronger result (which we don't use in our implementation, but provides strong support for a certain future improvement):
-
-\begin{theorem}
-(Ergodic Theorem) For a functional $g(p)=\E_{A\sim p}(h(A))$, 
+There is a trick we can use here, however. We can \emph{make} $\hat C_n$ into a model specification by letting
 \[
-\left|\sum_{i=1}^{B_1}\frac{1}{B_1} h(A_i)-g(\pi)\right|\leq O(\exp(-B_1))
+-\log f_\theta(A^*X,Y) := \mathrm{logit}\left( \risk(\hat C_n^{A^*}) \right)+C
 \]
-in probability, where $A_i\sim\pi_{B_2}$ i.i.d. and $\pi_{B_2}$ is an ergodic Markov chain with stationary distribution $\pi$.
-\end{theorem}
+or simply
+\[
+f_\theta(A^*X,Y) \propto \frac{1-\risk(\hat C_n^{A^*})}{\risk(\hat C_n^{A^*})}.
+\]
+This is analogous to the link function in generalized linear models (GLMs), where we link the mean parameter $\mu$ to the linear model $X\beta$ through a function $g$. In logistic regression (ie. classification problems) this link function is the logit function.
 
-This result extends the power of Bayesian random projection optimization into the first-half inequality, and may be able to provide an exponential bound there without axis-alignment.
+This likelihood would of course be estimated by
+\[
+\hat f_\theta(A^*X,Y) \propto \frac{1-\hat L(\hat C_n^{A^*})}{\hat L(\hat C_n^{A^*})}.
+\]
+in terms of the test risk. $\hat{\bm{\Phi}}$ is then the Metropolis-Hastings Markov chain corresponding to this estimated likelihood.
 
-\subsection{Irremovable error}
+\subsubsection{Summary}
 
-For the last arrow, note that final bit of error $\epsilon_\mathrm{irr} = g(\pi)-g(\pi_0)$ is irreducible, as $g(\pi)$ is in the Bayesian sense the best possible expected risk with the assumptions and data we have.
+We have thus bounded 
+\[
+g(\hat{\bm{\Phi}}^{B_1})-g(\pi_0) \leq \epsilon + o(\rho^{-B_1}) + \epsilon_\mathrm{irr}
+\]
+where the terms correspond to approximating $\bm{\Phi}$ by $\hat{\bm{\Phi}}$, $\pi$ by $\bm{\Phi}$, and $\pi_0$ by $\pi$ respectively.
 
 \subsection{Implementation}
 
 \subsubsection{Metropolis-Hastings}
 
-Metropolis-Hastings \cite{MRRTT53} is a Markov Chain Monte Carlo algorithm for sampling from a distribution $P(x)$ that only requires the ability to compute ratios $P(x)/P(x')$ -- thus, we only need to be able to calculate a function proportional to $P(x)$. In this implementation, we use the test accuracy for this purpose.
+Metropolis-Hastings \cite{MRRTT53} is a Markov Chain Monte Carlo algorithm for sampling from a distribution $P(x)$ that only requires the ability to compute ratios $P(x)/P(x')$ -- thus, we only need to be able to calculate a function proportional to $P(x)$, which is exactly what we have.
 
 M-H is a random walk algorithm, and thus also requires a proposal distribution $Q(x\to x')$. Ideally, this proposal distribution will be symmetric $Q(x\to x')=Q(x'\to x)$ so we won't need to calculate transition probabilities in the accept/reject step.
 
 \subsubsection{Choice of proposal kernel}
 
-In our case, we are performing a random walk on a projection matrix space $\mathcal A$. Our perturbations must also fall within this space, so we can't simply noise up every cell in $A$ by a standard Gaussian to obtain a proposal $A'$.
-
-In the axis-aligned case this is easy; simply pick an active feature and an inactive feature, and toggle them. For Haar projections this is more difficult.
+In our case, we are performing a random walk on a projection matrix space $\mathcal A$. Our perturbations must also fall within this space, so it won't work to simply noise up every cell in $A$ by a standard Gaussian to obtain a proposal $A'$. In the axis-aligned case this is easy; simply pick an active feature and an inactive feature, and toggle them. For Haar projections this is more difficult.
 
 Note that a projection $A$ can be represented as an orthonormal $d$-set in $p$-space. The natural way to perturb this $d$-set while maintaining orthonormality is by rotation.
 
-The next problem is finding a good distribution on small $p$-space rotations. Note that rotations in $\mathbb R^p$ can be represented as a series of two-dimensional rotations in pairwise orthogonal hyperplanes. This leads to an algorithm for generating small rotations.
+The next problem is finding a good distribution on small $p$-space rotations. Observe that rotations in $\mathbb R^p$ can be represented as a series of two-dimensional rotations in pairwise orthogonal hyperplanes. This leads to an algorithm for generating small rotations.
 
 \subsubsection{Implementation of proposal kernel}
 
@@ -719,11 +756,29 @@ To perform this small-rotation perturbation, first note that picking a set of $k
 
 To speed up computation, we memoize a standard $5^\circ$ counterclockwise isoclinic rotation, through the $\lfloor p/2 \rfloor$ hyperplanes defined by consecutive standard basis vectors. We then conjugate it by a random basis to obtain a random rotation, and then apply it to $A$ to get our proposal $A'$.
 
+\subsection{Ensemble sampling architectures}
+
+Instead of starting from the prior (discarding information) $B_1$ times, efficiency can be gained by sampling all the $A_i$ from the same Markov chain -- in other words, sampling an ensemble (or emperical CDF) from $\tilde\pi$. However, the problem with sampling multiple projections from the same simple M-H chain is that M-H will get stuck in local minima, threatening the independence assumption as well as ensemble diversity.
+
+\subsubsection{Sequential importance resampling}
+
+One way to sample an ensemble avoiding this issue is to use Sequential Importance Resampling (SIR), also often known as particle filtering. For example:
+\begin{enumerate}
+	\item Sample $B_1$ matrices $A_i$ from the prior.
+	\item Perform importance resampling, which is basically a bootstrap draw (resample) from the ensemble, weighted by the likelihoods (importances).
+	\item Run $k$ steps of normal MCMC in parallel on the ensemble.
+	\item Repeat 2-3 for $B_2$ iterations.
+\end{enumerate}
+
+\subsubsection{Parallel tempering}
+
+Another, more involved approach would be to use Parallel Tempering (PT). This algorithm runs a ladder of parallel Markov chains, where the top rung has ``infinite temperature'' (ie. is sampled from the prior), the next rung has high temperature (for instance, $T=10$), and so on, down to the bottommost rung with $T=1$.
+
+By a chain with temperature $T$, we mean that the acceptance ratio $a$ is taken to the power $1/T$. Thus, a very cold chain performs very greedy optimization, getting closer to strict gradient descent as $T\to 0$, and a very high temperature chain tends to ignore the likelihood, being much more willing to accept proposals that land in lower likelihoods.
+
+In addition to the normal M-H steps in parallel, PT creates a new type of step (like SIR's resample step) in which swaps between adjacent runs are proposed and accepted/rejected. Thus, the bottommost rung does not get stuck in local minima -- the upper rungs will find and explore between disjoint probability clusters, while the lower rungs will sample the correct posterior in each cluster.
+
 \subsection{Improvements \& future work}
-
-\subsubsection{Better loss functions}
-
-The closer $\tilde f$ is to $f$, the closer $\mathbb \E(\risk^A_n)$ gets to $\rrisk^\mathrm{Bayes}$, as quantified by $\epsilon$. Several future improvements were mentioned before, including the inclusion of a loss function for the noise component $f(\theta^\perp X\,|\,\theta X, \theta)$, for which a few ways of approximate-proportional estimation were given.
 
 \subsubsection{Bootstrap or $k$-fold cross-validation in misclassification rate estimates}
 
@@ -734,6 +789,8 @@ $k$-fold cross-validation can also be used instead of bootstrap.
 \subsubsection{Jump size}
 
 The current algorithm proposes jumps of constant size $5^\circ\times\left\lfloor\frac{p}{2}\right\rfloor$. This is inefficient in the beginning, where the initial matrix is likely to be far from the typical set of samples. Near the end, it becomes too coarse, unable to sample very well from regions whose width is smaller than the jump size.
+
+In terms of the theory, such a large, fixed jump size presents a barrier to uniform ergodicity.
 
 Optimizing the proposal kernel to adaptively or systematically increase in precision would both save computation and improve performance. By systematically, we mean setting a fixed schedule for jump size reduction:
 
@@ -749,28 +806,6 @@ $i=B_2$ & $0.01^\circ$ & $\max\left(\left\lfloor\frac{p}{10}\right\rfloor, 1\rig
 Alternatively, instead of a fixed schedule as above, each jump size can be run until no (or little) improvements have been made in the last 100 iterations, after which the next jump size is used.
 
 These methods can both be seen as forms of simulated annealing.
-
-\subsubsection{Ensemble sampling architectures -- PT, SIR}
-
-Instead of starting from the prior (discarding information) $B_1$ times, efficiency can be gained by sampling all the $A_i$ from the same Markov chain -- in other words, sampling an ensemble (or emperical CDF) from $\tilde\pi$.
-
-Besides the impressive power gain we saw from the Ergodic Theorem (asymptotically exponentially bounded excess expected test risk, averaged over the ensemble), we should see a massive improvement in computational time.
-
-However, the problem with sampling multiple projections from the same simple M-H chain is that M-H will get stuck in local minima, posing a threat to our independence assumption as well as compromising ensemble diversity.
-
-One way to sample an ensemble avoiding this issue is to use Sequential Importance Resampling (SIR), also often known as particle filtering. For example:
-\begin{enumerate}
-\item Sample $B_1$ matrices $A_i$ from the prior.
-\item Perform importance resampling, which is basically a bootstrap draw (resample) from the ensemble, weighted by the likelihoods (importances).
-\item Run $k$ steps of normal MCMC in parallel on the ensemble.
-\item Repeat 2-3 for $B_2$ iterations.
-\end{enumerate}
-
-A more involved approach would be to use Parallel Tempering (PT). This algorithm runs a ladder of parallel Markov chains, where the top rung has ``infinite temperature'' (ie. is sampled from the prior), the next rung has high temperature (for instance, $T=10$), and so on, down to the bottommost rung with $T=1$.
-
-By a chain with temperature $T$, we mean that the acceptance ratio $a$ is taken to the power $1/T$. Thus, a very cold chain performs very greedy optimization, getting closer to strict gradient descent as $T\to 0$, and a very high temperature chain tends to ignore the likelihood, being much more willing to accept proposals that land in lower likelihoods.
-
-In addition to the normal M-H steps in parallel, PT creates a new type of step (like SIR's resample step) in which swaps between adjacent runs are proposed and accepted/rejected. Thus, the bottommost rung does not get stuck in local minima -- the upper rungs will find and explore between disjoint probability clusters, while the lower rungs will sample the correct posterior in each cluster.
 
 
 

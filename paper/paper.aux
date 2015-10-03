@@ -10,6 +10,8 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Motivation}{0}}
 \citation{CS15}
 \citation{CS15}
+\citation{CS15}
+\citation{CS15}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Introduction}{1}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.1}First half}{1}}
 \newlabel{eqn:first-half}{{1}{1}}
@@ -18,49 +20,67 @@
 \newlabel{sec:glossary}{{1.3}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Review of RPE theory}{3}}
 \newlabel{sec:review}{{1.4}{3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The empirical $G_{n,i}$ curves for the standard run ($B_{1}=B_{2}=100$) of Model 1 ($n_{\mathrm  {train}}=50$) with RPE-H LDA (left) versus RPE-A LDA (right), averaged over 10 instances.}}{4}}
+\citation{CS15}
+\citation{CS15}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The empirical $G_{n,i}$ curves for standard runs of Model 1 in \cite  {CS15} ($n_{\mathrm  {train}}=50$ and $B_{1}=B_{2}=100$) with RPE-H LDA, averaged over 10 instances.}}{4}}
 \newlabel{fig:std-run-g-curves}{{1}{4}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Axis-aligned RPE theory}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}$G_{n,i}$ curves}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The empirical $G_{n,i}$ curves for $p=5$ and $d=2$, again with RPE-H LDA (left) and RPE-A LDA (right), averaged over 10 instances. The difference is much clearer.}}{5}}
-\newlabel{fig:mini-run-g-curves}{{2}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Effect of axis-alignment on $G_{n,i}$ curves}{4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Effect of axis-alignment on second-half bound}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}New theorem}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}New theorem}{5}}
 \citation{CGHJK96}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Lower bound for $B_{1}$ as a function of upper bound for $\epsilon $.}}{8}}
+\newlabel{fig:b1-as-func-of-eps}{{2}{8}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Estimating $\qopname  \relax m{min}|\alpha -r|$}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Lower bound for $B_{1}$ as a function of upper bound for $\epsilon $.}}{9}}
-\newlabel{fig:b1-as-func-of-eps}{{3}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Discussion \& future work}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Bayesian random projection optimization}{9}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces $g_{n,1}$ (the distribution of $r_{1}=\mathbb  {P}\left (\mathaccentV {hat}05E{C}_{n}^{A}(X)=1\tmspace  +\thinmuskip {.1667em}|\tmspace  +\thinmuskip {.1667em}X,Y=1\right )$) for Model 1 with standard parameters, estimated from 10 runs.}}{10}}
-\newlabel{fig:r1-dist}{{4}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces An example posterior density $\pi (A=A^*\tmspace  +\thinmuskip {.1667em}|\tmspace  +\thinmuskip {.1667em}\mathrm  {data})$, visualized in one dimension. }}{10}}
-\newlabel{fig:illust1}{{5}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces An ensemble representing (approximating) $\pi (A=A^*\tmspace  +\thinmuskip {.1667em}|\tmspace  +\thinmuskip {.1667em}\mathrm  {data})$.}}{11}}
-\newlabel{fig:illust2}{{6}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Outline}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Discussion \& future work}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces $g_{n,1}$ (the distribution of $r_{1}=\mathbb  {P}\left (\mathaccentV {hat}05E{C}_{n}^{A}(X)=1\tmspace  +\thinmuskip {.1667em}|\tmspace  +\thinmuskip {.1667em}X,Y=1\right )$) for Model 1 with standard parameters, estimated from 10 runs.}}{9}}
+\newlabel{fig:r1-dist}{{3}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces An example posterior density $\pi (A^*\tmspace  +\thinmuskip {.1667em}|\tmspace  +\thinmuskip {.1667em}\mathrm  {data})$, visualized in one dimension. }}{10}}
+\newlabel{fig:illust1}{{4}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Bayesian random projection optimization}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Bayesian motivation}{10}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Illustration}{10}}
+\citation{CS15}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces An ensemble representing (approximating) $\pi (A^*\tmspace  +\thinmuskip {.1667em}|\tmspace  +\thinmuskip {.1667em}\mathrm  {data})$.}}{11}}
+\newlabel{fig:illust2}{{5}{11}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Bootstrap MAP versus density estimation}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Bayesian framework}{11}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Drawing directly from $\pi (A^*\tmspace  +\thinmuskip {.1667em}|\tmspace  +\thinmuskip {.1667em}\mathrm  {data})$}{11}}
+\citation{MT93}
+\citation{Sarig08}
+\citation{Sarig08}
+\citation{MT93}
+\citation{Sarig08}
+\citation{MT93}
+\citation{MT93}
+\citation{Sarig08}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Drawing from an ergodic Markov chain with stationary distribution $\pi (A^*\tmspace  +\thinmuskip {.1667em}|\tmspace  +\thinmuskip {.1667em}\mathrm  {data})$}{12}}
+\citation{MT93}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Deriving the likelihood from the base classifier}{13}}
+\newlabel{eqn:likelihood-decomposition}{{2}{13}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}Noise}{13}}
 \citation{FY98}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Posterior distribution of $A^*$}{12}}
-\newlabel{eqn:likelihood-decomposition}{{2}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Signal}{14}}
 \citation{MRRTT53}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Assuming $\mathaccentV {tilde}07Ef$ is a good approximation of $f$}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Markov Convergence Theorem and Ergodic Theorem}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Irremovable error}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Implementation}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.1}Metropolis-Hastings}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.2}Choice of proposal kernel}{14}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.3}Implementation of proposal kernel}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}Improvements \& future work}{14}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.7.1}Better loss functions}{14}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.7.2}Bootstrap or $k$-fold cross-validation in misclassification rate estimates}{14}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.7.3}Jump size}{15}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.7.4}Ensemble sampling architectures -- PT, SIR}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.3}Summary}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Implementation}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.1}Metropolis-Hastings}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.2}Choice of proposal kernel}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.3}Implementation of proposal kernel}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Ensemble sampling architectures}{16}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.1}Sequential importance resampling}{16}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.5.2}Parallel tempering}{16}}
 \bibstyle{imsart-number}
 \bibdata{references}
 \bibcite{Breiman01}{1}
 \bibcite{CS15}{2}
 \bibcite{CGHJK96}{3}
 \bibcite{DG03}{4}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Improvements \& future work}{17}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.1}Bootstrap or $k$-fold cross-validation in misclassification rate estimates}{17}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.6.2}Jump size}{17}}
+\@writefile{toc}{\contentsline {section}{References}{17}}
 \bibcite{FY98}{5}
 \bibcite{MRRTT53}{6}
-\@writefile{toc}{\contentsline {section}{References}{16}}
+\bibcite{MT93}{7}
+\bibcite{Sarig08}{8}
