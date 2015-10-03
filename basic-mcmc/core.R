@@ -48,6 +48,8 @@ mcmc_accept = function(oldcost, newcost) {
 	hastings_ratio = (1-newcost)/(1-oldcost)
 #	# Let's make it really cold
 #	hastings_ratio = hastings_ratio^100
+	# Try using "logit link"
+	hastings_ratio = hastings_ratio*(oldcost/newcost)
 	return(runif(1) < hastings_ratio)
 }
 
@@ -170,10 +172,11 @@ ensemble.mcmc = function(data, B1=100, B2=100, p=50, d=5, classifier="lda", estm
 
 
 run.experiment = function(task, R=100, title="Experiment") {
+	task = substitute(task)
 	cl = makeCluster(detectCores() - 1)
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 	
-	results = parSapply(cl, 1:R, task)
+	system.time(results = parSapply(cl, 1:R, task))
 	cat(paste0(title, ": ", mean(results),
 					" pm ", sd(results)/sqrt(R), "\n"))
 	
