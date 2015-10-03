@@ -639,7 +639,7 @@ Drawing directly from $\pi(A^*\,|\,\mathrm{data})$ is infeasible (it would requi
 
 However, if we have an ergodic Markov chain with $\pi(A^*\,|\,\mathrm{data})$ as its stationary distribution, there is an powerful result we can invoke from ergodic theory. This theorem can be interpreted as a type of law of large numbers, saying that for an ergodic random process, the time average moves closer to the space average as time goes on.
 
-The textbook \cite{MT93} is a general reference for ergodic theory on Markov chains, while the lecture notes \cite{Sarig08} provide a more concise summary. The weak ergodic theorem cited here is Theorem 2.1 (von Neumann's Mean Ergodic Theorem) from \cite{Sarig08}; Theorem 2.2 (Birkhoff's Pointwise Ergodic Theorem) is a stronger result (almost everywhere convergence) that we don't need. The geometric ergodic theorem is given two entire chapters, Chapters 15 \& 16, in \cite{MT93}, and also appears a remark at the end of Section 1.5.4.3 (Proof of the Ergodic Theorem for Markov chains) of \cite{Sarig08}, after the proof.
+The textbook \cite{MT93} is a general reference for ergodic theory on Markov chains, while the lecture notes \cite{Sarig08} and \cite{Geyer12} provide a more concise summary. The weak ergodic theorem cited here is Theorem 2.1 (von Neumann's Mean Ergodic Theorem) from \cite{Sarig08}; Theorem 2.2 (Birkhoff's Pointwise Ergodic Theorem) is a stronger result (almost everywhere convergence) that we don't need. The geometric ergodic theorem is given two entire chapters, Chapters 15 \& 16, in \cite{MT93}, and also appears a remark at the end of Section 1.5.4.3 (Proof of the Ergodic Theorem for Markov chains) of \cite{Sarig08}, after the proof.
 
 \begin{theorem}
 (Weak ergodic theorem) For any functional $g(p)=\E_{A\sim p}(h(A))$, 
@@ -650,16 +650,22 @@ as $B_1\to\infty$, where the $A_i$ are drawn from an ergodic Markov chain $\bm{\
 \end{theorem}
 
 \begin{theorem}
-(Geometric ergodic theorem) If $\bm\Phi$ is uniformly ergodic (satisfying one of the seven equivalent conditions in Theorem 16.0.2 of \cite{MT93}), then for any functional $g(p)=\E_{A\sim p}(h(A))$, 
+(Uniform ergodic theorem) If $\bm\Phi$ is uniformly ergodic (satisfying one of the seven equivalent conditions in Theorem 16.0.2 of \cite{MT93}), then for any functional $g(p)=\E_{A\sim p}(h(A))$, 
 \[
 \left|\sum_{i=1}^{B_1}\frac{1}{B_1} h(A_i)-g(\pi)\right|\leq C\cdot \rho^{B_1}
 \]
 in probability for some $\rho<1$, independent of the initial state.
 \end{theorem}
 
-Ergodicity is implied by irreducibility, aperiodicity, and positive recurrence, which Metropolis-Hastings algorithms satisfy (this is the type of inference algorithm we will apply). \{Note to Tim: uniform ergodicity seems a lot more complicated to prove -- although the intro to \cite{MT93} Ch. 16 notes that geometric ergodicity is the norm rather than the exception for most problems. Since our projection matrix space is finite-dimensional and normal in a lot of respects, my intuition is that it should hold. It certainly does for finite state spaces (mentioned in \cite{Sarig08}), so any ergodic chain on axis-aligned projection matrix space would guarantee geometric ergodicity. Anyhow, this is a to-do item.\}
+\{There is also a geometric ergodic theorem, which is weaker than uniform ergodicity. However, uniform ergodicity would be ideal.\}
 
-\{Also, I couldn't find direct references for the version of the geometric ergodic theorem I wanted to use (ie. in terms of weak convergence, and in terms of a time average). \cite{MT93} uses convergence in $V$-norm, and I'm not sure if their notation denotes taking a time average, or merely the distribution of the $B_1$th sample. Need to spend the time to derive the version I want. It seems to be mentioned everywhere, but formally found nowhere...\}
+Ergodicity is implied by irreducibility, aperiodicity, and positive recurrence, which Metropolis-Hastings algorithms satisfy (this is the type of inference algorithm we will apply). \{Note to Tim: geometric or uniform ergodicity seem complicated to prove -- although the intro to \cite{MT93} Ch. 16 notes that geometric ergodicity is the norm rather than the exception for most problems. However \cite{Geyer12} states that most Markov chains are not uniformly ergodic.\}
+
+\{As mentioned in \cite{Sarig08}, any ergodic chain on a finite state space (ie. axis-aligned projection matrix space) is uniformly ergodic.\}
+
+\{Besides not knowing whether to apply uniform or geometric ergodicity, I couldn't find direct references for the version of the geometric/uniform ergodic theorem I wanted to use (ie. in terms of weak convergence, and in terms of a time average). \cite{MT93} uses convergence in $V$-norm, and I'm not sure if their notation denotes taking a time average, or merely the distribution of the $B_1$th sample. Need to spend the time to derive the version I want. It seems to be mentioned everywhere, but formally found nowhere.\}
+
+\{Anyways, if you're interested in this, I think \cite{Geyer12} is the best reference.\}
 
 Let $\pi_0(\theta)=\delta_{A^*}(\theta)$ be the true density of $A^*$, ie.
 \[
