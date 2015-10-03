@@ -177,7 +177,7 @@ run.experiment = function(task, R=100, title="Experiment") {
 	clusterEvalQ(cl, source("basic-mcmc/core.R"))
 	
 	system.time({
-			results = parSapply(cl, 1:R, task)
+			results = parSapply(cl, 1:R, function(i) eval(task))
 		})
 	cat(paste0(title, ": ", mean(results),
 					" pm ", sd(results)/sqrt(R), "\n"))
