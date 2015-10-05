@@ -45,14 +45,19 @@ mcmc_accept = function(oldcost, newcost) {
 	# Proposal kernel is symmetric, so Hastings ratio is just the ratio of
 	# the probabilities. Here, our cost functions are misclassification rates
 	# so we take their difference from 1 to obtain the state probabilities.
-	hastings_ratio = (1-newcost)/(1-oldcost)
-	# Try using "logit link"
-	hastings_ratio = hastings_ratio*(oldcost/newcost)
-	# Let's make it colder
-	hastings_ratio = hastings_ratio^2
+#	hastings_ratio = (1-newcost)/(1-oldcost)
 	
-#	cat(paste0("MCR: ", oldcost, " -> ", newcost, "\n"))
-#	cat(paste0("HST: ", hastings_ratio, "\n"))
+#	# Try using "logit link"
+#	hastings_ratio = hastings_ratio*(oldcost/newcost)
+	
+#	# Let's make it colder
+#	hastings_ratio = hastings_ratio^2
+	
+	# Try using "Boltzmann distribution" -loglik = risk
+	hastings_ratio = exp(oldcost-newcost)
+	
+	cat(paste0("MCR: ", oldcost, " -> ", newcost, "\n"))
+	cat(paste0("HST: ", hastings_ratio, "\n"))
 	
 	if(is.nan(hastings_ratio)) hastings_ratio=0.5;
 	
