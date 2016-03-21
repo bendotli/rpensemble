@@ -1,0 +1,58 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{MRR{\etalchar{+}}53}
+
+\bibitem[Bre01]{Breiman01}
+Leo Breiman, \emph{Random forests}, Machine Learning \textbf{45} (2001), no.~1,
+  5--32 (English).
+
+\bibitem[CGH{\etalchar{+}}96]{CGHJK96}
+R.~M. Corless, G.~H. Gonnet, D.~E.~G. Hare, D.~J. Jeffrey, and D.~E. Knuth,
+  \emph{On the lambert w function}, Advances in Computational Mathematics,
+  1996, pp.~329--359.
+
+\bibitem[CNM06]{CN06}
+Rich Caruana and Alexandru Niculescu-Mizil, \emph{An empirical comparison of
+  supervised learning algorithms}, ICML 2006, 2006.
+
+\bibitem[CS15]{CS15}
+Timothy~I. Cannings and Richard~J. Samworth, \emph{Random projection ensemble
+  classification}, pre-print (2015), arXiv:1504.04595v1.
+
+\bibitem[DG03]{DG03}
+Sanjoy Dasgupta and Anupam Gupta, \emph{An elementary proof of a theorem of
+  johnson and lindenstrauss}, Random Structures \& Algorithms \textbf{22}
+  (2003), no.~1, 60--65.
+
+\bibitem[FY98]{FY98}
+Jianqing Fan and Qiwei Yao, \emph{Efficient estimation of conditional variance
+  functions in stochastic regression}, Biometrika \textbf{85} (1998), no.~3,
+  645--660.
+
+\bibitem[Gey12]{Geyer12}
+Charles~J. Geyer, \emph{Lecture notes on markov chains}, 2012.
+
+\bibitem[LLC10]{LLC10}
+Faming Liang, Chuanhai Liu, and Raymond~J. Carroll, \emph{Advanced markov chain
+  monte carlo methods}, Wiley, 2010.
+
+\bibitem[MRR{\etalchar{+}}53]{MRRTT53}
+Nicholas Metropolis, Arianna~W. Rosenbluth, Marshall~N. Rosenbluth, Augusta~H.
+  Teller, and Edward Teller, \emph{Equation of state calculations by fast
+  computing machines}, The Journal of Chemical Physics \textbf{21} (1953),
+  no.~6.
+
+\bibitem[MT93]{MT93}
+S.~P. Meyn and R.~L. Tweedie, \emph{Markov chains and stochastic stability},
+  Springer-Verlag, 1993.
+
+\bibitem[Sar08]{Sarig08}
+Omri Sarig, \emph{Lecture notes on ergodic theory}, 2008.
+
+\end{thebibliography}

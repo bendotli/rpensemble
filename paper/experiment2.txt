@@ -1,0 +1,57 @@
+> source("basic-mcmc/compare.R")
+> summarize.ensemble.bruteforce()
+Ensemble, bruteforce optimization
+Model 1: 0.4447 pm 0.00605439151076775
+Model 2: 0.2048 pm 0.005448528668041
+Model 3: 0.451 pm 0.0059075367031437
+Model 4: 0.356 pm 0.00572077553547355
+Model 5: 0.199069264069264 pm 0.00268068965431948
+
+> summarize.ensemble.mcmc(T=100)
+Ensemble, MCMC posterior predictive sampling
+Model 1: 0.4356 pm 0.00777891477980799
+Model 2: 0.21 pm 0.0062619582569769
+Model 3: 0.457 pm 0.00633970970880522
+Model 4: 0.3497 pm 0.00607936566334736
+Model 5: 0.200454545454545 pm 0.00277240946342517
+
+> summarize.ensemble.mcmc(T=100, B2=1000)
+Ensemble, MCMC posterior predictive sampling
+Model 1: 0.4458 pm 0.00620390883624871
+Model 2: 0.2081 pm 0.00554630644226544
+Model 3: 0.4657 pm 0.0060239505142373
+Model 4: 0.3594 pm 0.00559368330613138
+Model 5: 0.207835497835498 pm 0.00289271487630555
+
+> summarize.ensemble.mcmc()
+Ensemble, MCMC posterior predictive sampling
+Model 1: 0.4429 pm 0.00926958205719932
+Model 2: 0.2612 pm 0.00867281832957302
+Model 3: 0.4392 pm 0.00768532643576331
+Model 4: 0.3482 pm 0.00665207494020482
+Model 5: 0.202554112554113 pm 0.00267445508211301
+
+There were 35 warnings (use warnings() to see them)
+> summarize.ensemble.mcmc(B2=1000)
+Ensemble, MCMC posterior predictive sampling
+Model 1: 0.4532 pm 0.00880527849036754
+Model 2: 0.2772 pm 0.00873872144682805
+Model 3: 0.4505 pm 0.00769149471228388
+Model 4: 0.3485 pm 0.00521531350443048
+Model 5: 0.203138528138528 pm 0.00292094403091145
+
+> summarize.ensemble.mcmc(B1=1000)
+Ensemble, MCMC posterior predictive sampling
+Model 1: 0.4426 pm 0.00973343711028114
+Model 2: 0.2632 pm 0.0104309949940385
+Model 3: 0.4323 pm 0.00725001567396425
+Model 4: 0.3389 pm 0.00571352285672714
+Model 5: 0.201515151515152 pm 0.00304595757782887
+
+> summarize.ensemble.bruteforce(B1=1000)
+Ensemble, bruteforce optimization
+Model 1: 0.449 pm 0.00591778691912796
+Model 2: 0.1926 pm 0.00536283507111677
+Model 3: 0.4572 pm 0.00737875738902294
+Model 4: 0.333 pm 0.00489794844704382
+Model 5: 0.196320346320346 pm 0.00329737383294663

@@ -1,6 +1,6 @@
 # Main routine for MCMC projection matrix optimization.
 # 
-# Author: Ben Li <jiachengli@college.harvard.edu>
+# Author: Ben Li <bjli@college.harvard.edu>
 ###############################################################################
 
 # Internal libraries
@@ -41,20 +41,26 @@ project = function(data, m) {
 
 #' Calculate Hastings ratio & accept/reject the new state based on it.
 #' 
-mcmc_accept = function(oldcost, newcost) {
+mcmc_accept = function(oldcost, newcost, progress) {
 	# Proposal kernel is symmetric, so Hastings ratio is just the ratio of
 	# the probabilities. Here, our cost functions are misclassification rates
 	# so we take their difference from 1 to obtain the state probabilities.
-#	hastings_ratio = (1-newcost)/(1-oldcost)
+	hastings_ratio = (1-newcost)/(1-oldcost)
 	
-#	# Try using "logit link"
-#	hastings_ratio = hastings_ratio*(oldcost/newcost)
+	# Try using "logit link"
+	hastings_ratio = hastings_ratio*(oldcost/newcost)
 	
-#	# Let's make it colder
-#	hastings_ratio = hastings_ratio^2
+#	# Temperature schedule
+	hastings_ratio = hastings_ratio^100
+#	if(progress > 0.25) {
+#		hastings_ratio = hastings_ratio^2
+#	}
+#	if(progress > 0.75) {
+#		hastings_ratio = hastings_ratio^2
+#	}
 	
-	# Try using "Boltzmann distribution" -loglik = risk
-	hastings_ratio = exp(oldcost-newcost)
+#	# Try using "Boltzmann distribution" -loglik = risk
+#	hastings_ratio = exp(oldcost-newcost)
 	
 	cat(paste0("MCR: ", oldcost, " -> ", newcost, "\n"))
 	cat(paste0("HST: ", hastings_ratio, "\n"))
@@ -103,9 +109,10 @@ mcmc_step = function(m, progress) {
 	theta = 30; rots = floor(p/2);
 	if(progress > 0.25) {
 		theta = 5; rots = floor(p/4);
-	} else if(progress > 0.75) {
-		theta = 2; rots = floor(p/10);
 	}
+#	if(progress > 0.75) {
+#		theta = 2; rots = floor(p/10);
+#	}
 	
 	if(rots < 1) rots = 1;
 	
@@ -127,6 +134,8 @@ mcmc_optimize = function(data, B2 = 100, p = 50, d = 5, initialmethod = "Haar",
 	
 	# Run Markov chain for a total of R steps
 	accept_ctr = 0
+	m_err_plot = vector("list", B2+1)
+	m_err_plot[1] = m_err;
 	for(i in 1:B2) {
 		#cat(paste0("Iteration ", i, "\n"))
 		
@@ -137,14 +146,16 @@ mcmc_optimize = function(data, B2 = 100, p = 50, d = 5, initialmethod = "Haar",
 		proposal_err = run_classifier(project(data, proposal), classifier, estmethod)
 		
 		# Accept/reject
-		if(mcmc_accept(m_err, proposal_err)) {
+		if(mcmc_accept(m_err, proposal_err, i/B2)) {
 			m = proposal
 			m_err = proposal_err
 			accept_ctr = accept_ctr + 1
 		}
+		m_err_plot[i+1] = m_err
 	}
 	cat(paste0("Final misclassification rate: ", m_err, "\n"))
 	cat(paste0("Acceptance rate: ", accept_ctr/B2, "\n"))
+	plot(0:B2, m_err_plot, type="b")
 	
 	return(m)
 }

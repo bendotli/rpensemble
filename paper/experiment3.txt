@@ -1,0 +1,72 @@
+
+> run.experiment(function(i) {ensemble.mcmc(basic.model())})
+Experiment: 0.04203 pm 0.00156582537050244
+> run.experiment(function(i) {compare.haar.rpe.lda(basic.model())})
+Experiment: 0.04248 pm 0.00208542222549436
+> run.experiment(function(i) {ensemble.mcmc(basic.model(), B2=20)})
+Experiment: 0.03983 pm 0.00153892622935407
+
+
+
+
+
+
+
+
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B2=20, classifier="qda")})
+Experiment: 0.2976 pm 0.00861537268286442
+> run.experiment(function(i) {ensemble.mcmc(model.1(), classifier="qda")})
+Experiment: 0.3099 pm 0.00967814887551156
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B2=10, classifier="qda")})
+Experiment: 0.2965 pm 0.00934131152516075
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B1=1000, B2=10, classifier="qda")})
+Experiment: 0.321 pm 0.0101548615018233
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B1=5, B2=1000, classifier="qda")})
+Experiment: 0.3587 pm 0.00652989241484842
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B1=5, B2=20, classifier="qda")})
+Experiment: 0.3435 pm 0.00618302498618581
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B1=20, B2=20, classifier="qda")})
+Experiment: 0.2868 pm 0.00721653544565422
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B1=20, B2=20, classifier="qda")})
+Experiment: 0.2863 pm 0.00736310074121307
+> run.experiment(function(i) {compare.haar.rpe.qda(model.1())})
+Experiment: 0.1878 pm 0.00562925260123268
+
+
+
+
+
+
+
+
+
+> run.experiment(function(i) {ensemble.mcmc(model.2(), classifier="knn")})                                                                                                           
+^C
+
+
+
+
+> run.experiment(function(i) {ensemble.mcmc(model.3(), classifier="qda")})
+Experiment: 0.3869 pm 0.00898449281323721
+> run.experiment(function(i) {ensemble.mcmc(model.3(), B1=20, B2=20, classifier="qda")})
+Experiment: 0.3272 pm 0.00765688440476143
+
+
+
+
+
+
+
+
+> run.experiment(function(i) {ensemble.mcmc(model.4(), d=2, classifier="qda")})
+Experiment: 0.3668 pm 0.00628752171311792
+> run.experiment(function(i) {ensemble.mcmc(model.4(), B1=20, B2=20, d=2, classifier="qda")})
+Experiment: 0.4001 pm 0.00584219240706878
+> run.experiment(function(i) {ensemble.mcmc(model.4(), B2=20, d=2, classifier="qda")})
+Experiment: 0.3615 pm 0.00579336959921696
+> run.experiment(function(i) {ensemble.mcmc(model.4(), B1=1000, B2=20, d=2, classifier="qda")})
+Experiment: 0.358 pm 0.0053503516357584
+> run.experiment(function(i) {ensemble.mcmc(model.4(), B1=1000, B2=100, d=2, classifier="qda")})
+Experiment: 0.3695 pm 0.00576190028979112
+> run.experiment(function(i) {ensemble.mcmc(model.4(), B1=1000, B2=10, d=2, classifier="qda")})
+Experiment: 0.3575 pm 0.00643283088004909

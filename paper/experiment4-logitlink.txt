@@ -1,0 +1,92 @@
+Without logit link, T=1:
+> run.experiment(function(i) {ensemble.mcmc(basic.model())})
+Experiment: 0.04005 pm 0.0015546850017111
+
+With logit link, T=1:
+> run.experiment(ensemble.mcmc(basic.model()))
+Experiment: 0.04166 pm 0.00179309675132045
+
+--------------------------------------------
+
+From last experiment:
+
+> run.experiment(function(i) {ensemble.mcmc(model.1(), classifier="qda")})
+Experiment: 0.3099 pm 0.00967814887551156
+
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B1=20, B2=20, classifier="qda")})
+Experiment: 0.2868 pm 0.00721653544565422
+
+With logit link:
+
+> run.experiment(ensemble.mcmc(model.1(), classifier="qda"))
+   user  system elapsed
+  0.032   0.000 284.465
+Experiment: 0.2978 pm 0.00982532288003655
+
+> run.experiment(ensemble.mcmc(model.1(), classifier="qda", B1=20, B2=20))
+   user  system elapsed
+  0.028   0.000  13.365
+Experiment: 0.2878 pm 0.00797544210484138
+
+
+Last experiment -- high B2:
+
+> run.experiment(function(i) {ensemble.mcmc(model.1(), B1=5, B2=1000, classifier="qda")})
+Experiment: 0.3587 pm 0.00652989241484842
+
+With logit link:
+
+> run.experiment(ensemble.mcmc(model.1(), classifier="qda", B1=5, B2=1000))
+   user  system elapsed
+  0.026   0.008 141.479
+Experiment: 0.3681 pm 0.00718963198507462
+
+> run.experiment(ensemble.mcmc(model.1(), classifier="qda", B1=20, B2=1000))
+   user  system elapsed
+  0.030   0.004 552.642
+Experiment: 0.2964 pm 0.00767854152818099
+
+> run.experiment(ensemble.mcmc(model.1(), classifier="qda", B1=100, B2=1000))
+    user   system  elapsed
+   0.033    0.000 2667.584
+Experiment: 0.3185 pm 0.00881043343847154
+
+--------------------------------------------------------
+
+Model 5 experiments with logit link:
+> run.experiment(ensemble.mcmc(model.5()))
+   user  system elapsed
+  0.024   0.012 295.112
+Experiment: 0.201017316017316 pm 0.00295353478825057
+> run.experiment(ensemble.mcmc(model.5(n_train=100)))
+   user  system elapsed
+  0.027   0.004 316.266
+Experiment: 0.186577669902913 pm 0.00201680678884304
+> run.experiment(ensemble.mcmc(model.5(n_train=200)))
+   user  system elapsed
+  0.027   0.008 345.172
+Experiment: 0.177179487179487 pm 0.00203429576673708
+
+Again with d=3:
+> run.experiment(ensemble.mcmc(model.5(), d=2))
+   user  system elapsed
+  0.038   0.000 265.351
+Experiment: 0.224329004329004 pm 0.00287623297114098
+> run.experiment(ensemble.mcmc(model.5(n_train=100), d=2))
+   user  system elapsed
+  0.027   0.004 282.132
+Experiment: 0.212645631067961 pm 0.00276567272567556
+> run.experiment(ensemble.mcmc(model.5(n_train=200), d=2))
+   user  system elapsed
+  0.028   0.004 307.027
+Experiment: 0.202403846153846 pm 0.00261434801216781
+
+Model 4 (rotated sparse normals) with logit link:
+> run.experiment(ensemble.mcmc(model.4()))
+   user  system elapsed
+  0.025   0.004 286.636
+Experiment: 0.3525 pm 0.00584025563298267
+> run.experiment(ensemble.mcmc(model.4(), classifier="qda"))
+   user  system elapsed
+  0.029   0.012 289.750
+Experiment: 0.3677 pm 0.00543994763789417

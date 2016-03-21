@@ -1,0 +1,10 @@
+> run.experiment(ensemble.mcmc(model.5()))
+   user  system elapsed
+  0.026   0.012 295.224
+Experiment: 0.198961038961039 pm 0.002940692624278
+
+> run.experiment(ensemble.mcmc(model.4(), classifier="qda"))
+   user  system elapsed
+  0.031   0.004 286.673
+Experiment: 0.3691 pm 0.00623138845043398
+There were 35 warnings (use warnings() to see them)

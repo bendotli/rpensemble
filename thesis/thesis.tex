@@ -1,0 +1,1604 @@
+\documentclass{amsart}
+
+%\renewcommand\thesubsection    {{\bf \thesection.\arabic{subsection}}\bf}
+\usepackage[sc]{mathpazo}
+\linespread{1.2}    
+\usepackage[T1]{fontenc}	
+\usepackage{eulervm}
+\usepackage{tikz-cd}
+\providecommand{\tabularnewline}{\\}
+
+
+
+\usepackage{beramono} % better typewriter font, for code listings
+%\usepackage{courier} % another option
+
+% pretty code listing captions
+\usepackage{caption} % have to declare these here instead of letting LyX do it
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+% add xleftmargin=18pt/leftmargin=18pt back to the listing config to make this prettier (I removed it in order to make listings look better inline)
+
+\usepackage{listings}
+\usepackage{color}
+\lstset{basicstyle={\scriptsize\ttfamily},
+	breaklines=true,
+	commentstyle={\color[rgb]{0,0.6,0}},
+	keywordstyle={\color{blue}},
+	language=R,
+	numbers=right,
+	numbersep={-5pt},
+	numberstyle={\tiny\ttfamily\color[rgb]{0.2,0.2,0.2}},
+	rulecolor={\color{black}},
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	stepnumber=1,
+	stringstyle={\color[rgb]{0.588,0.345,0.475}},
+}
+
+%\usepackage{amsthm,amsmath,amssymb}
+\usepackage{graphicx}
+%\usepackage{esint}
+\usepackage{bm}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+
+\newcommand\E{\mathbb{E}}
+%\newcommand\Pr{\mathbb{P}}
+
+\newcommand\cbayes{C^{\mathrm{Bayes}}}
+\newcommand\crpnhat{\hat{C}_{n}^{\mathrm{RP}}}
+\newcommand\crpnhatstar{\hat{C}_{n}^{\mathrm{RP*}}}
+\newcommand\risk{\mathcal{L}}
+\newcommand\rrisk{\mathcal{R}}
+
+\global\long\def\bi#1#2{\mbox{\textbf{\emph{#1}}}_{\text{\textbf{\emph{#2}}}}}
+
+% center floats vertically
+\makeatletter
+\setlength{\@fptop}{0pt plus 1fil}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+
+\begin{document}
+
+% "Title of the Paper"
+\title{Random Projection Ensembles and Extensions}
+%\runtitle{Axis-Aligned RPE \& Bayesian RP Optimization}
+
+\author{Benjamin J. Li}
+
+\begin{abstract}
+	A recent classification technique called Random Projection Ensemble (RPE) uses random projections to a lower-dimensional space to run a base classifier, and then aggregates the ensemble of projected classifiers. Projecting down to dimension $d<n$ allows classifiers like Fisher's LDA to run on $p\gg n$ problems, and sufficient dimensionality reduction theorems guarantee performance. Using an ensemble of random projections (via a bagging-like approach) improves expressivity, and rigorous error bounds have been derived in the case of LDA as the base classifier.
+	In the case of axis-aligned projections (in other words, sampling a sparse set of feature vectors) we improve upon this and derive an exponential error bound. These bounds are notably independent of $p$, and thus efficient. In addition, we propose a new projection selection method. By performing a random walk across projection matrix space, we are able to use a density estimate of the optimal projection rather than a series of MAP (maximum a-posteriori) estimates in our classifier.
+\end{abstract}
+
+\maketitle
+
+
+
+
+
+
+
+
+\section{Background}
+
+\subsection{Motivation}
+
+A supervised classification problem requires prediction of class labels $Y$ from covariates $X$ given training data. Increasingly often, classification problems are high-dimensional: specifically, the dimension of the feature vectors $p$ is greater than the length of the training set $n$. This violates assumptions in many classification methods, causing poor performance or failure (as in linear discriminant analysis, where the sample covariance matrix when $p\geq n$ is not invertible). Current methods tailored to this situation make strong linearity, sparsity, and/or independence assumptions, as surveyed in \cite{CS15}.
+
+This limits their expressivity, in exchange for statistical power on problems that do fit the assumptions. Ensembling, as used for instance in random forests \cite{Breiman01}, is able to expand expressivity. In that example, bootstrap aggregation (bagging), in which the votes of component classifiers trained on bootstrapped data are aggregated, enables the algorithm to express nonlinear decision boundaries even with linear base classifiers.
+
+Instead of training component classifiers on ``row-sampled'' data (which effectively reduces $n$) via bagging, which is not helpful for the high-dimensionality problem, it would be nice to train them on ``column-sampled'' data (reducing $p$). In other words, we would like to take random axis-aligned projections.
+
+The motivation for taking projections is especially strong because we have a powerful guarantee on this ``column-sampling.'' The Johnson-Lindenstrauss Lemma \cite{DG03} states that for any $\epsilon\in(0,1)$ there is some projection $A$ to $\mathbb R^d$ where $d>\frac{8\log n}{\epsilon^2}$ \footnote{Note that this is independent of $p$.} that preserves squared pairwise distances between data points within $\epsilon$, and in fact this matrix can be found stochastically in polynomial time.
+
+Thus, ``column-sampling'' would allow us to perform fairly accurate approximate classification in $\mathbb R^d$. If we aggregate over many classifications on such projected spaces, the idea is that we would have a very accurate consensus estimate, just as bootstrapping obtains via row subsampling.
+
+
+\subsection{Introduction}
+
+Random projection ensemble (RPE) classification is a very recent method developed to solve the problem of high-dimensional classification.
+The fundamental idea is that we can improve the expressiveness and power of any base classifier $\hat C$ under a sufficient dimensionality reduction assumption by applying $\hat C$ to lower-dimensional projections of the feature vectors $A_i X$ and aggregating their responses.
+
+The specifics of the methodology discussed in \cite{CS15} involve drawing $B_{1}\times B_{2}$ $d$-dimensional projections from Haar measure on the space of all such projection matrices, running the base classifier with each of these projections, and then choosing the best of every $B_{2}$ projections, giving a final ensemble of $B_{1}$ projections that classifies according to a voting threshold $\alpha$. The apex of this method is that its performance is theoretically shown to be bounded independently of $p$.
+
+In this paper, we detail two separate improvements, corresponding exactly to the two separate halves of the bound on excess risk in \cite{CS15}. Section~\ref{sec:glossary} provides a glossary of notation.
+
+\subsubsection{First half}\label{sec:first-half}
+
+In the first half (Theorem 1 of \cite{CS15}), no distribution on the $B_1$ matrices $\{A_i\}$ is assumed, and it is shown that
+\begin{equation}
+\risk(\crpnhat) - \risk(\crpnhatstar) \leq O\left(\frac{1}{B_1}\right)
+\label{eqn:first-half}
+\end{equation}
+asymptotically in $B_1$. This is a bound on the difference in risk from only having $B_1$ projections, rather than infinitely many.
+
+As the dimension $p$ of the original data goes up, the space of projections $\mathbb{R}^p\to\mathbb{R}^d$ grows exponentially. It makes some sense to restrict the set of projections on $A$ to be axis-aligned in order to restrict this space. An axis-aligned projection simply picks $d$ basis vectors and drops the rest, bounding the set to $\binom{p}{d}\leq p^{d}/d!$ which is polynomial in $d$.
+
+It turns out that restricting projections to the axis-aligned subspace causes the bound in Equation~\ref{eqn:first-half} to become exponential in $B_1$, and for the bound to hold non-asymptotically under certain conditions!
+
+\subsubsection{Second half}\label{sec:second-half}
+
+In the second half (Theorem 2, Proposition 3, and Theorem 5 of \cite{CS15}), the best-of-$B_2$ algorithm is assumed and it is shown that with the $A_i$ chosen by this algorithm, the infinite-projection excess risk is 
+\begin{align*}
+\risk(\crpnhatstar) - \rrisk(\cbayes)
+	&\leq \frac1{\alpha(1-\alpha)}\big[
+			\E(\risk_n^{A_1})-\rrisk(\cbayes)
+		\big] \qquad\text{(Theorem 2)} \\
+	&\leq \frac1{\alpha(1-\alpha)}\big[
+			\hat{L}_n^* - \rrisk(\cbayes) + \epsilon_n \\
+	&\quad	+ \text{terms from Assumption (A.2)}
+		\big] \qquad\text{(Proposition 3)} \\
+	&\leq \frac1{\alpha(1-\alpha)}\big[
+			(\risk_n^{A^*} - \rrisk^{A^*-\mathrm{Bayes}}) \\
+	&\quad	+ (\epsilon_n - \epsilon_n^{A^*}) \\
+	&\quad	+ \text{terms from Assumption (A.2)}
+		\big] \qquad\text{(Theorem 5)}
+\end{align*}
+The sum of this with the first-half inequality is then the desired bound on the excess risk of $\crpnhat$.
+
+Choosing the $A_i$ by best-of-$B_2$ reuses no previous information. An avenue for improvement, then, might be to find an algorithm that does reuse previous information.
+
+We propose Bayesian Random Projection Optimization (BRPO) as an elegant way to derive good projection matrices by sampling them from the posterior distribution of $A^*$, the true sufficient dimension reduction matrix that we assume exists (Assumption (A.3) from \cite{CS15}). We give a Metropolis-Hastings algorithm for this, and prove a new second-half bound.
+
+\subsection{Glossary}\label{sec:glossary}
+\begin{definition}
+The \textbf{risk} of a classifier is defined as the \textbf{misclassification
+rate} 
+\[
+\rrisk(C):=\mathbb{P}\left\{ C(X)\neq Y\right\} 
+\]
+When $C$ is based on data, we write $\hat{C}$ and use the letter
+$\risk$ instead of $\rrisk$ to denote risk. The \textbf{excess risk}
+of $\hat{C}$ is defined by $\risk(\hat{C})-\rrisk(C^{\mathrm{Bayes}})$. $\hat{C}_n$ refers to the base classifier $\hat C$ trained on the training data.
+\end{definition}
+There are analogous definitions for estimates of risk based on the
+training data:
+\begin{definition}
+The \textbf{test risk} of a classifier (which we will sometimes refer
+to as the \textbf{risk estimate}) replaces $\risk$ with some estimator
+of risk based on the data $\hat{L}$, and the \textbf{excess test
+risk} (or \textbf{excess risk estimate}) is similarly $\hat{L}(\hat{\theta})-\rrisk(\hat{\theta}^{\mathrm{Bayes}})$.
+\end{definition}
+Finally, central to the first-half bound, we define the projection matrix space,
+and the distribution on it:
+\begin{definition}
+$\mathcal{A}$ is the subset of $d$-projection matrices that we draw
+our random projections from. A random matrix $A$ is a matrix-valued
+random variable with some distribution on $\mathcal{A}$.
+\end{definition}
+
+There are also some abbreviations we will use throughout the paper:
+\begin{itemize}
+\item RPE - random projection ensemble (classification)
+\item RPE-H - RPE with matrices drawn from Haar measure
+\item RPE-A - RPE with uniformly drawn axis-aligned matrices
+\item BRPO - Bayesian random projection optimization
+\end{itemize}
+
+\subsection{Review of RPE theory}\label{sec:review}
+
+The original method made three assumptions in order to deduce that
+excess risk $\risk(\crpnhat)-\rrisk(\cbayes)$ is bounded by a sum
+of expressions that do not depend on $p$. They are, in order and
+paraphrased:\\
+
+
+\noindent \textbf{Assumption (A.1).} $G_{n,1}$ and $G_{n,2}$ have
+second derivatives at the voting threshold $\alpha$, where, given
+the true joint distribution of the training data $(X,Y)$, $G_{n,i}$
+is the CDF of the probability that the base classifier $\hat{C}_{n}$
+will classify a random projection of $X$ as class $i$.\\
+
+
+This assumption is used to show that the risk of the finite
+RPE classifier $\crpnhat$ (with choices of base classifier $\hat{C}$,
+voting threshold $\alpha$, and finite ensemble size parameters $B_{1}$
+and $B_{2}$) is well-approximated by that of the infinite-simulation
+RPE classifier $\crpnhatstar$ (with the same choices of $\hat{C}_{n}$
+and $\alpha$). This result is \textbf{Theorem 1} which we've summarized
+earlier in Section~\ref{sec:first-half}, and does not involve
+the distribution on the projection matrices $A_{i}$ other than that
+they are independent and identically distributed, and independent
+of $(X,Y)$. This concludes the first-half bound.\\
+
+
+\textbf{Theorem 2}, bounding $\risk(\crpnhatstar)-\rrisk(\cbayes)$,
+does not involve the distribution on the projection matrices $A_{i}$
+other than that they are independent and identically distributed,
+and independent of $(X,Y)$. Thus, this result pulls smoothly into
+the axis-aligned case.
+
+\vspace{6pt}
+
+The next assumption (which is rather technical) involves the production of a good selection of random projections by taking the best projection in each row from a $B_{1}\times B_{2}$-sized grid of i.i.d. random projections from some base distribution (Haar measure as generally discussed in the original paper). To make conclusions about the test error, we define $\beta_{n}(j)$ as the discrete CDF of $n\left(\hat{L}_{n}^{A}-\hat{L}_{n}^{*}\right)$ (which is the random variable $n\hat{L}_{n}^{A}=\sum_{(x,y)}I(\hat{C}_{n}^{A}(x)\neq y)$ minus a constant, where $A$ is random).
+
+\vspace{6pt}
+
+\noindent \textbf{Assumption (A.2).} There is some $B_{0}\in(0,1)$
+and $\beta,\rho>0$ such that the histogram $\beta_{n}(j)$ is bounded
+below by the discrete CDF $\beta_{0}+\frac{\beta j^{\rho}}{n^{\rho}}$
+for all $j$ below $n\left(\frac{\log^{2}B_{2}}{\beta B_{2}}\right)^{1/\rho}+1$.
+It is particularly noted that as $B_{2}$ goes up, the strength of
+the condition decreases (a smaller bit of the left side of the CDF
+is constrained).\\
+
+
+From this, \textbf{Proposition 3} bounds the expected excess risk
+$\mathbb{E}(\risk_{n}^{A_{1}})-\rrisk(\cbayes)$ of a best-of-$B_{2}$
+projection by an expression involving $\hat{L}_{n}^{*}-\rrisk(\cbayes)$,
+the minimum excess risk estimate over all $A\in\mathcal A$. Intuitively,
+we expect this to be small when the Bayes classifier indeed only takes
+into account $d$ of the dimensions, which leads to the following
+definition and assumption:
+
+\begin{definition}
+Let the \textbf{projected Bayes classifier} be defined
+as the Bayes classifier on the joint distribution $(AX,Y)$.
+\end{definition}
+
+
+\noindent \textbf{Assumption (A.3).} There is some projection $A^{*}\in\mathcal{A}$
+such that the Bayes classifier and the projected Bayes classifier
+are the same except on a set of measure zero.\\
+
+
+\textbf{Proposition 4} goes to show that (A.3) holds under the sufficient
+dimension reduction condition (there exists a dimension reduction
+$R$ such that $R(X)$ is sufficient, ie. $Y\,|\,R(X)$ has the same
+distribution as $Y\,|\,X$). Naturally one would expect that if (A.3)
+holds, $\hat{L}_{n}^{*}$ would be close to $\rrisk(\cbayes)$, which
+is quantified in \textbf{Theorem 5}. These are all summarized compactly in
+Section~\ref{sec:second-half}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Axis-aligned RPE theory}\label{sec:aa-rpe}
+
+Following from our summary of RPE theory, we filter it through the additional assumption that $A$ is axis-aligned (in other words, a draw from the ``column bootstrap.'')
+
+\subsection{Effect of axis-alignment on $G_{n,i}$ curves}
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[scale=0.35]{G_ni}%\includegraphics[scale=0.35]{G_ni_axis}
+\par\end{centering}
+
+\caption{The empirical $G_{n,i}$ curves for Model 1 in \cite{CS15} ($n_{\mathrm{train}}=50$ and $B_{1}=B_{2}=100$) with RPE-H LDA,
+averaged over 10 instances. See appendix for details on test models.}
+
+\label{fig:std-run-g-curves}
+\end{figure}
+
+
+Central to Theorem 1, the most involved theoretical result in the paper, are
+the $G_{n,i}$ curves. They are estimated and plotted in Figure~\ref{fig:std-run-g-curves}
+for a standard run of Model 1. (Note that adjusting $n_{\mathrm{train}}$ changes the shape of these curves,
+which is why they've been averaged over 10 instances instead of simply
+run on 10 times more data.)
+
+What effect would imposing axis-alignment have on these curves?
+Finite $\mathcal{A}$ implies a discrete distribution on $A$, so the $G_{n,i}$
+must be step functions. This is a much stronger assertion than second-differentiability
+at the voting threshold $\alpha$.
+
+\subsection{Effect of axis-alignment on second-half bound}
+
+Restricting $\mathcal A$ to axis-aligned projections does not affect Theorem 2, which is independent of the distribution of $A$.
+The CDF $\beta_{n}(j)$ can still be defined, where $A$ is now distributed
+uniformly on the set of axis-aligned projection matrices, so Assumption
+(A.2) and Proposition 3 can remain unchanged (where $A_{1}$ is now
+a best-of-$B_{2}$ axis-aligned projection matrix).
+
+Assumption (A.3) has a simple modification (compatible with Proposition
+4) to make Theorem 5 hold for axis-aligned projections:
+
+\vspace{6pt}
+
+\noindent \textbf{Assumption (A.3').} There is some \emph{axis-aligned}
+projection $A^{*}\in\mathcal{A}$ such that the Bayes classifier and
+the projected Bayes classifier are the same except on a set of measure
+zero.
+
+\vspace{6pt}
+
+Thus, all that's left to fill in are the new (A.1) and Theorem 1 (and
+replacing the Theorem 1-derived part in Theorem 5's bound with the
+corresponding new and improved expression).
+
+
+\subsection{New theorem}
+
+We revise Assumption (A.1):
+
+\vspace{6pt}
+
+\noindent \textbf{Assumption (A.1$'$).} $G_{n,1}$ and $G_{n,2}$ are
+constant in a neighborhood of $\alpha$.
+
+\vspace{6pt}
+
+We need to show that this assumption holds for axis-aligned matrices.
+
+\begin{proposition}
+Allowing infinitesimal perturbation of $\alpha$,\footnote{Practically, we would choose $\alpha$ with its distance to an element of $R$ in mind, as we discuss later, so this is somewhat irrelevant.} Assumption (A.1$'$) holds for $\mathcal{A}$ as the set of axis-aligned
+$d\times p$ projections (or any subset thereof) and $A$ a matrix-valued
+random variable with this set as its support, with some distribution\footnote{For example, uniform over $\mathcal{A}$, or as is done in the package,
+chosen from the best of $B_{2}$ uniform candidates.} given by probabilities $q_{B}$ for all $B\in\mathcal{A}$.
+\end{proposition}
+
+
+\begin{proof}
+We have that 
+\begin{eqnarray*}
+G_{n,1}(\alpha) & = & \mathbb{P}\left\{ \mathbb{P}\left\{ \hat{C}_{n}^{A}(X)=1\,\Big|\,X\right\} \leq\alpha\,\Big|\,Y=1\right\} \\
+ & = & \mathbb{P}\left\{ \sum_{B\in\mathcal{A}}q_{B}I\left\{ \hat{C}_{n}^{B}(X)=1\right\} \leq\alpha\,\Big|\,Y=1\right\} 
+\end{eqnarray*}
+ is the CDF of a finite weighted sum of indicators. It can be seen
+as a step function with up to $||\mathcal{A}||$ jumps; let the set of the
+horizontal locations of these jumps be $R_{1}$ and let the corresponding
+vertical heights be $s_{r}$ (ie. such that $\sum_{r\in R_{1}}s_{r}=1$).
+Note that $R_{1}$ has Lebesgue measure zero inside $[0,1]$ and $G_{n,1}$
+is flat (thus has zero first and second derivatives) outside of $R_{1}$.
+
+The same holds for $G_{n,2}$; let the horizontal locations of its
+jumps be $R_{2}$ and the vertical heights be $t_{r}$ analogously.
+
+Then outside of the set $R=R_{1}\cup R_{2}$, $G_{n,1}$ and $G_{n,2}$ are locally constant. If we allow infinitesimal perturbation of $\alpha$, it will never fall into this set.
+\end{proof}
+
+
+Note that the set $R$ has cardinality at most $2||\mathcal{A}||=2\binom{p}{d}\leq2\frac{p^{d}}{d!}$.\\
+
+
+Now we design an analogous version of Theorem 1:\\
+
+
+\noindent \textbf{Theorem 1$'$.} \emph{Assume (A.1$'$). Then 
+\[
+\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)=o\left(B_{1}^{-M}\right)
+\]
+ as $B_{1}\to\infty$ for all $M\in\mathbb{N}$.}\footnote{\noindent Note that here $\crpnhatstar$ represents the infinite axis-aligned
+projection RPE classifier, so that although this bound is tighter,
+the infinite projection classifier we're approximating may be farther
+from the Bayes classifier than the general case. But this doesn't affect our theory, as
+we modified (A.3) so that $A^{*}$ must be axis-aligned.}
+
+\emph{Moreover, there exists some $C>0$ such that for all $B_1\geq C$, the non-asymptotic bound
+\[
+\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)=e^{-2\log^2 B_1}
+\]
+holds.}
+
+
+\begin{proof}
+As in the proof of Theorem 1, we have 
+\begin{eqnarray*}
+\risk(\crpnhat) & = & \pi_{1}\mathbb{P}\left\{ \crpnhat(X)=2\,|\,Y=1\right\} +\pi_{2}\mathbb{P}\left\{ \crpnhat(X)=1\,|\,Y=2\right\} \\
+ & = & \pi_{1}\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)<\alpha\,|\,Y=1\right\} +\pi_{2}\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)\geq\alpha\,|\,Y=2\right\} 
+\end{eqnarray*}
+ where $\hat{\nu}_{n}^{B_{1}}(x):=\frac{1}{B_{1}}\sum_{b_{1}=1}^{B_{1}}I\left\{ \hat{C}_{n}^{A_{b_{1}}}(x)=1\right\} $.
+Conditional on the mean $\hat{\mu}_{n}(X)=\theta$ of the $I\left\{ \hat{C}_{n}^{A_{b_{1}}}(x)=1\right\} $,
+they are i.i.d. $\mathrm{Bern}(\theta)$. As $G_{n,1}$ is the CDF
+of $\hat{\mu}_{n}(X)\,|\,\{Y=1\}$, we can write 
+\begin{eqnarray*}
+\mathbb{P}\left\{ \hat{\nu}_{n}^{B_{1}}(X)<\alpha\,|\,Y=1\right\}  & = & \int_{0}^{1}\!\mathbb{P}\left\{ \frac{1}{B_{1}}\sum_{b_{1}=1}^{B_{1}}I\left\{ \hat{C}_{n}^{A_{b_{1}}}(x)=1\right\} <\alpha\,\bigg|\,\hat{\mu}_{n}(X)=\theta\right\} \,dG_{n,1}(\theta)\\
+ & = & \int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)\,dG_{n,1}(\theta)
+\end{eqnarray*}
+ for $T\sim\mathrm{Bin}(B_{1},\theta)$. Combining with the similar
+result for $G_{n,2}$ gives 
+\[
+\risk(\crpnhat)=\pi_{2}+\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)\,dG_{n}^{\circ}(\theta)
+\]
+ where $G_{n}^{\circ}=\pi_{1}G_{n,1}-\pi_{2}G_{n,2}$. Subtracting the statement 
+\[
+\risk\left(\crpnhatstar\right)=\pi_{1}G_{n,1}(\alpha)+\pi_{2}\left(1-G_{n,2}(\alpha)\right)
+\]
+ gives 
+\[
+\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)=\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta)
+\]
+
+
+We show that 
+\[
+\int_{0}^{1}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta)=\int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta)+o(B_{1}^{-M})
+\]
+ as $B_{1}\to\infty$ for all $M\in\mathbb{N}$, by Hoeffding's inequality:
+for $\epsilon=\frac{\log B_{1}}{\sqrt{B_{1}}}$ and all $M$ we have
+\[
+\sup_{|\theta-\alpha|\geq\epsilon}\left|\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\right|\leq\sup_{|\theta-\alpha|\geq\epsilon}\exp\left\{ -2B_{1}(\theta-\alpha)^{2}\right\} \leq e^{-2\log^{2}B_{1}}=o(B_{1}^{-M})
+\]
+
+
+Let $I=(\alpha-\epsilon,\alpha+\epsilon)$. Note that $G_{n,1}$ is
+the CDF of a discrete random variable with values $r\in R_{1}$ and
+probabilities $s_{r}$, and $G_{n,2}$ the same for $t_r$, so that 
+\begin{eqnarray*}
+\int_{\alpha-\epsilon}^{\alpha+\epsilon}\!\mathbb{P}(T<B_{1}\alpha)-I\{\theta<\alpha\}\,dG_{n}^{\circ}(\theta) & = & \pi_{1}\sum_{r\in R_{1}\cap I}s_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)\\
+ &  & -\pi_{2}\sum_{r\in R_{2}\cap I}t_{r}\left(\mathbb{P}(T<B_{1}\alpha)-I\{r<\alpha\}\right)
+\end{eqnarray*}
+
+
+This concludes the proof, as we can make both $R_{1}\cap I$
+and $R_{2}\cap I$ empty by setting $B_{1}$ high enough that $\epsilon<\min_{r\in R_{1}\cup R_{2}}|\alpha-r|$.
+\end{proof}
+
+In other words, one can get bounds exponentially close to $\crpnhatstar$
+(the infinite random projection classifier) in the axis-aligned case, as opposed to only
+linearly close to the general infinite projection classifier.
+
+As $\epsilon=\frac{\log B_{1}}{\sqrt{B_{1}}}$ is strictly decreasing in $B_{1}$
+for all $B_{1}>1$, and has inverse $B_{1}=\exp\left(-2W_{-1}(-\frac{\epsilon}{2})\right)$
+involving the Lambert $W$ function \cite{CGHJK96} with parameter $-1$, this exponential behavior kicks in non-asymptotically at
+\[
+B_{1}>\exp\left(-2W_{-1}\left(-\frac{\min|\alpha-r|}{2}\right)\right).
+\]
+
+\subsection{Estimating $\min|\alpha-r|$}
+
+In the process of determining this lower bound, an issue arises with the determination of $\min|\alpha-r|$.
+We only know $\hat{\pi}_{1}n_{\mathrm{train}}$ elements of $R_{1}$, which is generally not close to the cardinality of $R_{1}$ (which can be as big as $2^{||\mathcal{A}||}=2^{\binom{p}{d}}$).
+However, we can estimate $\min|\alpha-r_{1}|$ by the following procedure:
+\begin{enumerate}
+\item Smooth $\hat{g}_{n,1}$ (by, for instance, taking $\tilde{g}_{n,1}$
+as the sum of Gaussians at each known element of $R_{1}$ with some
+specified bandwidth).
+\item Evaluate this smoothed empirical density at $\alpha$.
+\item Note that on average, a $\tilde{g}_{n,1}(\alpha)\times\delta$ slice
+of the density will contain $\tilde{g}_{n,1}\delta||R_{1}||$ points;
+setting this to 1 gives $\delta=\frac{1}{\tilde{g}_{n,1}(\alpha)\cdot||R_{1}||}$
+as our estimate for $\min|\alpha-r_{1}|$.
+\end{enumerate}
+Combined with previous observations, this means that generally we
+need 
+\[
+B_{1}>\exp\left\{ -2W_{-1}\left(-\frac{1}{2^{\binom{p}{d}+1}\cdot\max_i\tilde{g}_{n,i}(\alpha)}\right)\right\} 
+\]
+ (where $W_{-1}$, also known as the product logarithm, vanishes
+more slowly than the logarithm -- see the next section).
+
+If $\max_i\tilde{g}_{n,i}(\alpha)$ doesn't vanish quickly enough, this
+expression will be dominated by the exponential behavior of $||R||$.
+
+
+\subsection{Results \& analysis}
+
+Tables of misclassification rates for RPE-A compared to RPE-H and several standard machine learning ``toolbox classifiers'' are given in Appendix~\ref{sec:data}.
+These are compared across RPE base classifiers, choices of $d$, values of $n_\mathrm{train}$, and prior weights for six different models, Model 0 through Model 5.
+These models are described in Appendix~\ref{sec:test-models}.
+
+\subsubsection{Model 0}
+
+The first thing to notice is that LASSO-like methods work best when we truly have two $p$-dimensional Gaussians separated in $d$ dimensions.
+Table~\ref{tab:model-0} clearly illustrates the far-above-the-others performance Penalized LDA, our representative from this category alongside NSC, SCRDA, and IR.
+As Model 0 is essentially the classic compressive sensing problem, it is not a surprise at all that $L_1$ penalization is the optimal solution.
+
+All the other classifiers, including the hyperparameter-tuned toolbox classifiers, are too complex and thus overfit. Note that if we were to turn down
+the expressivity of RPE by setting $B_1=1$, we should be able to obtain error rates nearly as low as PenLDA, as this model perfectly satisfies Assumption (A.3) for
+LDA -- given the correct projection $A^*$, Fisher's LDA classifies optimally.
+(However, as we would be performing brute force search rather than using an efficient algorithm for $L_1$ minimization, this would be horribly slow.)
+
+It may be surprising that axis-aligned RPE shows worse performance in this setting, which in fact has axis-aligned discrimination dimensions.
+This is likely because each projection matrix selected to be part of the ensemble that isn't $A^*$ has several irrelevant features selected in RPE-A,
+whereas in RPE-H each matrix in the ensemble will tend to be approximately in the same direction as $A^*$. In other words, in RPE-A,
+the algorithm has to find $A^*$ exactly or otherwise deal with high error.
+
+\subsubsection{Model 1}
+
+As this problem has a round decision boundary, it makes sense that Gaussian kernel SVM, one of the simplest and most common nonlinear classifiers, performs well.
+RPE-H performs just as well or better as RBF-SVM, giving evidence of its capability for expressivity.
+
+Switching to axis-aligned projections is a restriction on expressivity, so performance drops markedly. Learning curved decision boundaries requires a continuum of
+projections around an axis of curvature, something that is not possible with discrete axis-aligned projections.
+
+\subsubsection{Model 2}
+
+Table~\ref{tab:model-2} shows performance on the student-$t$ model. Random forest and RPE-H with $k$-nearest-neighbors are the highest-performing classifiers,
+with RPE-H slightly worse on $\pi_1=0.5$ and slightly better on $\pi_2=0.75$.
+
+RPE-A is slightly penalized here for likely the same reason as in Model 0. However, this penalization seems to be constant (on the order of 1), so this
+``discretization penalty'' has very little effect here, where the base misclassification rates are an order of magnitude higher than in Model 0.
+
+\subsubsection{Model 3}
+
+This model (Gaussian versus Cauchy) has very high Bayes risk, as the Cauchy distribution is notoriously difficult. All three of the toolbox classifiers
+significantly underperform compared to RPE-H.
+
+Here, the advantage from our axis-aligned assumption overcomes the discretization penalty. RPE-A performs 3-6 points better than RPE-H. This is a situation
+in which it is very difficult to find the vicinity of the correct projection -- limited by the first half of our error bound, which is exactly what axis-
+alignment works with. Limiting and discretizing the search space gives much faster (exponential) convergence to the optimal projection $A^*$.
+
+\subsubsection{Model 4}
+
+The rotated sparse normals model provides another illustration of the usefulness of RPE-H. This is uninteresting for RPE-A as the axis-aligned assumption is
+grossly wrong, giving a 3-5 point penalty.
+
+\subsubsection{Model 5}
+
+The final model is real data (the UCI Ozone data set). Although Table~\ref{tab:model-5} is not glamorous for RPE in general, RPE-A gives a consistent 1-2 point
+boost over RPE-H. This reflects the fact that in the real world, data does tend to be axis-aligned, and making this assumption is worth a fair amount of
+statistical power.
+
+
+
+
+\subsection{Discussion \& future work}
+
+Although the theorem is an impressive statement, the lower bound
+for $B_{1}$ before the exponential decay of error in Theorem 1$'$ kicks
+in is very large and grows extremely quickly in $p$ and $d$, as
+a result of the exponential.
+For instance, we need $\max_i g_{n,i}(\alpha)$
+at a value of $2^{-\binom{p}{d}+1}$ to put the minimum $B_{1}$ for
+exponential behavior at $74.2$.
+
+This theoretical result would go hand-in-hand with a good algorithm for choosing projections, as $g_{n,1}$ and $g_{n,2}$ (the density functions from which we draw $r_{1}\in R_{1}$ and $r_{2}\in R_{2}$ respectively -- see Figure~\ref{fig:r1-dist}) would tend to be skewed further left and further right respectively. Optimal values of $\alpha$, would then be located where $R_{1}\cup R_{2}$ is much less dense, and thus $\min|r-\alpha|$ larger, allowing for exponential behavior with lower $B_{1}$.
+
+\begin{figure}[h]
+\begin{centering}
+\includegraphics[scale=0.5]{r1_dist}
+\par\end{centering}
+
+\caption{$g_{n,1}$ (the distribution of $r_{1}=\mathbb{P}\left(\hat{C}_{n}^{A}(X)=1\,|\,X,Y=1\right)$)
+for Model 1 with standard parameters, estimated from 10 runs.}
+
+
+\label{fig:r1-dist}
+\end{figure}
+
+Even more ideally we would have an algorithm for $A_{1}$ that almost never lets $r_{1}$ or $r_{2}\in(\alpha-\epsilon,\alpha+\epsilon)$
+-- then $\risk\left(\crpnhat\right)-\risk\left(\crpnhatstar\right)$ would decay exponentially in $B_{1}$ with no minimum bound on $B_{1}$! This could apply even to Haar or other base distributions on projection matrix space.
+
+A simple example would be to have the sampler purposefully reject any such draw of $A_1$ for which $\hat r_i = \frac1n\sum_{j=1}^n I(\hat C_n^{A_1}(X)=1 \,|\, X,Y=i) \in (\alpha+\epsilon, \alpha-\epsilon)$ -- the interval can be widened to compensate for the inaccuracy of $\hat r_i$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\section{Bayesian random projection optimization}
+
+The second part of this paper deals with the second-half inequality, bounding $\risk(\crpnhatstar) - \rrisk(\cbayes)$ by more efficiently sampling $B_1$ projections that comprise the ensemble. We make no assumptions about $\mathcal A$, rendering this part independent of (but complementary to) the axis-aligned theory above.
+
+Assumption (A.3) plays a crucial part, perhaps moreso than in the original method, as the core of our Bayesian model. Our model states that there \emph{is} a true $A^*$, and we use it as our model parameter $\theta$.
+
+Our ultimate goal is to utilize the Bayesian framework to obtain a ``best-possible'' ensemble classifier, in the sense that we've used all information available to us, and the remaining error is irreducible.
+
+\subsection{Bayesian motivation}
+
+Define the following quantities:
+
+\begin{center}
+	\begin{tabular}{r|l}
+		Parameter & $A^*$ \\
+		Data & $D=(X,Y)$ \\
+		Model (likelihood) & $f(D\,|\,A^*)$ \\
+		Prior & $\tau(A^*)=$ Haar measure on $\mathcal{A}$ \\
+		Marginal & $m(D) = \int\!f(D\,|\,A^*)\pi(A^*)\,dA^*$ \\
+		Posterior & $\pi(A^*\,|\,D) = \frac{f(D\,|\,A^*)\pi(A^*)}{m(D)}$
+	\end{tabular}
+\end{center}
+
+\subsubsection{Illustration}
+
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.3]{illustration1}
+\caption{An example posterior density $\pi(A^*\,|\,\mathrm{data})$, visualized in one dimension.
+\label{fig:illust1}}
+\par\end{centering}
+\end{figure}
+
+In Figure~\ref{fig:illust1}, point (A) would be the single (point) estimate $\widehat{A^*}$ in the original method of drawing the $A_i$ (each one as the projection with the minimum test error or ``highest likelihood'' out of $B_2$ projections drawn from the prior).
+
+However, the distribution itself provides much more information than the point estimate. There is ample probability of finding $A^*$ at (B), slightly off from the mode, or at (C) in an entirely separate probability cluster. In particular for (C), the best-of-$B_2$ method will nearly never draw representatives from the smaller peak. In fact, the chance becomes vanishingly small as $B_2\to\infty$.
+
+\begin{figure}
+\begin{centering}
+\includegraphics[scale=0.3]{illustration2}
+\par\end{centering}
+\vspace{-20pt}
+\caption{An ensemble representing (approximating) $\pi(A^*\,|\,\mathrm{data})$.}
+\label{fig:illust2}
+\end{figure}
+
+\subsubsection{Bootstrap MAP versus density estimation}
+
+For now, think of the likelihood of $A^*$ as the classification accuracy on $A^*X$ by the base classifier. We will give a principled explanation for why this makes sense further on.
+
+In Bayesian terminology, the original method of \cite{CS15} is approximating the MAP (maximum a posteriori) estimate via best-of-$B_2$, and then maintaining some variation in that estimate by repeating this $B_1$ times and ensembling the results. This technique has proven quite effective, and might be referred to as a ``\textbf{bootstrap MAP}'' approach from our Bayesian perspective.
+
+Note that the information from $B_1(B_2-1)$ of the projection matrices drawn goes largely unused. It would be nice to fully utilize the likelihoods calculated for all $B_1B_2$ samples. This is equivalent to saying we should use a full density estimate, not just a series of MAP estimates, in our ensemble method.
+
+\subsection{Bayesian framework}
+
+\subsubsection{Drawing directly from $\pi(A^*\,|\,\mathrm{data})$}
+
+It would be nice to use the full information of the posterior distribution, rather than $B_1$ independent resamples of the single-point MAP estimate. The objectively-best way to do this would be to draw our $B_1$ projection matrices \emph{directly from $\pi(A^*\,|\,\mathrm{data})$}, the posterior density on projection matrix space, as shown in Figure~\ref{fig:illust2}.
+
+The accuracy of an RPE classifier based directly on $\pi(A^*\,|\,\mathrm{data})$ is, in the Bayesian sense, the best possible performance we can get with the assumptions and data we have. As we obtain more data (as $n\to\infty$), $\pi(A^*\,|\,\mathrm{data})$ will approach the true distribution $\pi_0 = \delta_{A^*_\mathrm{true}}$\footnote{or any other true distribution $\pi_0$ if we modify assumption (A.3)' appropriately}, and the risk will approach the Bayes risk.
+
+\begin{definition}
+Let $g(p)=\E_{A\sim p}(\risk_n^A)$ be a functional taking some distribution of projection matrices $p$ to the expected risk over that distribution. In other words, if we drew infinitely many $A_i$ from $p$, the risk of the resulting RPE classifier would be $g(p)$.
+\end{definition}
+
+For $n$ fixed, $g(\pi)-g(\pi_0)=\epsilon_\mathrm{irr}$ is the irreducible error in our scenario.
+
+\subsubsection{Drawing from an ergodic Markov chain with stationary distribution $\pi(A^*\,|\,\mathrm{data})$}
+
+Drawing directly from $\pi(A^*\,|\,\mathrm{data})$ is computationally infeasible (it would require calculating the partition function $m(D)$ which would take $||\mathcal A||$ evaluations of the base classifier).
+
+However, if we have an ergodic Markov chain with $\pi(A^*\,|\,\mathrm{data})$ as its stationary distribution, there is an powerful result we can invoke from ergodic theory. This theorem can be interpreted as a type of law of large numbers, saying that for an ergodic random process, the time average moves closer to the space average as time goes on.
+
+The textbook \cite{MT93} is a general reference for ergodic theory on Markov chains, while the lecture notes \cite{Sarig08} and \cite{Geyer12} provide a more concise summary. The weak ergodic theorem cited here is Theorem 2.1 (von Neumann's Mean Ergodic Theorem) from \cite{Sarig08}; Theorem 2.2 (Birkhoff's Pointwise Ergodic Theorem) is a stronger result (almost everywhere convergence) that we don't need. The geometric ergodic theorem is given two entire chapters, Chapters 15 \& 16, in \cite{MT93}, and also appears a remark at the end of Section 1.5.4.3 (Proof of the Ergodic Theorem for Markov chains) of \cite{Sarig08}, after the proof.
+
+\begin{theorem}
+(Weak ergodic theorem) For any functional $g(p)=\E_{A\sim p}(h(A))$, 
+\[
+\sum_{i=1}^{B_1}\frac{1}{B_1} h(A_i) \overset{p}{\to} g(\pi)
+\]
+as $B_1\to\infty$, where the $A_i$ are drawn from an ergodic Markov chain $\bm{\Phi}$ with stationary distribution $\pi$.
+\end{theorem}
+
+\begin{theorem}
+(Uniform ergodic theorem) If $\bm\Phi$ is uniformly ergodic (satisfying one of the seven equivalent conditions in Theorem 16.0.2 of \cite{MT93}), then for any functional $g(p)=\E_{A\sim p}(h(A))$, 
+\[
+\left|\sum_{i=1}^{B_1}\frac{1}{B_1} h(A_i)-g(\pi)\right|\leq C\cdot \rho^{B_1}
+\]
+in probability for some $\rho<1$, independent of the initial state.
+\end{theorem}
+
+%There is also a geometric ergodic theorem, which is weaker than uniform ergodicity. However, uniform ergodicity would be ideal.
+
+Ergodicity is implied by irreducibility, aperiodicity, and positive recurrence, which Metropolis-Hastings algorithms satisfy (this is the type of inference algorithm we will apply).
+%Note to Tim: geometric or uniform ergodicity seem complicated to prove -- although the intro to \cite{MT93} Ch. 16 notes that geometric ergodicity is the norm rather than the exception for most problems. However \cite{Geyer12} states that most Markov chains are not uniformly ergodic.
+
+%As mentioned in \cite{Sarig08}, any ergodic chain on a finite state space (ie. axis-aligned projection matrix space) is uniformly ergodic.
+
+%Besides not knowing whether to apply uniform or geometric ergodicity, I couldn't find direct references for the version of the geometric/uniform ergodic theorem I wanted to use (ie. in terms of weak convergence, and in terms of a time average). \cite{MT93} uses convergence in $V$-norm, and I'm not sure if their notation denotes taking a time average, or merely the distribution of the $B_1$th sample. Need to spend the time to derive the version I want. It seems to be mentioned everywhere, but formally found nowhere.
+
+%Anyways, if you're interested in this, I think \cite{Geyer12} is the best reference.
+
+Let $\pi_0(\theta)=\delta_{A^*}(\theta)$ be the true density of $A^*$, ie.
+\[
+\int_R\!\pi_0(A)\,\mu(A)=I(A^*\in R\,|\,\text{true }A^*)
+\]
+We want to sample the $A_i$ from some $\hat{\bm{\Phi}}^{B_1}$ such that $g(\hat{\bm{\Phi}}^{B_1})$ is as close as possible to $g(\pi_0)=\risk_n^{A^*}$ (ie. picking up from Theorem 2). This process is split into three steps:
+\[
+\hat{\bm{\Phi}}^{B_1} \to \bm{\Phi}^{B_1} \to \pi \to \pi_0
+\]
+The arrow $\pi\to\pi_0$ is $\epsilon_\mathrm{irr}$, and the arrow $\bm{\Phi}^{B_1}\to\pi$ is $o(\rho^{-B_1})$. The leftmost arrow depends on our likelihood approximation, which is in terms of the performance of our base classifier $\hat C_n$ along with the accuracy of the logit model (which we will describe in the next subsection) in deriving an implied likelihood function from $\hat C_n$.
+
+This leftmost arrow requires an additional assumption, which will replace (A.2) in the original method. This is the error in approximating $f$ by an implied likelihood based on the base classifier.
+
+\vspace{6pt}
+
+\noindent \textbf{Assumption (A.2)$'$}. $g(\hat \Phi^{B_1}) - g(\Phi^{B_1})$ is bounded by $\epsilon$.
+
+\subsection{Deriving the likelihood from the base classifier}
+
+Recall the sufficient dimension reduction theorem posited the existence of a projection $A^*$ such that conditioned on $A^*X$, $X$ is independent of $Y$.
+
+We are applying a parametric model with parameter $\theta=A^*$. The likelihood splits into a distribution on the conditionally independent ``noise'' component $A^{*\perp}(X)$ (where $A^{*\perp}$ denotes the orthogonal complement of $A^*$) and the model on $(A^*X,Y)$:
+\begin{equation}
+f(D\,|\,A^*)=f(A^* X, A^{*\perp} X,Y\,|\,A^*)=f(A^{*\perp} X\,|\,A^* X, A^*)f(A^* X, Y\,|\,A^*)
+\label{eqn:likelihood-decomposition}
+\end{equation}
+
+\newcommand{\approxpropto}{\mathrel{\vcenter{
+  \offinterlineskip\halign{\hfil$##$\cr
+    \propto\cr\noalign{\kern2pt}\sim\cr\noalign{\kern-2pt}}}}}
+
+\subsubsection{Noise}
+
+The term $f_\theta(A^{*\perp} X\,|\,A^* X)$ represents a noise model for the orthogonal complement component. This noise is allowed to depend on the signal, but gives no additional information towards $Y$. We give some examples of assumptions on noise, and then for the rest of the paper assume a noninformative noise model (just as the original RPE method does).
+
+We could, for instance, assume multivariate Gaussian noise independent of $A^*X$ with mean $\mu$ and covariance matrix $\Sigma$, giving us
+\[
+f_\theta(A^{*\perp} X = x \,|\,A^* X)=\frac{1}{\sqrt{(2\pi)^{k}|\Sigma|}}
+\exp\left(-\frac{1}{2}({x}-{\mu})^\mathrm{T}{\Sigma}^{-1}({x}-{\mu})
+\right)
+\]
+Then we could add $\mu$ and $\Sigma$ to the parameter set $\theta$ and perform inference on them simultaneously with $A^*$.
+
+As another example, instead of making a model assumption about noise, we can substitute a term that represents the assumed lack of correlation between $A^{*\perp}X$ and $Y$ (requiring the estimation of conditional covariances\footnote{For example see \cite{FY98} for a method to estimate conditional covariance. Alternatively, we can approximate the conditional covariances by nonconditional covariances, which are then extremely easy to calculate.}):
+\[
+f(\theta^\perp X\,|\,\theta X, \theta) \approxpropto 1 - \frac{1}{p-d} \sum_i \sqrt\frac{\sigma^2_{(\theta^\perp X)_i,Y\,|\,\theta X}}{\sigma_{(\theta^\perp X)_i\,|\,\theta X}\sigma_{Y\,|\,\theta X}}
+\]
+
+There are a variety of possible noise models, and often the application area will suggest suitable models that can then be used to improve the power of our classifier -- this is one of the advantages of a Bayesian framework.
+
+From this point forward, we will use the null noise model $f_\theta(A^{*\perp} X \,|\,A^* X) \propto 1$ so that the noise component of $X$ has no effect on our inference.
+
+\subsubsection{Signal}
+
+A classifier is a ``device,'' not a model specification. Yet we want to rely on the model assumptions of our base classifier for $(A^*X,Y)$ after the parent RPE algorithm has performed the dimension reduction, instead of making our own.\footnote{A classifier using the RPE framework, but given a likelihood function instead of a base classifier -- that would also be interesting!}
+
+There is a trick we can use here, however. We can \emph{make} $\hat C_n$ into a model specification by letting
+\[
+-\log f_\theta(A^*X,Y) := \mathrm{logit}\left( \risk(\hat C_n^{A^*}) \right)+C
+\]
+or simply
+\[
+f_\theta(A^*X,Y) \propto \frac{1-\risk(\hat C_n^{A^*})}{\risk(\hat C_n^{A^*})}.
+\]
+This is analogous to the link function in generalized linear models (GLMs), where we link the mean parameter $\mu$ to the linear model $X\beta$ through a function $g$. In logistic regression this link function is the logit function, which is in some sense the "natural" link function for classification problems.
+
+This likelihood would be estimated by
+\[
+\hat f_\theta(A^*X,Y) \propto \frac{1-\hat L(\hat C_n^{A^*})}{\hat L(\hat C_n^{A^*})}.
+\]
+in terms of the test risk. $\hat{\bm{\Phi}}$ is then the Metropolis-Hastings Markov chain corresponding to this estimated likelihood.
+
+\subsubsection{Summary}
+
+We have thus bounded 
+\[
+g(\hat{\bm{\Phi}}^{B_1})-g(\pi_0) \leq \epsilon + o(\rho^{-B_1}) + \epsilon_\mathrm{irr}
+\]
+where the terms correspond to approximating $\bm{\Phi}$ by $\hat{\bm{\Phi}}$, $\pi$ by $\bm{\Phi}$, and $\pi_0$ by $\pi$ respectively.
+
+\subsection{Implementation}
+
+\subsubsection{Metropolis-Hastings}
+
+Metropolis-Hastings \cite{MRRTT53} is a Markov Chain Monte Carlo algorithm for sampling from a distribution $P(x)$ that only requires the ability to compute ratios $P(x)/P(x')$ -- thus, we only need to be able to calculate a function proportional to $P(x)$, which is exactly what we have.
+
+M-H is a random walk algorithm, and thus also requires a proposal distribution $Q(x\to x')$. Ideally, this proposal distribution will be symmetric ($Q(x\to x')=Q(x'\to x)$) so we won't need to calculate transition probabilities in the accept/reject step.
+
+\subsubsection{Choice of proposal kernel}
+
+In our case, we are performing a random walk on a projection matrix space $\mathcal A$. Our perturbations must also fall within this space, so it won't work to simply noise up cells in $A$ by Gaussians to obtain proposals. In the axis-aligned case proposals are easy; simply pick an active feature and an inactive feature, and toggle them. For Haar projections this is more difficult.
+
+Note that a projection $A$ can be represented as an orthonormal $d$-set in $p$-space. The natural way to perturb this $d$-set while maintaining orthonormality is by rotation.
+
+The next problem is finding a good distribution on small $p$-space rotations. Observe that rotations in $\mathbb R^p$ can be represented as a series of two-dimensional rotations in pairwise orthogonal hyperplanes. This leads to an algorithm for generating small rotations.
+
+\subsubsection{Implementation of proposal kernel}
+
+To perform this small-rotation perturbation, first note that picking a set of $k$ pairwise orthogonal hyperplanes is equivalent to picking an orthonormal $2k$-set in $p$-space. This is easily done using the same function we use to generate projections. We then perform a $5^\circ$ counterclockwise isoclinic rotation through these hyperplanes.
+
+To speed up computation, we memoize a standard $5^\circ$ counterclockwise isoclinic rotation, through the $\lfloor p/2 \rfloor$ hyperplanes defined by consecutive standard basis vectors. We then conjugate it by a random basis to obtain a random rotation, and then apply it to $A$ to get our proposal $A'$.
+
+\subsubsection{Temperature}
+
+The temperature $T$ of our sampler is a free parameter that toggles between full prior ($T=\infty$) and full random walk MAP ($T=0$), which performs pure optimization.
+
+By a chain with temperature $T$, we mean that the acceptance ratio $a$ is taken to the power $1/T$. Thus, a very cold chain performs very greedy optimization, strictly descending the objective function as $T\to 0$, and a very high temperature chain tends to ignore the likelihood and is much more willing to accept proposals that land in lower likelihoods.
+
+In terms of the Bayesian framework, the temperature adjusts how strong the signal from our interpreted likelihood is. This is something that depends on the situation, so we leave $T$ as a tuning parameter.
+
+\subsubsection{Ensemble sampling architectures}
+
+Instead of starting from the prior (discarding information) $B_1$ times, efficiency can be gained by sampling all the $A_i$ from the same Markov chain -- in other words, sampling an ensemble (or emperical CDF) from $\tilde\pi$. However, the problem with sampling multiple projections from the same simple M-H chain is that M-H will get stuck in local minima, threatening the independence assumption as well as ensemble diversity. There are several ways to mitigate this.
+
+One way is to use Sequential Importance Resampling (SIR), also often known as particle filtering:
+\begin{enumerate}
+	\item Sample $B_1$ matrices $A_i$ from the prior.
+	\item Perform importance resampling, which is basically a bootstrap draw (resample) from the ensemble, weighted by the likelihoods (importances).
+	\item Run $k$ steps of normal MCMC in parallel on the ensemble.
+	\item Repeat 2-3 for $B_2$ iterations.
+\end{enumerate}
+SIR results in $B_1$ matrices from the Markov chain, avoiding local minima and high dependence on initial state by starting them each independently from the prior but exchanging information between them through resampling steps.
+
+Another approach would be to use Parallel Tempering (PT). This algorithm runs a ladder of parallel Markov chains, where the top rung has ``infinite temperature'' (ie. is sampled from the prior), the next rung has high temperature (for instance, $T=100$), and so on, down to the bottommost rung with $T=1$.
+
+In addition to the normal M-H steps in parallel, PT creates a new type of step (like SIR's resample step) in which swaps between adjacent runs are proposed and accepted/rejected. Thus, the bottommost rung does not get stuck in local minima -- the upper rungs will find and explore between disjoint probability clusters, while the lower rungs will sample the correct posterior in each cluster.
+
+SIR and PT are not only highly performant global inference algorithms; they are also highly parallel. Details and references for these methods can be found in the book \cite{LLC10}.
+
+\subsubsection{Jump size}
+
+Jumps of constant size $5^\circ\times\left\lfloor\frac{p}{2}\right\rfloor$ may be inefficient in the beginning, where the initial matrix is likely to be far from the typical set of samples. Near the end, they may be too coarse, unable to sample very well from regions whose width is smaller than the jump size. In terms of the theory, such a large, fixed jump size presents a barrier to uniform ergodicity.
+
+Optimizing the proposal kernel to adaptively or systematically increase in precision would both save computation and improve performance. Such a systematic schedule for jump sizes could look like:
+
+\vspace{6pt}
+\begin{center}
+	\begin{tabular}{r|cc}
+		$i$ & $\theta$ & $d$ \\
+		\hline
+		0 & \multicolumn{2}{c}{from prior} \\
+		1 & $30^\circ$ & $\left\lfloor\frac{p}{2}\right\rfloor$ \\
+		$\vdots$ & & \\
+		$B_2$ & $0.01^\circ$ & $\max\left(\left\lfloor\frac{p}{10}\right\rfloor, 1\right)$
+	\end{tabular}
+\end{center}
+\vspace{6pt}
+
+Alternatively, instead of a fixed schedule as above, each jump size can be run until no (or little) improvements have been made in the last 100 iterations, after which the next jump size is used. This would prevent a fixed value for $B_2$, however.
+
+These methods can be seen as forms of simulated annealing.
+
+\subsubsection{Bootstrap or $k$-fold cross-validation in misclassification rate estimates}
+
+Instead of fitting $\hat C$ on $(\theta X, Y)$ and testing on the same $\theta X$, it may be fruitful to train on a bootstrap sample of the training set, and calculate an out-of-bag test error estimate (which is a popular way to run the random forest algorithm). $k$-fold cross-validation can also be used instead of bootstrap.
+
+\subsection{Performance}
+
+We provide an implementation of RPO with some of the features described above. To keep it simple, we used a Metropolis-Hastings architecture of one independent chain per sample, so no information was shared between the $B_1$ chains.
+
+\subsubsection{Temperature}
+
+The temperature parameter was crucially important, as the default $T=1$ value corresponded to a signal-to-noise ratio of nearly zero, as shown in Figure~\ref{fig:rpo-no-temperature}. Setting a colder temperature of $T=\frac{1}{100}$ gave much better mixing, as we can see from Figure~\ref{fig:rpo-temperature}.
+
+\subsubsection{Parallelization}
+
+Although we didn't use SIR or PT in our implementation, we were able to achieve parallelization simply by training each of the $B1$ projection matrices (for $B2$ iterations each) on a separate thread. As no information is exchanged between the threads (unlike in SIR or PT which have steps requiring synchronization), this runs very fast. On a 36-core AWS instance, RPE-H QDA on Model 1 takes 2.8 seconds.
+
+\begin{figure}
+	\begin{centering}
+		\includegraphics[scale=0.3]{rpo-no-temperature}
+		\par\end{centering}
+	\caption{Performance of the RPO sampler on Model 1 with $T=1$, showing that very little signal from the training data is being used. The horizontal axis gives the iteration number, while the vertical axis shows the test risk of $\hat C$ on the current projection.}
+	\label{fig:rpo-no-temperature}
+\end{figure}
+
+\begin{figure}
+	\begin{centering}
+		\includegraphics[scale=0.3]{rpo-temperature}
+		\par\end{centering}
+	\caption{Performance of the RPO sampler with $T=\frac{1}{100}$, which gives much higher signal-to-noise ratio. Note that the acceptance rate is very low after an initial descent into the plausible region.}
+	\label{fig:rpo-temperature}
+\end{figure}
+
+\subsubsection{Proposal kernel}
+
+In general, the isoclinic rotation proposal kernel worked very well, but a step size schedule was helpful to avoid long periods of inactivity (low acceptance ratios), which we see in Figure~\ref{fig:rpo-temperature}. Markov chains mix best when the acceptance ratio is not at either extreme, so having large step sizes for the initial descent, and then smaller step sizes for later sampling, will optimize mixing. This is shown in Figure~\ref{fig:rpo-stepsize-schedule}.
+
+\begin{figure}
+	\begin{centering}
+		\includegraphics[scale=0.3]{rpo-stepsize-schedule}
+		\par\end{centering}
+	\caption{Performance of the RPO sampler with $T=\frac{1}{100}$ and a step schedule of $30^\circ$ on $\lfloor \frac{p}{2} \rfloor$ planes from 0 to 25\%, and $5^\circ$ on $\lfloor \frac{p}{4} \rfloor$ planes from 25\% to 100\%.}
+	\label{fig:rpo-stepsize-schedule}
+\end{figure}
+
+\clearpage % dump floats
+
+\subsubsection{Code}
+
+Below is RPO implemented in R. This code (along with all the code for the axis-aligned section) is also available at 
+\begin{center}
+\texttt{http://github.com/bendotli/rpensemble}
+\end{center}
+ and requires the package that accompanies \cite{CS15} as a dependency.
+
+\lstinputlisting[language=R, caption=Random projection optimization]{../basic-mcmc/core.R}
+
+
+
+
+
+
+
+
+\newpage
+\section{Acknowledgements}
+
+First and foremost I would like to thank my thesis advisors Samuel Kou in the Department of Statistics, and Horng-Tzer Yau in the Department of Mathematics at Harvard for supervising my joint thesis. This thesis would not have been possible without your support, and I am very thankful for the advice you have given.
+
+Thanks to my summer research advisor Richard J. Samworth at the Statistical Laboratory, University of Cambridge, as well as his student Timothy I. Cannings, under whom Section~\ref{sec:aa-rpe} (axis-aligned RPE) was written. This work is an extension and derivative on their joint paper first proposing random projection ensembles, and they have provided innumerable suggestions towards the completion of my thesis even after the summer ended.
+
+I would also like to acknowledge funding from the UK EPSRC (Engineering and Physical Sciences Research Council) for supporting my summer work at Cambridge.
+
+Finally, thanks to my mom and dad for providing moral support (and delicious home cooking!) during the long days of winter break spent working on my thesis. Many a time that month I found myself insurmountably stuck, ready to give up -- and that's when you shined through.
+
+
+
+
+
+
+
+\appendix
+
+
+
+
+\newpage
+\section{Test methodology}\label{sec:test-models}
+
+As in \cite{CS15}, we run each experiment 100 times, and we use default RPE parameters $B_1=B_2=100$.
+
+\subsection{Test models}
+
+\subsubsection{Model 0}
+
+The basic Model 0 consists of two $p$-dimensional Gaussians with the
+same identity covariance matrix, shifted apart from each other in
+$d$ of the $p$ dimensions by $2\Delta$, where $\pi_{1}$ is the
+probability of class 1 and $1-\pi_{1}$ that of class 2. The parameters
+are $\pi_{1}$, $p$, $d$, and $\Delta$ (and we also can adjust
+$n_{\mathrm{train}}$ and $n_{\mathrm{test}}$).
+
+We use $p=50$, $d=5$, $\Delta=1$, and as in the paper, $n_{\mathrm{train}}\in\{50,100,200\}$
+and $n_{\mathrm{test}}=1000$. Instead of varying $\pi_{1}$, here
+we keep it at $\pi_{1}=0.5$. For these model parameter values, the Bayes risk multiplied by 100
+is \textbf{12.8}.
+
+This model is not included in \cite{CS15}, but we include it as the Gaussian discrimination problem is
+the classic realm of LDA.
+
+\subsubsection{Model 1}
+
+This test case gives classes with two very different distributions, standard Laplace versus standard normal, shifted apart by the vector
+$\frac{1}{8}(1,\dots,1)$.
+
+
+\subsubsection{Model 2}
+
+Model 2 involves two student-$t$ distributions and a non-identity covariance matrix, giving a heavier-tailed and correlated version of Model 0.
+
+$k$-nearest neighbors was the optimal base classifier here, but the
+paper didn't specify over what range to choose $k$ from. It only
+mentioned using leave-one-out cross-validation (LOO CV) to select
+$k$; we tried both $k=1:5$ and $k=1:25$. Neither of these settings
+was able to reproduce the paper's numbers for RPE-H with $k$nn, or
+for $k$nn on its own (they always performed significantly worse),
+so we simply include the paper's numbers.
+
+\subsubsection{Model 3}
+
+Here, class 1 is an equal mixture of two standard Gaussians separated in
+the first 5 components, while class 2 is independently standard Cauchy in
+the first 5 components, and standard normal in the rest.
+
+This model has some very heavy tails, which will throw off all the standard
+toolbox classifiers.
+
+\subsubsection{Model 4}
+
+This model consists of rotated sparse normals, with block diagonal covariance matrices. The random rotation is drawn from Haar measure, and fixed from then on.
+
+\subsubsection{Model 5}
+
+The final test case is a real dataset, the UCI Ozone data.
+
+In \cite{CS15}, none of the $d=5$ versions were reported (it was not explained why).
+Here we operate under the assumption that they were left out because
+they did not perform well, and thus it would not be valuable to run them.
+
+
+
+
+
+
+\subsection{Compared classifiers}
+
+
+\subsubsection{Linear discriminant analysis}
+
+One of the standard linear classifiers. No hyperparameters.
+
+Interestingly, the standard implementation in R (from the \texttt{MASS}
+library) still functions when $n_{\mathrm{train}}\ll p$; it only
+complains about collinearity and performs extremely poorly. Formally, it
+should not be able to run at all due to impossibility of non-full rank matrix inversion.
+
+\begin{lstlisting}[caption=Modular LDA testing code]
+library(MASS)
+
+compare.lda = function(data) {
+train = data$train
+test = data$test
+
+# Run LDA
+lda.model = lda(y ~ ., data = train)
+lda.out = predict(lda.model, newdata = test)
+lda.class = lda.out$class
+
+# Calculate error
+return(mean(lda.class != test$y))
+}
+\end{lstlisting}
+
+
+
+\subsubsection{HaarRPE-LDA}
+
+An ensemble of LDA base classifiers, trained on projections of the
+data (with a very simple optimization procedure on the selection of
+these projections). The important hyperparameters are $B_{1}$ and
+$B_{2}$ (which we fix at $B_{1}=B_{2}=10$ as in the paper) as well
+as $d$ (for which we use the true $d=5$).
+
+\begin{lstlisting}[caption=Modular RPE-H with LDA testing code]
+library(RPEnsemble)
+
+compare.haar.rpe.lda = function(data) {
+train = data$train
+test = data$test
+n_train = length(train$y)
+n_test = length(test$y)
+p = ncol(train)-1
+d = 5 ###############################
+
+# Run RPE LDA with Haar measure-drawn random projections
+rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
+XTest = data.matrix(test[-(p+1)]), d = d, B1 = 10, B2 = 10,
+cores = 1)
+
+# Estimate the class 1 prior probability
+rpelda.p_hat = sum(train$y == 1)/n_train
+
+# Choose the best value for alpha (the voting threshold) emperically
+rpelda.alpha_hat = RPalpha(RP.out = rpelda.out, Y = train$y, p1 = rpelda.p_hat)
+
+# Ensemble the base classifiers
+rpelda.class = RPEnsembleClass(RP.out = rpelda.out, n = n_train, n.test = n_test,
+p1 = rpelda.p_hat, alpha = rpelda.alpha_hat)
+
+# Calculate error
+return(mean(rpelda.class != test$y))
+}
+\end{lstlisting}
+
+
+
+\subsubsection{AxisRPE-LDA}
+
+Same as above, but the choice procedure for projection matrices only
+considers axis-aligned projections. When the model is in fact axis-aligned,
+this makes it far easier to find the true projection (projecting down
+to the first $d$ dimensions).
+
+\begin{lstlisting}[caption=Modular RPE-A with LDA testing code]
+compare.axis.rpe.lda = function(data) {
+train = data$train
+test = data$test
+n_train = length(train$y)
+n_test = length(test$y)
+p = ncol(train)-1
+d = 5 ###############################
+
+# Run RPE LDA with axis-aligned random projections
+rpelda.out = RPParallel(XTrain = data.matrix(train[-(p+1)]), YTrain = train$y,
+XTest = data.matrix(test[-(p+1)]), d = d, B1 = 10, B2 = 10,
+projmethod = "axis",
+cores = 1)
+
+# Estimate the class 1 prior probability
+rpelda.p_hat = sum(train$y == 1)/n_train
+
+# Choose the best value for alpha (the voting threshold) emperically
+rpelda.alpha_hat = RPalpha(RP.out = rpelda.out, Y = train$y, p1 = rpelda.p_hat)
+
+# Ensemble the base classifiers
+rpelda.class = RPEnsembleClass(RP.out = rpelda.out, n = n_train, n.test = n_test,
+p1 = rpelda.p_hat, alpha = rpelda.alpha_hat)
+
+# Calculate error
+return(mean(rpelda.class != test$y))
+}
+\end{lstlisting}
+
+\subsubsection{Other RPE classifiers}
+Other choices of base classifier will use the same code as above, with an additional \texttt{base = QDA/KNN} parameter -- see full codebase on GitHub.
+
+
+\subsubsection{Random forest}
+
+Standard toolbox classifier. We fix the number of trees at 1000, and tune hyperparameter
+$m_{\mathrm{try}}$ over $\{2,\dots,10\}$.
+
+Note that $n_{\mathrm{trees}}$ is analogous to $B_{1}$ and $B_{2}$,
+and $m_{\mathrm{try}}$ is analogous to $d$.
+
+\begin{lstlisting}[caption=Modular random forest (via CARET) testing code]
+library(caret)
+
+compare.rf = function(data) {
+train = data$train
+test = data$test
+tuneGrid <- data.frame(.mtry=(2:10))
+
+# Run random forest
+rf.model <- train(y ~ ., data=train,
+ntree=1000,
+method='rf',
+preProcess = c("center", "scale"),
+tuneGrid = tuneGrid,
+trControl=trainControl(method='oob', verboseIter=T))
+rf.class = predict(rf.model, newdata = test)
+
+# Calculate error
+return(mean(rf.class != test$y))
+}
+\end{lstlisting}
+
+
+
+\subsubsection{Gaussian SVM}
+
+Standard toolbox classifier. Hyperparameter $C$ is tuned over $\{1,2,3,4,5\}$\@.
+
+\begin{lstlisting}[caption=Modular RBF-SVM (via CARET) testing code]
+compare.rbf.svm = function(data) {
+train = data$train
+test = data$test
+tuneGrid <- data.frame(.C = 1:5)
+
+# Run kernel SVM
+model <- train(y ~ .,
+data=train,
+method='svmRadialCost',
+preProcess = c("center", "scale"),
+tuneGrid = tuneGrid,
+trControl=trainControl(method="boot", number=10, verboseIter=T))
+class = predict(model, newdata = test)
+
+# Calculate error
+return(mean(class != test$y))
+}
+\end{lstlisting}
+
+
+
+\subsubsection{Boosted trees (adaboost)}
+
+A more advanced toolbox classifier, adaboost (adaptively boosted decision trees). The hyperparameter tuning grid was manually selected to optimize for our six models.
+
+\begin{lstlisting}[caption=Modular boosted decision trees (via CARET) testing code]
+compare.boosted.dtrees = function(data) {
+	train = data$train
+	test = data$test
+	tuneGrid <- expand.grid(
+	iter = c(5, 10, 25, 40),
+	maxdepth = c(16),
+	nu = c(0.5))
+	
+	# Run boosted trees
+	model <- train(y ~ .,
+	data=train,
+	method='ada',
+	preProcess = c("center", "scale"),
+	tuneGrid = tuneGrid,
+	trControl=trainControl(method="boot", number=10, verboseIter=T))
+	class = predict(model, newdata = test)
+	
+	# Calculate error
+	return(mean(class != test$y))
+}
+\end{lstlisting}
+
+
+
+
+\newpage
+\section{Data}\label{sec:data}
+
+\subsection{Introduction}
+
+We use 50 training points and 100 test points, and repeat each experiment
+100 times. The table contains the sample means of misclassification
+rates, and standard errors for these means.
+
+As in \cite{CS15}, we multiply the misclassification rates by 100 for ease of reading.
+
+
+\subsubsection{Original 9 classifiers (3 base $\times$ $\{d=2,d=5,\text{no RPE}\}$)}
+
+The top sections of each graph are the original data points from the
+paper \cite{CS15}. Rows in italics represent results verbatim from
+the source paper.
+
+In this paper we will generally only re-run the best classifier from
+the paper (which will also be re-run in its axis-aligned form).
+This is indicated by a star ($\star$).
+
+
+\subsubsection{Original 4 comparisons (PenLDA, NSC, SCRDA, IR)}
+
+Again, italics represent verbatim data. As the interfaces for these
+packages are not standardized, we do not re-run any of these.
+As such, Model 0 (not in the source paper) has no data for this section.
+
+
+\subsubsection{Axis-aligned version (RPE-A) of best Haar RPE (RPE-H)}
+
+The next section compares the axis-aligned versions of the best RPE-H
+algorithms from the top section.
+
+
+\subsubsection{Toolbox classifiers (RF, SVM, boosted decision trees)}
+
+The last section adds some comparisons with a typical toolbox of classification
+algorithms (random forest, radial basis function SVM, and boosted
+decision trees).
+
+Boosted tree classifiers performed best in \cite{CN06}, an emprical
+survey of classification techniques against a diverse set of models
+and a diverse set of error metrics. (However, they weren't particularly
+strong on the accuracy/misclassification rate metric, and in the below
+results they always lost out to random forest.)
+
+
+\subsubsection{Total}
+
+This makes for a total of 17 classifiers.
+
+
+
+
+
+
+
+
+\begin{table}[p]
+	\begin{centering}
+		\begin{tabular}{r|l|c|c|c|c}
+			\multicolumn{1}{r}{$\boxed{\text{Model 0}}$} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{$\pi_{1}=0.5$, $\text{Bayes risk}=1.28$} & \tabularnewline
+			\multicolumn{1}{r}{} &  & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \tabularnewline
+			\multicolumn{2}{c|}{\textbf{Classifier}} & $50$ & $100$ & $200$ & \tabularnewline
+			\hline 
+			RPE-H$_{d=2}$ & LDA & $3.58_{0.174}$ & $2.68_{0.0840}$ & $2.07_{0.0709}$ & \tabularnewline
+			\hline 
+			RPE-H$_{d=5}$ & LDA & $4.10_{0.226}$ & $2.82_{0.134}$ & $2.09_{0.0661}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{LDA} & $30.8_{0.795}$ & $6.48_{0.157}$ & $2.90_{0.0689}$ & \tabularnewline
+			\hline 
+			RPE-H$_{d=2}$ & QDA & $3.62_{0.152}$ & $2.60_{0.0808}$ & $2.13_{0.0646}$ & \tabularnewline
+			\hline 
+			RPE-H$_{d=5}$ & QDA & $3.98_{0.172}$ & $2.60_{0.0772}$ & $1.93_{0.0525}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{QDA} & N/A & N/A & $14.5_{0.273}$ & \tabularnewline
+			\hline 
+			RPE-H$_{d=2}$ & $k$nn$_{k=1:25}$ & $3.88_{0.218}$ & $2.64_{0.0883}$ & $2.14_{0.0770}$ & \tabularnewline
+			\hline 
+			RPE-H$_{d=5}$ & $k$nn$_{k=1:25}$ & $3.94_{0.188}$ & $2.48_{0.104}$ & $2.02_{0.0637}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{$k$nn$_{k=1:25}$} & $11.2_{0.440}$ & $5.97_{0.160}$ & $4.09_{0.0778}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{PenLDA} & $\mathbf{1.71_{0.0535}}$ & $\mathbf{1.42_{0.0389}}$ & $\mathbf{1.31_{0.0344}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{NSC} & NR & NR & NR & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{SCRDA} & NR & NR & NR & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{IR} & NR & NR & NR & \tabularnewline
+			\hline 
+			\hline 
+			RPE-A$_{d=5}$ & LDA & $5.18_{0.212}$ & $3.96_{0.157}$ & $3.19_{0.102}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{RF} & $3.28_{0.0815}$ & $2.60_{0.0586}$ & $2.11_{0.0498}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{RBF-SVM} & $5.17_{0.121}$ & $3.16_{0.0688}$ & $2.30_{0.0617}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{Boosted Decision Trees} & $5.63_{0.298}$ & $3.52_{0.106}$ & $2.89_{0.0921}$ & \tabularnewline
+		\end{tabular}\\
+		
+		\par\end{centering}
+	
+	\protect\caption{Misclassification rates on Model 0.}
+	\label{tab:model-0}
+\end{table}
+
+\begin{table}[p]
+	\small
+	\begin{centering}
+		\begin{tabular}{r|l|c|c|c|c|c|c|c}
+			\multicolumn{1}{r}{$\boxed{\text{Model 1}}$} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{$\pi_{1}=0.5$, $\text{Bayes risk}=4.91$} & \multicolumn{3}{c}{$\pi_{1}=0.33$, $\text{Bayes risk}=4.09$} & \tabularnewline
+			\multicolumn{1}{r}{} &  & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \tabularnewline
+			\multicolumn{2}{c|}{\textbf{Classifier}} & $50$ & $100$ & $200$ & $50$ & $100$ & $200$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{LDA} & $\mathit{43.99_{0.64}}$ & $\mathit{41.99_{0.58}}$ & $\mathit{41.14_{0.55}}$ & $\mathit{29.83_{0.51}}$ & $\mathit{26.70_{0.33}}$ & $\mathit{23.76_{0.25}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{LDA} & $\mathit{43.95_{0.44}}$ & $\mathit{42.10_{0.39}}$ & $\mathit{41.15_{0.37}}$ & $\mathit{33.11_{0.52}}$ & $\mathit{30.03_{0.36}}$ & $\mathit{26.55_{0.24}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{LDA}} & \emph{N/A} & $\mathit{26.49_{0.28}}$ & $\mathit{21.74_{0.22}}$ & \emph{N/A} & $\mathit{37.64_{0.31}}$ & $\mathit{33.75_{0.20}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{QDA} & $\mathit{19.74_{0.43}}$ & $\mathit{15.65_{0.24}}$ & $\mathit{13.60_{0.15}}$ & $\bi{17.64}{0.50}$ & $\mathit{13.37_{0.27}}$ & $\mathit{11.88_{0.21}}$ & \tabularnewline
+			\hline 
+			$\star$RPE-H$_{d=5}$ & QDA & $\mathbf{18.3_{0.552}}$ & $\mathbf{14.1_{0.452}}$ & $\mathbf{12.3_{0.299}}$ & $18.8_{0.657}$ & $13.1_{0.390}$ & $11.0_{0.325}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{QDA}} & \emph{N/A} & \emph{N/A} & $\mathit{39.93_{0.29}}$ & \emph{N/A} & \emph{N/A} & $\mathit{33.05_{0.16}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{26.19_{0.37}}$ & $\mathit{20.96_{0.23}}$ & $\mathit{18.56_{0.14}}$ & $\mathit{23.58_{0.34}}$ & $\mathit{20.02_{0.22}}$ & $\mathit{16.58_{0.21}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{27.41_{0.35}}$ & $\mathit{21.30_{0.24}}$ & $\mathit{17.48_{0.15}}$ & $\mathit{24.64_{0.31}}$ & $\mathit{19.33_{0.28}}$ & $\mathit{16.15_{0.20}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{$k$nn$_{k=1:25}$}} & $\mathit{48.81_{0.18}}$ & $\mathit{48.68_{0.19}}$ & $\mathit{48.29_{0.18}}$ & $\mathit{32.69_{0.17}}$ & $\mathit{32.50_{0.16}}$ & $\mathit{32.64_{0.15}}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{\emph{PenLDA}} & $\mathit{44.40_{0.27}}$ & $\mathit{42.60_{0.25}}$ & $\mathit{41.05_{0.20}}$ & $\mathit{33.19_{0.33}}$ & $\mathit{32.61_{0.25}}$ & $\mathit{31.31_{0.17}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{NSC}} & $\mathit{46.51_{0.33}}$ & $\mathit{44.60_{0.25}}$ & $\mathit{43.03_{0.39}}$ & $\mathit{31.76_{0.21}}$ & $\mathit{31.13_{0.17}}$ & $\mathit{31.65_{0.18}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{SCRDA}} & $\mathit{46.76_{0.31}}$ & $\mathit{44.55_{0.38}}$ & $\mathit{42.55_{0.37}}$ & $\mathit{33.56_{0.37}}$ & $\mathit{32.52_{0.23}}$ & $\mathit{31.94_{0.18}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{IR}} & $\mathit{43.87_{0.24}}$ & $\mathit{42.25_{0.25}}$ & $\mathit{40.55_{0.18}}$ & $\mathit{35.04_{0.34}}$ & $\mathit{36.26_{0.28}}$ & $\mathit{26.48_{0.23}}$ & \tabularnewline
+			\hline 
+			\hline 
+			RPE-A$_{d=5}$ & QDA & $32.2_{0.596}$ & $27.9_{0.470}$ & $24.6_{0.494}$ & $27.6_{0.557}$ & $22.2_{0.460}$ & $19.2_{0.423}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{RF} & $41.2_{0.659}$ & $35.0_{0.570}$ & $24.6_{0.490}$ & $31.54_{0.504}$ & $28.7_{0.527}$ & $24.0_{0.423}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{RBF-SVM} & $\mathbf{18.3_{0.446}}$ & $\mathbf{14.2_{0.437}}$ & $13.0_{0.399}$ & $\mathbf{16.4_{0.493}}$ & $\mathbf{12.6_{0.315}}$ & $\mathbf{10.1_{0.342}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{Boosted Decision Trees} & $47.1_{0.494}$ & $45.6_{0.535}$ & $39.9_{0.601}$ & $35.8_{0.492}$ & $34.9_{0.523}$ & $31.2_{0.538}$ & \tabularnewline
+		\end{tabular}\\
+		
+		\par\end{centering}
+	
+	\protect\caption{Misclassification rates on Model 1.}
+	\label{tab:model-1}
+\end{table}
+
+\begin{table}[p]
+	\small
+	\begin{centering}
+		\begin{tabular}{r|l|c|c|c|c|c|c|c}
+			\multicolumn{1}{r}{$\boxed{\text{Model 2}}$} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{$\pi_{1}=0.5$, $\text{Bayes risk}=10.07$} & \multicolumn{3}{c}{$\pi_{1}=0.75$, $\text{Bayes risk}=6.67$} & \tabularnewline
+			\multicolumn{1}{r}{} &  & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \tabularnewline
+			\multicolumn{2}{c|}{\textbf{Classifier}} & $50$ & $100$ & $200$ & $50$ & $100$ & $200$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{LDA} & $\mathit{23.86_{0.91}}$ & $\mathit{21.74_{0.81}}$ & $\mathit{22.90_{1.06}}$ & $\mathit{29.43_{0.48}}$ & $\mathit{26.69_{0.34}}$ & $\mathit{25.48_{0.19}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{LDA} & $\mathit{21.14_{0.52}}$ & $\mathit{18.23_{0.35}}$ & $\mathit{17.50_{0.43}}$ & $\mathit{31.29_{0.45}}$ & $\mathit{30.26_{0.43}}$ & $\mathit{27.26_{0.31}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{LDA}} & \emph{N/A} & $\mathit{26.49_{0.28}}$ & $\mathit{21.74_{0.22}}$ & \emph{N/A} & $\mathit{23.35_{0.26}}$ & $\mathit{20.15_{0.23}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{QDA} & $\mathit{32.97_{0.87}}$ & $\mathit{33.41_{1.03}}$ & $\mathit{38.89_{0.71}}$ & $\mathit{18.97_{0.79}}$ & $\mathit{22.95_{1.08}}$ & $\mathit{27.34_{1.07}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{QDA} & $\mathit{34.91_{0.69}}$ & $\mathit{37.35_{0.75}}$ & $\mathit{40.90_{0.40}}$ & $\mathit{20.25_{0.74}}$ & $\mathit{28.78_{1.09}}$ & $\mathit{40.56_{0.96}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{QDA}} & \emph{N/A} & \emph{N/A} & $\mathit{39.95_{0.23}}$ & \emph{N/A} & \emph{N/A} & \emph{N/A} & \tabularnewline
+			\hline 
+			\emph{$\star$RPE-H$_{d=2}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{17.16_{0.31}}$ & $\mathit{15.02_{0.20}}$ & $\mathit{13.31_{0.14}}$ & $\mathit{13.24_{0.37}}$ & $\mathit{11.08_{0.23}}$ & $\mathit{9.51_{0.13}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{16.86_{0.27}}$ & $\mathit{15.37_{0.22}}$ & $\mathit{13.56_{0.13}}$ & $\bi{12.17}{0.31}$ & $\bi{9.99}{0.17}$ & $\bi{9.02}{0.12}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{$k$nn$_{k=1:25}$}} & $\mathit{20.26_{0.37}}$ & $\mathit{18.33_{0.18}}$ & $\mathit{16.79_{0.14}}$ & $\mathit{15.64_{0.33}}$ & $\mathit{13.71_{0.25}}$ & $\mathit{12.18_{0.13}}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{\emph{PenLDA}} & $\mathit{38.69_{1.08}}$ & $\mathit{35.07_{1.24}}$ & $\mathit{35.19_{1.23}}$ & $\mathit{28.96_{1.19}}$ & $\mathit{25.69_{0.33}}$ & $\mathit{26.11_{0.19}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{NSC}} & $\mathit{40.03_{1.19}}$ & $\mathit{38.48_{1.24}}$ & $\mathit{39.29_{1.19}}$ & $\mathit{26.18_{0.21}}$ & $\mathit{25.25_{0.14}}$ & $\mathit{25.32_{0.13}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{SCRDA}} & $\mathit{21.95_{0.59}}$ & $\mathit{18.35_{0.28}}$ & $\mathit{16.98_{0.20}}$ & $\mathit{20.34_{0.44}}$ & $\mathit{18.35_{0.32}}$ & $\mathit{16.98_{0.22}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{IR}} & $\mathit{39.24_{1.04}}$ & $\mathit{37.02_{1.15}}$ & $\mathit{38.06_{1.08}}$ & $\mathit{48.45_{2.08}}$ & $\mathit{49.10_{2.02}}$ & $\mathit{50.93_{1.98}}$ & \tabularnewline
+			\hline 
+			\hline 
+			RPE-A$_{d=5}$ & $k$nn$_{k=1:25}$ & $18.0_{0.458}$ & $15.5_{0.414}$ & $14.5_{0.370}$ & $12.75_{0.454}$ & $11.0_{0.352}$ & $9.35_{0.303}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{RF} & $\mathbf{16.3_{0.417}}$ & $\mathbf{14.2_{0.353}}$ & $\mathbf{13.2_{0.379}}$ & $15.8_{0.714}$ & $10.9_{0.365}$ & $9.59_{0.319}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{RBF-SVM} & $20.6_{0.386}$ & $16.6_{0.547}$ & $16.4_{0.396}$ & $14.3_{0.507}$ & $11.6_{0.358}$ & $10.4_{0.320}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{Boosted Decision Trees} & $21.5_{0.555}$ & $17.2_{0.434}$ & $15.2_{0.381}$ & $16.9_{0.527}$ & $12.6_{0.446}$ & $10.1_{0.325}$ & \tabularnewline
+		\end{tabular}\\
+		
+		\par\end{centering}
+	
+	\protect\caption{Misclassification rates on Model 2.}
+	\label{tab:model-2}
+\end{table}
+
+\begin{table}[p]
+	\small
+	\begin{centering}
+		\begin{tabular}{r|l|c|c|c|c|c|c|c}
+			\multicolumn{1}{r}{$\boxed{\text{Model 3}}$} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{$\pi_{1}=0.5$, $\text{Bayes risk}=11.59$} & \multicolumn{3}{c}{$\pi_{1}=0.75$, $\text{Bayes risk}=13.12^\text{(sic)}$} & \tabularnewline
+			\multicolumn{1}{r}{} &  & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \tabularnewline
+			\multicolumn{2}{c|}{\textbf{Classifier}} & $50$ & $100$ & $200$ & $50$ & $100$ & $200$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{LDA} & $\mathit{43.95_{0.63}}$ & $\mathit{42.57_{0.61}}$ & $\mathit{41.60_{0.70}}$ & $\mathit{23.41_{0.57}}$ & $\mathit{22.24_{0.34}}$ & $\mathit{22.31_{0.22}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{LDA} & $\mathit{45.29_{0.49}}$ & $\mathit{44.57_{0.43}}$ & $\mathit{43.78_{0.49}}$ & $\mathit{27.15_{0.68}}$ & $\mathit{23.67_{0.43}}$ & $\mathit{22.48_{0.24}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{LDA}} & \emph{N/A} & $\mathit{49.39_{0.19}}$ & $\mathit{49.37_{0.16}}$ & \emph{N/A} & $\mathit{35.33_{0.43}}$ & $\mathit{30.57_{0.29}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{QDA} & $\mathit{29.78_{0.57}}$ & $\mathit{26.34_{0.42}}$ & $\mathit{23.47_{0.29}}$ & $\mathit{19.36_{0.70}}$ & $\mathit{17.19_{0.44}}$ & $\mathit{15.36_{0.30}}$ & \tabularnewline
+			\hline 
+			$\star$RPE-H$_{d=5}$ & QDA & $29.0_{0.703}$ & $25.5_{0.562}$ & $21.5_{0.503}$ & $21.2_{0.995}$ & $15.9_{0.560}$ & $14.0_{0.359}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{QDA}} & \emph{N/A} & \emph{N/A} & $\mathit{27.58_{0.34}}$ & \emph{N/A} & \emph{N/A} & \emph{N/A} & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{29.43_{0.39}}$ & $\mathit{26.48_{0.61}}$ & $\mathit{23.47_{0.23}}$ & $\mathit{19.31_{0.37}}$ & $\mathit{16.64_{0.26}}$ & $\mathit{14.61_{0.20}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{29.36_{0.38}}$ & $\mathit{26.29_{0.29}}$ & $\mathit{23.38_{0.19}}$ & $\mathit{19.93_{0.40}}$ & $\mathit{18.82_{0.36}}$ & $\mathit{14.74_{0.18}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{$k$nn$_{k=1:25}$}} & $\mathit{34.46_{0.32}}$ & $\mathit{31.26_{0.23}}$ & $\mathit{28.88_{0.21}}$ & $\mathit{22.46_{0.20}}$ & $\mathit{19.85_{0.19}}$ & $\mathit{17.70_{0.16}}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{\emph{PenLDA}} & $\mathit{48.34_{0.22}}$ & $\mathit{48.97_{0.37}}$ & $\mathit{49.21_{0.17}}$ & $\mathit{27.54_{0.50}}$ & $\mathit{27.05_{0.42}}$ & $\mathit{26.26_{0.29}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{NSC}} & $\mathit{47.67_{0.42}}$ & $\mathit{47.69_{0.37}}$ & $\mathit{47.83_{0.32}}$ & $\mathit{23.03_{0.16}}$ & $\mathit{23.12_{0.15}}$ & $\mathit{23.63_{0.14}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{SCRDA}} & $\mathit{45.44_{0.52}}$ & $\mathit{44.86_{0.55}}$ & $\mathit{43.27_{0.51}}$ & $\mathit{23.65_{0.42}}$ & $\mathit{21.89_{0.27}}$ & $\mathit{21.63_{0.19}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{IR}} & $\mathit{48.40_{0.21}}$ & $\mathit{48.91_{0.17}}$ & $\mathit{49.29_{0.16}}$ & $\mathit{32.26_{0.59}}$ & $\mathit{35.35_{0.53}}$ & $\mathit{38.54_{0.37}}$ & \tabularnewline
+			\hline 
+			\hline 
+			RPE-A$_{d=5}$ & QDA & $\mathbf{26.2_{0.755}}$ & $\mathbf{20.3_{0.569}}$ & $\mathbf{17.8_{0.471}}$ & $\mathbf{15.2_{0.544}}$ & $\mathbf{11.7_{0.370}}$ & $\mathbf{10.4_{0.370}}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{RF} & $41.0_{0.669}$ & $34.1_{0.677}$ & $24.2_{0.474}$ & $24.5_{0.381}$ & $21.5_{0.460}$ & $15.9_{0.431}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{RBF-SVM} & $45.1_{0.508}$ & $44.9_{0.643}$ & $45.9_{0.557}$ & $24.4_{0.610}$ & $21.9_{0.464}$ & $22.5_{0.445}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{Boosted Decision Trees} & $44.0_{0.561}$ & $38.4_{0.581}$ & $31.5_{0.536}$ & $25.9_{0.465}$ & $24.0_{0.422}$ & $19.8_{0.515}$ & \tabularnewline
+		\end{tabular}\\
+		
+		\par\end{centering}
+	
+	\protect\caption{Misclassification rates on Model 3.}
+	\label{tab:model-3}
+\end{table}
+
+\begin{table}[p]
+	\small
+	\begin{centering}
+		\begin{tabular}{r|l|c|c|c|c|c|c|c}
+			\multicolumn{1}{r}{$\boxed{\text{Model 4}}$} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{$\pi_{1}=0.5$, $\text{Bayes risk}=9.84$} & \multicolumn{3}{c}{$\pi_{1}=0.75$, $\text{Bayes risk}=6.22$} & \tabularnewline
+			\multicolumn{1}{r}{} &  & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \tabularnewline
+			\multicolumn{2}{c|}{\textbf{Classifier}} & $50$ & $100$ & $200$ & $50$ & $100$ & $200$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{LDA} & $\mathit{32.65_{0.37}}$ & $\mathit{30.34_{0.22}}$ & $\mathit{28.33_{0.17}}$ & $\mathit{26.83_{0.45}}$ & $\mathit{24.42_{0.26}}$ & $\mathit{22.9_{0.18}}$ & \tabularnewline
+			\hline 
+			$\star$RPE-H$_{d=5}$ & LDA & $34.9_{0.533}$ & $32.7_{0.467}$ & $32.6_{0.544}$ & $28.1_{0.711}$ & $23.2_{0.517}$ & $22.6_{0.457}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{LDA}} & \emph{N/A} & $\mathit{38.47_{0.25}}$ & $\mathit{32.86_{0.17}}$ & \emph{N/A} & $\mathit{32.96_{0.33}}$ & $\mathit{26.95_{0.21}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{QDA} & $\bi{33.35}{0.37}$ & $\bi{30.37}{0.21}$ & $\bi{28.41}{0.18}$ & $\mathit{28.33_{0.50}}$ & $\mathit{25.54_{0.33}}$ & $\mathit{23.76_{0.23}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{QDA} & $\mathit{33.87_{0.31}}$ & $\mathit{31.02_{0.21}}$ & $\mathit{28.60_{0.16}}$ & $\mathit{28.70_{0.46}}$ & $\mathit{25.39_{0.32}}$ & $\mathit{23.56_{0.19}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{QDA}} & \emph{N/A} & \emph{N/A} & $\mathit{44.25_{0.21}}$ & \emph{N/A} & \emph{N/A} & \emph{N/A} & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{34.36_{0.39}}$ & $\mathit{31.12_{0.23}}$ & $\mathit{28.99_{0.17}}$ & $\mathit{27.35_{0.34}}$ & $\mathit{25.25_{0.28}}$ & $\mathit{23.69_{0.20}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{34.33_{0.38}}$ & $\mathit{31.44_{0.23}}$ & $\mathit{29.07_{0.17}}$ & $\mathit{26.59_{0.35}}$ & $\mathit{24.71_{0.25}}$ & $\mathit{23.11_{0.17}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{$k$nn$_{k=1:25}$}} & $\mathit{39.53_{0.32}}$ & $\mathit{38.16_{0.23}}$ & $\mathit{37.06_{0.23}}$ & $\mathit{28.70_{0.39}}$ & $\mathit{27.68_{0.25}}$ & $\mathit{27.36_{0.21}}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{\emph{PenLDA}} & $\mathit{34.73_{0.50}}$ & $\mathit{31.87_{0.37}}$ & $\mathit{29.27_{0.21}}$ & $\mathit{30.06_{0.55}}$ & $\mathit{27.74_{0.45}}$ & $\mathit{26.13_{0.34}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{NSC}} & $\mathit{37.80_{0.58}}$ & $\mathit{34.28_{0.44}}$ & $\mathit{30.76_{0.27}}$ & $\mathit{26.05_{0.37}}$ & $\mathit{24.83_{0.43}}$ & $\mathit{23.81_{0.21}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{SCRDA}} & $\mathit{35.74_{0.56}}$ & $\mathit{31.44_{0.37}}$ & $\mathit{28.18_{0.17}}$ & $\mathit{25.80_{0.33}}$ & $\mathit{24.43_{0.20}}$ & $\mathit{23.20_{0.19}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{IR}} & $\mathit{34.95_{0.54}}$ & $\mathit{32.06_{0.39}}$ & $\mathit{29.39_{0.23}}$ & $\mathit{32.95_{0.57}}$ & $\mathit{31.03_{0.46}}$ & $\mathit{29.78_{0.36}}$ & \tabularnewline
+			\hline 
+			\hline 
+			RPE-A$_{d=5}$ & LDA & $37.5_{0.607}$ & $34.8_{0.554}$ & $33.3_{0.448}$ & $28.6_{0.657}$ & $25.0_{0.484}$ & $23.9_{0.490}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{RF} & $37.0_{0.604}$ & $34.3_{0.554}$ & $31.9_{0.459}$ & $\mathbf{23.8_{0.474}}$ & $\mathbf{23.7_{0.497}}$ & $\mathbf{21.9_{0.423}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{RBF-SVM} & $36.4_{0.603}$ & $34.6_{0.488}$ & $31.0_{0.530}$ & $24.8_{0.488}$ & $23.8_{0.443}$ & $22.8_{0.426}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{Boosted Decision Trees} & $38.3_{0.565}$ & $35.9_{0.485}$ & $35.0_{0.523}$ & $26.0_{0.447}$ & $24.4_{0.461}$ & $24.4_{0.389}$ & \tabularnewline
+		\end{tabular}\\
+		
+		\par\end{centering}
+	
+	\protect\caption{Misclassification rates on Model 4.}
+	\label{tab:model-4}
+\end{table}
+
+\begin{table}[p]
+	\begin{centering}
+		\begin{tabular}{r|l|c|c|c|c}
+			\multicolumn{1}{r}{$\boxed{\text{Model 5}}$} & \multicolumn{1}{l}{} & \multicolumn{3}{c}{} & \tabularnewline
+			\multicolumn{1}{r}{} &  & \multicolumn{3}{c|}{$n_{\mathrm{train}}$} & \tabularnewline
+			\multicolumn{2}{c|}{\textbf{Classifier}} & $50$ & $100$ & $200$ & \tabularnewline
+			\hline 
+			$\star$RPE-H$_{d=2}$ & LDA & $24.2_{0.297}$ & $22.0_{0.218}$ & $20.6_{0.170}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{LDA} & \emph{NR} & \emph{NR} & \emph{NR} & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{LDA}} & \emph{N/A} & $\mathit{34.47_{0.38}}$ & $\mathit{24.46_{0.25}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{QDA} & $\mathit{26.12_{0.34}}$ & $\mathit{23.03_{0.23}}$ & $\mathit{21.56_{0.23}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{QDA} & \emph{NR} & \emph{NR} & \emph{NR} & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{QDA}} & \emph{N/A} & \emph{N/A} & \emph{N/A} & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=2}$} & \emph{$k$nn$_{k=1:25}$} & $\mathit{26.82_{0.39}}$ & $\mathit{23.75_{0.26}}$ & $\mathit{22.14_{0.19}}$ & \tabularnewline
+			\hline 
+			\emph{RPE-H$_{d=5}$} & \emph{$k$nn$_{k=1:25}$} & \emph{NR} & \emph{NR} & \emph{NR} & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{$k$nn$_{k=1:25}$}} & $\mathit{26.94_{0.28}}$ & $\mathit{25.93_{0.19}}$ & $\mathit{24.52_{0.18}}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{\emph{PenLDA}} & $\mathit{29.98_{0.35}}$ & $\mathit{29.71_{0.31}}$ & $\mathit{29.66_{0.27}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{NSC}} & $\mathit{26.55_{0.38}}$ & $\mathit{25.51_{0.32}}$ & $\mathit{24.30_{0.21}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{SCRDA}} & $\mathit{25.60_{0.32}}$ & $\mathit{23.39_{0.26}}$ & $\mathit{19.66_{0.25}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{\emph{IR}} & $\mathit{30.70_{0.31}}$ & $\mathit{30.63_{0.26}}$ & $\mathit{30.67_{0.22}}$ & \tabularnewline
+			\hline 
+			\hline 
+			RPE-A$_{d=2}$ & LDA & $22.8_{0.287}$ & $20.6_{0.204}$ & $19.4_{0.174}$ & \tabularnewline
+			\hline 
+			\hline 
+			\multicolumn{2}{c|}{RF} & $\mathbf{20.7_{0.243}}$ & $18.4_{0.214}$ & $16.8_{0.211}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{RBF-SVM} & $20.8_{0.276}$ & $\mathbf{18.2_{0.210}}$ & $\mathbf{16.5_{0.174}}$ & \tabularnewline
+			\hline 
+			\multicolumn{2}{c|}{Boosted Decision Trees} & $21.5_{0.212}$ & $19.9_{0.225}$ & $18.0_{0.207}$ & \tabularnewline
+		\end{tabular}\\
+		
+		\par\end{centering}
+	
+	\protect\caption{Misclassification rates on Model 5.}
+	\label{tab:model-5}
+\end{table}
+
+
+
+
+\clearpage % dump figures here!
+
+
+
+
+
+
+\newpage
+\bibliographystyle{amsalpha}
+\bibliography{references}
+
+\end{document}
